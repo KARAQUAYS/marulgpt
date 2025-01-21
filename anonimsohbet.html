@@ -96,7 +96,7 @@
         <div id="messages"></div>
         <div id="input-area">
             <input type="text" id="messageInput" placeholder="Bir mesaj yaz..." />
-            <button onclick="sendMessage()">Gönder</button>
+            <button id="sendBtn">Gönder</button>
         </div>
         <div id="status" class="status-red">Bağlantı kuruluyor...</div>
     </div>
@@ -116,8 +116,10 @@
         const db = nhost.graphql;
         const messagesDiv = document.getElementById('messages');
         const statusDiv = document.getElementById('status');
+        const sendButton = document.getElementById('sendBtn');
 
-        async function sendMessage() {
+        async function sendMessage(event) {
+            event.preventDefault();
             const input = document.getElementById('messageInput');
             const message = input.value;
 
@@ -173,6 +175,8 @@
           .subscribe((payload) => {
               displayMessage(payload.data.text);
           });
+
+        sendButton.addEventListener('click', sendMessage);
     </script>
 </body>
 </html>
