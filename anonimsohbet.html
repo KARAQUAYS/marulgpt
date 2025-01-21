@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anonim Sohbet</title>
+    <title>Mesajlaşma Uygulaması</title>
     <style>
         body {
             margin: 0;
@@ -91,7 +91,7 @@
     </style>
 </head>
 <body>
-    <header>Anonim Sohbet</header>
+    <header>Mesajlaşma Uygulaması</header>
     <div id="chat-container">
         <div id="messages"></div>
         <div id="input-area">
@@ -122,12 +122,9 @@
             const message = input.value;
 
             if (message.trim() !== '') {
-                const randomUser = `Anonim-${Math.floor(Math.random() * 1000)}`;
-
                 try {
                     await db
                       .insert('messages', {
-                        user: randomUser,
                         text: message,
                       });
                     input.value = '';
@@ -137,10 +134,10 @@
             }
         }
 
-        function displayMessage(user, text) {
+        function displayMessage(text) {
             const messageElement = document.createElement('div');
             messageElement.classList.add('message');
-            messageElement.innerHTML = `<strong>${user}:</strong> ${text}`;
+            messageElement.innerHTML = `<strong>Mesaj:</strong> ${text}`;
             messagesDiv.appendChild(messageElement);
 
             // Otomatik kaydırma
@@ -174,7 +171,7 @@
               order_by: { created_at: 'asc' },
           })
           .subscribe((payload) => {
-              displayMessage(payload.data.user, payload.data.text);
+              displayMessage(payload.data.text);
           });
     </script>
 </body>
