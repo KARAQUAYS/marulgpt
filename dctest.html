@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basit Discord Klonu</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #2c2f33;
+            color: #fff;
+        }
+
+        #app {
+            display: flex;
+            height: 100vh;
+        }
+
+        #sidebar {
+            width: 250px;
+            background: #23272a;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #sidebar h2 {
+            color: #7289da;
+            font-size: 1.5rem;
+        }
+
+        #chat {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #messages {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            background: #36393f;
+            border-bottom: 1px solid #23272a;
+        }
+
+        .message {
+            margin-bottom: 1rem;
+        }
+
+        .message strong {
+            color: #7289da;
+        }
+
+        #input-area {
+            padding: 1rem;
+            display: flex;
+            gap: 0.5rem;
+            background: #2c2f33;
+        }
+
+        #input-area input {
+            flex: 1;
+            padding: 0.5rem;
+            border: 1px solid #23272a;
+            border-radius: 4px;
+            background: #40444b;
+            color: #fff;
+        }
+
+        #input-area button {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            background: #7289da;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        #input-area button:hover {
+            background: #5b6eae;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div id="sidebar">
+            <h2>Sunucular</h2>
+            <ul>
+                <li># Genel Sohbet</li>
+                <li># Proje Tartışma</li>
+                <li># Yardım</li>
+            </ul>
+        </div>
+        <div id="chat">
+            <div id="messages"></div>
+            <div id="input-area">
+                <input type="text" id="messageInput" placeholder="Bir mesaj yaz..." />
+                <button onclick="sendMessage()">Gönder</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const messagesDiv = document.getElementById('messages');
+
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const message = input.value;
+
+            if (message.trim() !== '') {
+                const messageElement = document.createElement('div');
+                messageElement.classList.add('message');
+                messageElement.innerHTML = `<strong>Kullanıcı:</strong> ${message}`;
+                messagesDiv.appendChild(messageElement);
+
+                // Otomatik kaydır
+                messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+                input.value = '';
+            }
+        }
+    </script>
+</body>
+</html>
