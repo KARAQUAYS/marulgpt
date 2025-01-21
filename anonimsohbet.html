@@ -85,6 +85,22 @@
         #input-area button:hover {
             background: #5b6eae;
         }
+
+        #status {
+            padding: 0.5rem;
+            text-align: center;
+            font-size: 1rem;
+        }
+
+        .status-green {
+            color: #fff;
+            background-color: #43b581;
+        }
+
+        .status-red {
+            color: #fff;
+            background-color: #e74c3c;
+        }
     </style>
 </head>
 <body>
@@ -95,6 +111,7 @@
             <input type="text" id="messageInput" placeholder="Bir mesaj yaz..." />
             <button onclick="sendMessage()">Gönder</button>
         </div>
+        <div id="status" class="status-red">Bağlantı kuruluyor...</div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/supabase@2.17.1/dist/supabase.min.js"></script>
@@ -106,6 +123,7 @@
         const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
         const messagesDiv = document.getElementById('messages');
+        const statusDiv = document.getElementById('status');
 
         async function sendMessage() {
             const input = document.getElementById('messageInput');
@@ -143,6 +161,27 @@
                 displayMessage(user, text);
             })
             .subscribe();
+
+        // Supabase bağlantı durumu
+        supabase
+            .from('messages')
+            .select('*')
+            .then(response => {
+                if (response.error) {
+                    console.log(response.error.message);
+                    statusDiv.textContent = 'Bağlantı başarısız!';
+                    statusDiv.className = 'status-red';
+                } else {
+                    console.log('Supabase bağlantısı başarılı!');
+                    statusDiv.textContent = 'Bağlantı başarılı!';
+                    statusDiv.className = 'status-green';
+                }
+            })
+            .catch(error => {
+                console.error('Hata:', error);
+                statusDiv.textContent = 'Bağlantı başarısız!';
+                statusDiv.className = 'status-red';
+            });
     </script>
 </body>
 </html>
