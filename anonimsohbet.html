@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anonim Sohbet</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #2c2f33;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        header {
+            background: #7289da;
+            padding: 1rem;
+            text-align: center;
+            font-size: 1.5rem;
+        }
+
+        #chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        #messages {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            background: #36393f;
+        }
+
+        .message {
+            margin-bottom: 1rem;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .message strong {
+            color: #43b581;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        #input-area {
+            display: flex;
+            padding: 1rem;
+            background: #2c2f33;
+            gap: 0.5rem;
+        }
+
+        #input-area input {
+            flex: 1;
+            padding: 0.5rem;
+            border: 1px solid #23272a;
+            border-radius: 4px;
+            background: #40444b;
+            color: #fff;
+        }
+
+        #input-area button {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            background: #7289da;
+            color: #fff;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        #input-area button:hover {
+            background: #5b6eae;
+        }
+    </style>
+</head>
+<body>
+    <header>Anonim Sohbet</header>
+    <div id="chat-container">
+        <div id="messages"></div>
+        <div id="input-area">
+            <input type="text" id="messageInput" placeholder="Bir mesaj yaz..." />
+            <button onclick="sendMessage()">Gönder</button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/supabase@2.17.1/dist/supabase.min.js"></script>
+    <script>
+        // Supabase yapılandırması
+        const supabaseUrl = 'https://jurampcyhebchlddsfxx.supabase.co';  // Proje URL'si
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp1cmFtcGN5aGViY2hsZGRzZnh4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzc0ODE1ODksImV4cCI6MjA1MzA1NzU4OX0.CERKHh1S0QGJYmL2GgE3I2Kt0sSDQxlb1I16BI8u6Q0';  // Anon key
+
+        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+        const messagesDiv = document.getElementById('messages');
+
+        async function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const message = input.value;
+
+            if (message.trim() !== '') {
+                const randomUser = `Anonim-${Math.floor(Math.random() * 1000)}`;
+                const { data, error } = await supabase
+                    .from('messages')
+                    .insert([{ user: randomUser, text: message }]);
+
+                if (error) {
+                    console.error(error);
+                }
+
+                input.value = '';
+            }
+        }
+
+        function displayMessage(user, text) {
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message');
+            messageElement.innerHTML = `<strong>${user}:</strong> ${text}`;
+            messagesDiv.appendChild(messageElement);
+
+            // Otomatik kaydırma
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        // Mesajları dinle
+        supabase
+            .from('messages')
+            .on('INSERT', (payload) => {
+                const { user, text } = payload.new;
+                displayMessage(user, text);
+            })
+            .subscribe();
+    </script>
+</body>
+</html>
