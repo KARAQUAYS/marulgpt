@@ -114,14 +114,14 @@
             if (message.trim() !== '') {
                 const randomUser = `Anonim-${Math.floor(Math.random() * 1000)}`;
                 const { data, error } = await supabase
-                    .from('messages')
+                    .from('messages')  // Veritabanı tablosu
                     .insert([{ user: randomUser, text: message }]);
 
                 if (error) {
                     console.error(error);
+                } else {
+                    input.value = '';
                 }
-
-                input.value = '';
             }
         }
 
