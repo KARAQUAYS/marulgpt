@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Basit Discord Klonu</title>
+    <title>Gerçek Zamanlı Sohbet</title>
     <style>
         body {
             margin: 0;
@@ -101,25 +101,100 @@
         </div>
     </div>
 
-    <script>
+    <script type="module">
+        import { NhostClient } from 'https://unpkg.com/@nhost/nhost-js';
+
+        // Nhost istemcisini başlatın
+        const nhost = new NhostClient({
+            subdomain: 'aanwlrgicuaxbeucccam',
+            region: 'eu-central-1'
+        });
+
         const messagesDiv = document.getElementById('messages');
+        const messageInput = document.getElementById('messageInput');
 
-        function sendMessage() {
-            const input = document.getElementById('messageInput');
-            const message = input.value;
+        // Mesajları listeleme
+        async function fetchMessages() {
+            const { data, error } = await nhost.graphql.request(`
+                query {
+                    messages(order_by: { created_at: asc }) {
+                        id
+                        username
+                        content
+                        created_at
+                    }
+                }
+            `);
 
-            if (message.trim() !== '') {
-                const messageElement = document.createElement('div');
-                messageElement.classList.add('message');
-                messageElement.innerHTML = `<strong>Kullanıcı:</strong> ${message}`;
-                messagesDiv.appendChild(messageElement);
+            if (error) {
+                console.error('Mesajları alırken hata:', error);
+                return;
+            }
+
+            messagesDiv.innerHTML = '';
+            data.messages.forEach((msg) => {
+                addMessageToDOM(msg.username, msg.content);
+            });
+
+            // Otomatik kaydır
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        // Yeni bir mesaj ekleme
+        async function sendMessage() {
+            const content = messageInput.value.trim();
+            const username = 'Kullanıcı'; // Kullanıcı adı statik olarak belirlenmiş
+
+            if (!content) return;
+
+            const { error } = await nhost.graphql.request(`
+                mutation {
+                    insert_messages_one(object: { username: "${username}", content: "${content}" }) {
+                        id
+                    }
+                }
+            `);
+
+            if (error) {
+                console.error('Mesaj gönderilirken hata:', error);
+                return;
+            }
+
+            messageInput.value = '';
+        }
+
+        // Mesajı DOM'a ekle
+        function addMessageToDOM(username, content) {
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message');
+            messageElement.innerHTML = `<strong>${username}:</strong> ${content}`;
+            messagesDiv.appendChild(messageElement);
+        }
+
+        // Gerçek zamanlı mesaj güncellemeleri için dinleme
+        nhost.graphql
+            .onSubscription(`
+                subscription {
+                    messages(order_by: { created_at: asc }) {
+                        id
+                        username
+                        content
+                        created_at
+                    }
+                }
+            `)
+            .on('data', (data) => {
+                messagesDiv.innerHTML = '';
+                data.messages.forEach((msg) => {
+                    addMessageToDOM(msg.username, msg.content);
+                });
 
                 // Otomatik kaydır
                 messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            });
 
-                input.value = '';
-            }
-        }
+        // Mesajları yükle
+        fetchMessages();
     </script>
 </body>
 </html>
