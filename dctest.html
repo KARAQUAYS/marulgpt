@@ -136,7 +136,6 @@
                 addMessageToDOM(msg.username, msg.content);
             });
 
-            // Otomatik kaydır
             messagesDiv.scrollTop = messagesDiv.scrollHeight;
         }
 
@@ -189,11 +188,9 @@
                     addMessageToDOM(msg.username, msg.content);
                 });
 
-                // Otomatik kaydır
                 messagesDiv.scrollTop = messagesDiv.scrollHeight;
             });
 
-        // Mesajları yükle
         fetchMessages();
     </script>
 </body>
