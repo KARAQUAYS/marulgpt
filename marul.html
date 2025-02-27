@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MarulGPT</title>
+    <style>
+        :root {
+            --primary: #2d6df6;
+            --background: #171717;
+            --background-secondary: #232323;
+            --text-primary: #ffffff;
+            --text-secondary: #868686;
+            --marulgpt-color: #4CAF50; /* Yeşil renk */
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: var(--background);
+            color: var(--text-primary);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, sans-serif;
+            height: 100vh;
+            display: flex;
+            overflow: hidden; /* Sayfa genişlemesini engelle */
+        }
+
+        /* Sidebar Stilleri */
+        #sidebar {
+            width: 260px;
+            background: var(--background-secondary);
+            border-right: 1px solid #333;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; /* Taşmayı engelle */
+        }
+
+        #new-chat-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            cursor: pointer;
+        }
+
+        #chat-list {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .chat-item {
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-item:hover {
+            background: #2d2d2d;
+        }
+
+        .chat-delete {
+            color: #ff4444;
+            display: none;
+        }
+
+        .chat-item:hover .chat-delete {
+            display: block;
+        }
+
+        /* Ana İçerik */
+        #main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100vh; /* Tam ekran yükseklik */
+            overflow: hidden; /* Taşmayı engelle */
+        }
+
+        header {
+            padding: 16px;
+            background: var(--background-secondary);
+            border-bottom: 1px solid #333;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .menu-container {
+            position: relative;
+        }
+
+        #menu-btn {
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 24px;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            right: 0;
+            top: 40px;
+            background: var(--background-secondary);
+            border: 1px solid #333;
+            border-radius: 8px;
+            min-width: 200px;
+            display: none;
+            z-index: 1000;
+        }
+
+        .dropdown-menu.show {
+            display: block;
+        }
+
+        .menu-item {
+            padding: 12px 16px;
+            cursor: pointer;
+            color: var(--text-primary);
+        }
+
+        .menu-item:hover {
+            background: #2d2d2d;
+        }
+
+        /* Sohbet Alanı */
+        #chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+            height: calc(100vh - 120px); /* Sabit yükseklik */
+            overflow: hidden; /* Taşmayı engelle */
+        }
+
+        #chat-history {
+            flex: 1;
+            overflow-y: auto;
+            padding-bottom: 20px;
+        }
+
+        .message {
+            margin: 20px 0;
+            display: flex;
+            gap: 20px;
+        }
+
+        .message.user {
+            flex-direction: row-reverse;
+        }
+
+        .message-header {
+            font-size: 0.9em;
+            color: var(--text-secondary);
+            margin-bottom: 5px;
+        }
+
+        .message-content {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 8px;
+            white-space: pre-wrap;
+            word-wrap: break-word; /* Uzun metinlerin taşmasını engelle */
+        }
+
+        .message.user .message-content {
+            background: var(--background-secondary);
+            border: 1px solid #333;
+            color: var(--text-primary);
+        }
+
+        .message.marulgpt .message-content {
+            background: rgba(45, 109, 246, 0.1);
+            border: 1px solid rgba(45, 109, 246, 0.2);
+            color: var(--marulgpt-color); /* Yeşil renk */
+        }
+
+        #chat-input {
+            padding: 20px;
+            background: var(--background);
+            border-top: 1px solid #333;
+        }
+
+        .input-container {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        #user-input {
+            width: 100%;
+            padding: 12px 45px 12px 16px;
+            background: var(--background-secondary);
+            border: 1px solid #333;
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 16px;
+        }
+
+        #send-btn {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+        }
+
+        /* Giriş Ekranı ve Modaller */
+        .auth-container {
+            max-width: 400px;
+            margin: auto;
+            padding: 40px;
+            background: var(--background-secondary);
+            border-radius: 16px;
+            text-align: center;
+        }
+
+        .auth-container h2 {
+            margin-bottom: 30px;
+        }
+
+        .auth-container input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            background: var(--background);
+            border: 1px solid #333;
+            border-radius: 8px;
+            color: var(--text-primary);
+        }
+
+        .auth-container button {
+            width: 100%;
+            padding: 12px;
+            background: var(--primary);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+        }
+
+        #auth-toggle {
+            margin-top: 20px;
+            color: var(--text-secondary);
+        }
+
+        #auth-toggle a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: var(--background-secondary);
+            padding: 20px;
+            border-radius: 8px;
+            min-width: 300px;
+        }
+
+        .modal input {
+            width: 100%;
+            margin: 10px 0;
+            padding: 8px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Auth Screen -->
+    <div id="auth-container" class="auth-container">
+        <h2>Giriş Yap</h2>
+        <input type="text" id="username" placeholder="Kullanıcı Adı">
+        <input type="password" id="password" placeholder="Şifre">
+        <button id="auth-btn">Giriş Yap</button>
+        <p id="auth-toggle">Hesabınız yok mu? <a href="#" id="toggle-link">Kayıt Ol</a></p>
+    </div>
+
+    <!-- Main Interface -->
+    <div id="main-interface" style="display:none;">
+        <div id="sidebar">
+            <button id="new-chat-btn">+ Yeni Sohbet</button>
+            <div id="chat-list"></div>
+        </div>
+
+        <div id="main-content">
+            <header>
+                <h1>MarulGPT</h1>
+                <div class="menu-container">
+                    <button id="menu-btn">⋮</button>
+                    <div class="dropdown-menu" id="dropdown-menu">
+                        <div class="menu-item" id="account-info">Hesap Bilgileri</div>
+                        <div class="menu-item" id="upgrade-account">Hesabı Yükselt</div>
+                        <div class="menu-item" id="logout-btn">Çıkış Yap</div>
+                    </div>
+                </div>
+            </header>
+
+            <div id="chat-container">
+                <div id="chat-history"></div>
+                <div id="chat-input">
+                    <div class="input-container">
+                        <input type="text" id="user-input" placeholder="MarulGPT'ye sorun...">
+                        <button id="send-btn">➤</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div id="account-modal" class="modal">
+        <div class="modal-content">
+            <h3>Hesap Bilgileri</h3>
+            <div id="account-details"></div>
+            <div id="password-change">
+                <input type="password" id="current-password" placeholder="Mevcut Şifre">
+                <input type="password" id="new-password" placeholder="Yeni Şifre">
+                <button id="save-password">Şifreyi Kaydet</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="upgrade-modal" class="modal">
+        <div class="modal-content">
+            <h3>Premium Yükseltme</h3>
+            <input type="text" id="upgrade-code" placeholder="Yükseltme Kodu">
+            <button id="submit-upgrade">Yükselt</button>
+        </div>
+    </div>
+
+    <script>
+        // Veritabanı Simülasyonu
+        let users = JSON.parse(localStorage.getItem('users')) || {
+            'admin': {
+                password: 'admin123',
+                type: 'owner',
+                chats: [],
+                createdAt: new Date().toISOString()
+            }
+            'eymenisko': {
+                password: 'ertengri60',
+                type: 'owner',
+                chats: [],
+                createdAt: new Date().toISOString()
+            }
+        };
+
+        let currentUser = null;
+        let currentChatId = null;
+        const PREMIUM_CODE = 'PREMIUM123';
+        const DAILY_LIMIT = 15;
+        const RESET_TIME = 2 * 60 * 60 * 1000; // 2 saat
+        let isRegistering = false;
+
+        // Yardımcı Fonksiyonlar
+        function saveUsers() {
+            localStorage.setItem('users', JSON.stringify(users));
+        }
+
+        function createChat() {
+            const chatId = Date.now().toString();
+            users[currentUser].chats.push({
+                id: chatId,
+                title: `Sohbet ${users[currentUser].chats.length + 1}`,
+                messages: [],
+                createdAt: new Date().toISOString()
+            });
+            saveUsers();
+            return chatId;
+        }
+
+        function updateChatList() {
+            const chatList = document.getElementById('chat-list');
+            chatList.innerHTML = '';
+            users[currentUser].chats.forEach(chat => {
+                const div = document.createElement('div');
+                div.className = 'chat-item';
+                div.innerHTML = `
+                    <span>${chat.title}</span>
+                    <span class="chat-delete" onclick="deleteChat('${chat.id}')">×</span>
+                `;
+                div.addEventListener('click', () => loadChat(chat.id));
+                chatList.appendChild(div);
+            });
+        }
+
+        function loadChat(chatId) {
+            currentChatId = chatId;
+            const chat = users[currentUser].chats.find(c => c.id === chatId);
+            const history = document.getElementById('chat-history');
+            history.innerHTML = '';
+            chat.messages.forEach(msg => addMessage(msg.role, msg.content, false));
+        }
+
+        function deleteChat(chatId) {
+            users[currentUser].chats = users[currentUser].chats.filter(c => c.id !== chatId);
+            saveUsers();
+            updateChatList();
+            if(currentChatId === chatId) {
+                currentChatId = createChat();
+                loadChat(currentChatId);
+            }
+        }
+
+        // Mesaj İşlemleri
+        function addMessage(role, content, saveToHistory = true) {
+            const history = document.getElementById('chat-history');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${role}`;
+            messageDiv.innerHTML = `
+                <div class="message-header">${role === 'user' ? currentUser : 'MarulGPT'}</div>
+                <div class="message-content">${role === 'user' ? content : ''}</div>
+            `;
+            history.appendChild(messageDiv);
+            history.scrollTop = history.scrollHeight;
+
+            if (role === 'marulgpt') {
+                typeResponse(messageDiv.querySelector('.message-content'), content);
+            }
+
+            if(saveToHistory) {
+                const chat = users[currentUser].chats.find(c => c.id === currentChatId);
+                chat.messages.push({ role, content });
+                chat.title = content.substring(0, 50);
+                saveUsers();
+                updateChatList();
+            }
+        }
+
+        // Yazma Efekti
+        function typeResponse(element, text) {
+            let index = 0;
+            const interval = setInterval(() => {
+                if (index < text.length) {
+                    element.textContent += text[index++];
+                    element.parentElement.scrollIntoView({ behavior: 'smooth' });
+                } else {
+                    clearInterval(interval);
+                }
+            }, 30); // Her harf arası 30ms
+        }
+
+        // Auth İşlemleri
+        document.getElementById('auth-btn').addEventListener('click', () => {
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+
+            if(isRegistering) {
+                if(users[username]) return alert('Kullanıcı zaten var!');
+                users[username] = {
+                    password,
+                    type: 'normal',
+                    chats: [],
+                    questionCount: 0,
+                    lastReset: Date.now(),
+                    createdAt: new Date().toISOString()
+                };
+                saveUsers();
+                alert('Kayıt başarılı! Giriş yapabilirsiniz.');
+                toggleAuthMode(); // Kayıt sonrası giriş moduna geç
+            } else {
+                const user = users[username];
+                if(!user || user.password !== password) return alert('Geçersiz bilgiler!');
+                
+                // Limit kontrolü
+                if(user.type === 'normal') {
+                    const timeSinceReset = Date.now() - user.lastReset;
+                    if(timeSinceReset > RESET_TIME) {
+                        user.lastReset = Date.now();
+                        user.questionCount = 0;
+                    }
+                }
+
+                currentUser = username;
+                document.getElementById('auth-container').style.display = 'none';
+                document.getElementById('main-interface').style.display = 'flex';
+                currentChatId = createChat();
+                loadChat(currentChatId);
+            }
+        });
+
+        // Giriş/Kayıt Toggle
+        function toggleAuthMode() {
+            isRegistering = !isRegistering;
+            document.getElementById('auth-btn').textContent = isRegistering ? 'Kayıt Ol' : 'Giriş Yap';
+            document.getElementById('auth-toggle').innerHTML = isRegistering 
+                ? 'Zaten hesabınız var mı? <a href="#" id="toggle-link">Giriş Yap</a>'
+                : 'Hesabınız yok mu? <a href="#" id="toggle-link">Kayıt Ol</a>';
+            document.getElementById('toggle-link').addEventListener('click', (e) => {
+                e.preventDefault();
+                toggleAuthMode();
+            });
+        }
+
+        document.getElementById('toggle-link').addEventListener('click', (e) => {
+            e.preventDefault();
+            toggleAuthMode();
+        });
+
+        // Sohbet İşlemleri
+        document.getElementById('new-chat-btn').addEventListener('click', () => {
+            currentChatId = createChat();
+            loadChat(currentChatId);
+        });
+
+        // Mesaj Gönderme
+        document.getElementById('send-btn').addEventListener('click', sendMessage);
+        document.getElementById('user-input').addEventListener('keypress', e => {
+            if(e.key === 'Enter') sendMessage();
+        });
+
+        async function sendMessage() {
+            const input = document.getElementById('user-input');
+            const message = input.value.trim();
+            if(!message) return;
+
+            const user = users[currentUser];
+            if(user.type === 'normal') {
+                if(user.questionCount >= DAILY_LIMIT) {
+                    return alert('Günlük limit doldu! 2 saat sonra tekrar deneyin.');
+                }
+                user.questionCount++;
+            }
+
+            addMessage('user', message);
+            input.value = '';
+
+            try {
+                const response = await fetchGeminiResponse(message);
+                addMessage('marulgpt', response);
+                saveUsers();
+            } catch (error) {
+                addMessage('marulgpt', '⚠️ Bir hata oluştu. Lütfen tekrar deneyin.');
+            }
+        }
+
+        async function fetchGeminiResponse(prompt) {
+            const API_KEY = 'AIzaSyB_ithzYTwOPdCT_Bk6VGLJHve6rZr_E_0';
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${API_KEY}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    contents: [{
+                        parts: [{text: prompt}]
+                    }]
+                })
+            });
+
+            const data = await response.json();
+            return data.candidates[0].content.parts[0].text;
+        }
+
+        // Menü İşlemleri
+        document.getElementById('menu-btn').addEventListener('click', () => {
+            document.getElementById('dropdown-menu').classList.toggle('show');
+        });
+
+        document.getElementById('account-info').addEventListener('click', () => {
+            const user = users[currentUser];
+            document.getElementById('account-details').innerHTML = `
+                <p>Kullanıcı Adı: ${currentUser}</p>
+                <p>Hesap Türü: ${user.type === 'owner' ? 'Yönetici' : user.type === 'premium' ? 'Premium' : 'Normal'}</p>
+                <p>Kayıt Tarihi: ${new Date(user.createdAt).toLocaleDateString()}</p>
+            `;
+            document.getElementById('account-modal').style.display = 'flex';
+        });
+
+        document.getElementById('upgrade-account').addEventListener('click', () => {
+            document.getElementById('upgrade-modal').style.display = 'flex';
+        });
+
+        document.getElementById('submit-upgrade').addEventListener('click', () => {
+            const code = document.getElementById('upgrade-code').value;
+            if(code === PREMIUM_CODE) {
+                users[currentUser].type = 'premium';
+                saveUsers();
+                alert('Hesabınız premiuma yükseltildi!');
+                document.getElementById('upgrade-modal').style.display = 'none';
+            } else {
+                alert('Geçersiz kod!');
+            }
+        });
+
+        // Şifre Değiştirme
+        document.getElementById('save-password').addEventListener('click', () => {
+            const current = document.getElementById('current-password').value;
+            const newPass = document.getElementById('new-password').value;
+            
+            if(users[currentUser].password !== current) return alert('Mevcut şifre hatalı!');
+            if(currentUser === 'admin') return alert('Admin şifresi değiştirilemez!');
+            
+            users[currentUser].password = newPass;
+            saveUsers();
+            alert('Şifre başarıyla değiştirildi!');
+        });
+
+        // Modal Kapatma
+        window.onclick = function(event) {
+            if(event.target.className === 'modal') {
+                event.target.style.display = 'none';
+            }
+        }
+
+        // Çıkış İşlemi
+        document.getElementById('logout-btn').addEventListener('click', () => {
+            currentUser = null;
+            document.getElementById('main-interface').style.display = 'none';
+            document.getElementById('auth-container').style.display = 'block';
+        });
+    </script>
+</body>
+</html>
