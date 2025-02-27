@@ -11,7 +11,7 @@
             --background-secondary: #232323;
             --text-primary: #ffffff;
             --text-secondary: #868686;
-            --marulgpt-color: #4CAF50; /* Yeşil renk */
+            --marulgpt-color: #4CAF50; 
         }
 
         body {
@@ -22,10 +22,9 @@
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, sans-serif;
             height: 100vh;
             display: flex;
-            overflow: hidden; /* Sayfa genişlemesini engelle */
+            overflow: hidden; 
         }
 
-        /* Sidebar Stilleri */
         #sidebar {
             width: 260px;
             background: var(--background-secondary);
@@ -33,7 +32,7 @@
             padding: 20px;
             display: flex;
             flex-direction: column;
-            overflow: hidden; /* Taşmayı engelle */
+            overflow: hidden; 
         }
 
         #new-chat-btn {
@@ -74,13 +73,12 @@
             display: block;
         }
 
-        /* Ana İçerik */
         #main-content {
             flex: 1;
             display: flex;
             flex-direction: column;
-            height: 100vh; /* Tam ekran yükseklik */
-            overflow: hidden; /* Taşmayı engelle */
+            height: 100vh; 
+            overflow: hidden; 
         }
 
         header {
@@ -131,7 +129,6 @@
             background: #2d2d2d;
         }
 
-        /* Sohbet Alanı */
         #chat-container {
             flex: 1;
             display: flex;
@@ -139,8 +136,8 @@
             width: 100%;
             padding: 20px;
             box-sizing: border-box;
-            height: calc(100vh - 120px); /* Sabit yükseklik */
-            overflow: hidden; /* Taşmayı engelle */
+            height: calc(100vh - 120px); 
+            overflow: hidden; 
         }
 
         #chat-history {
@@ -170,7 +167,7 @@
             padding: 12px 16px;
             border-radius: 8px;
             white-space: pre-wrap;
-            word-wrap: break-word; /* Uzun metinlerin taşmasını engelle */
+            word-wrap: break-word; 
         }
 
         .message.user .message-content {
@@ -182,7 +179,7 @@
         .message.marulgpt .message-content {
             background: rgba(45, 109, 246, 0.1);
             border: 1px solid rgba(45, 109, 246, 0.2);
-            color: var(--marulgpt-color); /* Yeşil renk */
+            color: var(--marulgpt-color); 
         }
 
         #chat-input {
@@ -218,7 +215,6 @@
             cursor: pointer;
         }
 
-        /* Giriş Ekranı ve Modaller */
         .auth-container {
             max-width: 400px;
             margin: auto;
@@ -289,7 +285,6 @@
     </style>
 </head>
 <body>
-    <!-- Auth Screen -->
     <div id="auth-container" class="auth-container">
         <h2>Giriş Yap</h2>
         <input type="text" id="username" placeholder="Kullanıcı Adı">
@@ -298,7 +293,6 @@
         <p id="auth-toggle">Hesabınız yok mu? <a href="#" id="toggle-link">Kayıt Ol</a></p>
     </div>
 
-    <!-- Main Interface -->
     <div id="main-interface" style="display:none;">
         <div id="sidebar">
             <button id="new-chat-btn">+ Yeni Sohbet</button>
@@ -330,7 +324,6 @@
         </div>
     </div>
 
-    <!-- Modals -->
     <div id="account-modal" class="modal">
         <div class="modal-content">
             <h3>Hesap Bilgileri</h3>
@@ -352,7 +345,6 @@
     </div>
 
     <script>
-        // Veritabanı Simülasyonu
         let users = JSON.parse(localStorage.getItem('users')) || {
             'admin': {
                 password: 'admin123',
@@ -369,7 +361,6 @@
         const RESET_TIME = 2 * 60 * 60 * 1000; // 2 saat
         let isRegistering = false;
 
-        // Yardımcı Fonksiyonlar
         function saveUsers() {
             localStorage.setItem('users', JSON.stringify(users));
         }
@@ -419,7 +410,6 @@
             }
         }
 
-        // Mesaj İşlemleri
         function addMessage(role, content, saveToHistory = true) {
             const history = document.getElementById('chat-history');
             const messageDiv = document.createElement('div');
@@ -444,7 +434,6 @@
             }
         }
 
-        // Yazma Efekti
         function typeResponse(element, text) {
             let index = 0;
             const interval = setInterval(() => {
@@ -454,10 +443,9 @@
                 } else {
                     clearInterval(interval);
                 }
-            }, 30); // Her harf arası 30ms
+            }, 30);
         }
 
-        // Auth İşlemleri
         document.getElementById('auth-btn').addEventListener('click', () => {
             const username = document.getElementById('username').value.trim();
             const password = document.getElementById('password').value;
@@ -474,12 +462,11 @@
                 };
                 saveUsers();
                 alert('Kayıt başarılı! Giriş yapabilirsiniz.');
-                toggleAuthMode(); // Kayıt sonrası giriş moduna geç
+                toggleAuthMode();
             } else {
                 const user = users[username];
                 if(!user || user.password !== password) return alert('Geçersiz bilgiler!');
                 
-                // Limit kontrolü
                 if(user.type === 'normal') {
                     const timeSinceReset = Date.now() - user.lastReset;
                     if(timeSinceReset > RESET_TIME) {
@@ -496,7 +483,6 @@
             }
         });
 
-        // Giriş/Kayıt Toggle
         function toggleAuthMode() {
             isRegistering = !isRegistering;
             document.getElementById('auth-btn').textContent = isRegistering ? 'Kayıt Ol' : 'Giriş Yap';
@@ -514,13 +500,11 @@
             toggleAuthMode();
         });
 
-        // Sohbet İşlemleri
         document.getElementById('new-chat-btn').addEventListener('click', () => {
             currentChatId = createChat();
             loadChat(currentChatId);
         });
 
-        // Mesaj Gönderme
         document.getElementById('send-btn').addEventListener('click', sendMessage);
         document.getElementById('user-input').addEventListener('keypress', e => {
             if(e.key === 'Enter') sendMessage();
