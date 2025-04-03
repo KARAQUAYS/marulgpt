@@ -2,16 +2,36 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>MarulGPT</title>
     <style>
         :root {
             --primary: #2d6df6;
+            --primary-light: #4d8bf5;
             --background: #171717;
             --background-secondary: #232323;
+            --background-tertiary: #2e2e2e;
             --text-primary: #ffffff;
-            --text-secondary: #868686;
-            --marulgpt-color: #4CAF50; /* Yeşil renk */
+            --text-secondary: #b0b0b0;
+            --marulgpt-color: #4CAF50;
+            --gradient-1: #2d6df6;
+            --gradient-2: #4CAF50;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Logo Tasarımı */
+        .logo {
+            background: linear-gradient(45deg, var(--gradient-1), var(--gradient-2));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: 800;
+            font-size: 1.8rem;
+            letter-spacing: -0.5px;
+            transition: var(--transition);
         }
 
         body {
@@ -19,59 +39,118 @@
             padding: 0;
             background: var(--background);
             color: var(--text-primary);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, sans-serif;
             height: 100vh;
             display: flex;
-            overflow: hidden; /* Sayfa genişlemesini engelle */
+            overflow: hidden;
         }
 
-        /* Sidebar Stilleri */
+        /* Header Scroll Efekti */
+        header {
+            position: sticky;
+            top: 0;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            background: rgba(35, 35, 35, 0.8);
+            z-index: 1000;
+            transition: var(--transition);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 0 20px;
+        }
+
+        .scrolled-header {
+            background: rgba(23, 23, 23, 0.95);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Sidebar Animasyon */
         #sidebar {
             width: 260px;
             background: var(--background-secondary);
-            border-right: 1px solid #333;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
             padding: 20px;
             display: flex;
             flex-direction: column;
-            overflow: hidden; /* Taşmayı engelle */
+            overflow: hidden;
+            transform: translateX(0);
+            transition: var(--transition);
+            z-index: 1001;
+        }
+
+        @media (max-width: 768px) {
+            #sidebar {
+                position: fixed;
+                height: 100vh;
+                transform: translateX(-100%);
+            }
+            .sidebar-open #sidebar {
+                transform: translateX(0);
+                box-shadow: var(--shadow-lg);
+            }
         }
 
         #new-chat-btn {
-            background: var(--primary);
+            background: linear-gradient(45deg, var(--gradient-1), var(--gradient-2));
             color: white;
             border: none;
             padding: 12px;
             border-radius: 8px;
             margin-bottom: 20px;
             cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+            box-shadow: var(--shadow-sm);
+        }
+
+        #new-chat-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
         }
 
         #chat-list {
             flex: 1;
             overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary) var(--background);
         }
 
         .chat-item {
-            padding: 10px;
-            margin: 5px 0;
-            border-radius: 6px;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 8px;
             cursor: pointer;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            background: var(--background-tertiary);
+            transition: var(--transition);
+            transform-style: preserve-3d;
         }
 
         .chat-item:hover {
-            background: #2d2d2d;
+            background: rgba(255, 255, 255, 0.05);
+            transform: translateZ(8px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .chat-item.active {
+            background: rgba(45, 109, 246, 0.15);
+            border-left: 3px solid var(--primary);
         }
 
         .chat-delete {
             color: #ff4444;
             display: none;
+            font-weight: bold;
+            transition: var(--transition);
         }
 
         .chat-item:hover .chat-delete {
             display: block;
+        }
+
+        .chat-delete:hover {
+            transform: scale(1.2);
         }
 
         /* Ana İçerik */
@@ -79,17 +158,8 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            height: 100vh; /* Tam ekran yükseklik */
-            overflow: hidden; /* Taşmayı engelle */
-        }
-
-        header {
-            padding: 16px;
-            background: var(--background-secondary);
-            border-bottom: 1px solid #333;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+            height: 100vh;
+            overflow: hidden;
         }
 
         .menu-container {
@@ -102,57 +172,85 @@
             color: var(--text-primary);
             font-size: 24px;
             cursor: pointer;
-            padding: 5px;
+            padding: 8px;
+            border-radius: 50%;
+            transition: var(--transition);
+        }
+
+        #menu-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
         }
 
         .dropdown-menu {
             position: absolute;
             right: 0;
-            top: 40px;
+            top: 50px;
             background: var(--background-secondary);
-            border: 1px solid #333;
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 8px;
             min-width: 200px;
             display: none;
             z-index: 1000;
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
         }
 
         .dropdown-menu.show {
             display: block;
+            animation: fadeIn 0.2s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .menu-item {
             padding: 12px 16px;
             cursor: pointer;
             color: var(--text-primary);
+            transition: var(--transition);
         }
 
         .menu-item:hover {
-            background: #2d2d2d;
+            background: rgba(255, 255, 255, 0.05);
         }
 
-        /* Sohbet Alanı */
+        /* Sohbet Alanı - GÜNCELLENMİŞ KISIM */
         #chat-container {
             flex: 1;
             display: flex;
             flex-direction: column;
             width: 100%;
-            padding: 20px;
+            padding: 0;
             box-sizing: border-box;
-            height: calc(100vh - 120px); /* Sabit yükseklik */
-            overflow: hidden; /* Taşmayı engelle */
+            height: calc(100vh - 80px);
+            overflow: hidden;
+            background: linear-gradient(135deg, rgba(45, 109, 246, 0.1) 0%, rgba(76, 175, 80, 0.1) 100%);
         }
 
         #chat-history {
             flex: 1;
             overflow-y: auto;
-            padding-bottom: 20px;
+            padding: 20px;
+            width: 100%;
+            box-sizing: border-box;
         }
 
         .message {
             margin: 20px 0;
             display: flex;
             gap: 20px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: messageAppear 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        @keyframes messageAppear {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .message.user {
@@ -162,63 +260,113 @@
         .message-header {
             font-size: 0.9em;
             color: var(--text-secondary);
-            margin-bottom: 5px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            justify-content: flex-end; /* Sağa hizalı */
         }
 
         .message-content {
-            max-width: 80%;
-            padding: 12px 16px;
-            border-radius: 8px;
+            max-width: 90%;
+            padding: 14px 18px;
+            border-radius: 12px;
             white-space: pre-wrap;
-            word-wrap: break-word; /* Uzun metinlerin taşmasını engelle */
+            word-wrap: break-word;
+            line-height: 1.5;
+            transition: var(--transition);
         }
 
         .message.user .message-content {
             background: var(--background-secondary);
-            border: 1px solid #333;
+            border: 1px solid rgba(255, 255, 255, 0.1);
             color: var(--text-primary);
+            box-shadow: var(--shadow-sm);
         }
 
         .message.marulgpt .message-content {
-            background: rgba(45, 109, 246, 0.1);
+            background: rgba(45, 109, 246, 0.15);
             border: 1px solid rgba(45, 109, 246, 0.2);
-            color: var(--marulgpt-color); /* Yeşil renk */
+            color: var(--text-primary);
         }
 
         #chat-input {
-            padding: 20px;
+            padding: 15px 20px;
             background: var(--background);
-            border-top: 1px solid #333;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .input-container {
-            max-width: 800px;
+            max-width: 100%;
             margin: 0 auto;
             position: relative;
+            padding: 0 20px;
         }
 
         #user-input {
             width: 100%;
-            padding: 12px 45px 12px 16px;
+            padding: 14px 50px 14px 18px;
             background: var(--background-secondary);
-            border: 1px solid #333;
-            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
             color: var(--text-primary);
             font-size: 16px;
+            transition: var(--transition);
+            box-shadow: var(--shadow-sm);
+        }
+
+        #user-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(45, 109, 246, 0.2);
         }
 
         #send-btn {
             position: absolute;
-            right: 10px;
+            right: 30px;
             top: 50%;
             transform: translateY(-50%);
             background: none;
             border: none;
             color: var(--text-secondary);
             cursor: pointer;
+            font-size: 20px;
+            transition: var(--transition);
         }
 
-        /* Giriş Ekranı ve Modaller */
+        #send-btn:hover {
+            color: var(--primary);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        /* Typing Indicator */
+        .typing-indicator {
+            display: none;
+            padding: 15px;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            margin: 20px 0;
+        }
+
+        .typing-indicator.active {
+            display: flex;
+        }
+
+        .typing-dot {
+            width: 10px;
+            height: 10px;
+            background: var(--primary);
+            border-radius: 50%;
+            animation: typing 1.4s infinite ease-in-out;
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% { transform: translateY(0); opacity: 0.6; }
+            30% { transform: translateY(-8px); opacity: 1; }
+        }
+
+        /* Auth Screen */
         .auth-container {
             max-width: 400px;
             margin: auto;
@@ -226,42 +374,75 @@
             background: var(--background-secondary);
             border-radius: 16px;
             text-align: center;
+            box-shadow: var(--shadow-lg);
+            animation: fadeInUp 0.5s ease;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .auth-container h2 {
             margin-bottom: 30px;
+            color: var(--text-primary);
+            font-weight: 600;
         }
 
         .auth-container input {
             width: 100%;
-            padding: 12px;
+            padding: 14px;
             margin-bottom: 15px;
             background: var(--background);
-            border: 1px solid #333;
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 8px;
             color: var(--text-primary);
+            font-size: 16px;
+            transition: var(--transition);
+        }
+
+        .auth-container input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(45, 109, 246, 0.2);
         }
 
         .auth-container button {
             width: 100%;
-            padding: 12px;
-            background: var(--primary);
+            padding: 14px;
+            background: linear-gradient(45deg, var(--gradient-1), var(--gradient-2));
             border: none;
             border-radius: 8px;
             color: white;
+            font-weight: 600;
             cursor: pointer;
+            transition: var(--transition);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .auth-container button:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
         }
 
         #auth-toggle {
             margin-top: 20px;
             color: var(--text-secondary);
+            font-size: 14px;
         }
 
         #auth-toggle a {
-            color: var(--primary);
+            color: var(--primary-light);
             text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
         }
 
+        #auth-toggle a:hover {
+            text-decoration: underline;
+        }
+
+        /* Modaller */
         .modal {
             display: none;
             position: fixed;
@@ -272,19 +453,145 @@
             background: rgba(0,0,0,0.5);
             justify-content: center;
             align-items: center;
+            z-index: 1002;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            animation: fadeIn 0.3s ease;
         }
 
         .modal-content {
             background: var(--background-secondary);
-            padding: 20px;
-            border-radius: 8px;
+            padding: 25px;
+            border-radius: 12px;
             min-width: 300px;
+            max-width: 90%;
+            box-shadow: var(--shadow-lg);
+            transform: scale(0.95);
+            animation: modalAppear 0.3s ease forwards;
+        }
+
+        @keyframes modalAppear {
+            to { transform: scale(1); }
+        }
+
+        .modal h3 {
+            margin-top: 0;
+            color: var(--text-primary);
+            font-size: 1.5rem;
         }
 
         .modal input {
             width: 100%;
-            margin: 10px 0;
-            padding: 8px;
+            margin: 12px 0;
+            padding: 12px;
+            background: var(--background);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 16px;
+        }
+
+        .modal input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(45, 109, 246, 0.2);
+        }
+
+        .modal button {
+            width: 100%;
+            padding: 12px;
+            background: var(--primary);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .modal button:hover {
+            background: var(--primary-light);
+        }
+
+        /* Responsive Tasarım */
+        @media (max-width: 1024px) {
+            .message-content {
+                max-width: 85% !important;
+            }
+        }
+
+        @media (max-width: 768px) {
+            #sidebar {
+                width: 280px;
+            }
+            
+            .message-content {
+                max-width: 90% !important;
+                padding: 12px 16px !important;
+            }
+            
+            #user-input {
+                padding: 12px 45px 12px 16px !important;
+            }
+            
+            #chat-history {
+                padding: 15px;
+            }
+            
+            .input-container {
+                padding: 0 15px;
+            }
+            
+            #send-btn {
+                right: 25px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .auth-container {
+                padding: 30px 20px;
+                width: 90%;
+            }
+            
+            .logo {
+                font-size: 1.5rem;
+            }
+            
+            .message {
+                gap: 12px;
+            }
+            
+            .message-content {
+                max-width: 95% !important;
+                padding: 10px 14px !important;
+            }
+            
+            #chat-input {
+                padding: 15px;
+            }
+            
+            #send-btn {
+                right: 20px;
+            }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--background);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-light);
         }
     </style>
 </head>
@@ -307,7 +614,7 @@
 
         <div id="main-content">
             <header>
-                <h1>MarulGPT</h1>
+                <h1 class="logo">MarulGPT</h1>
                 <div class="menu-container">
                     <button id="menu-btn">⋮</button>
                     <div class="dropdown-menu" id="dropdown-menu">
@@ -320,6 +627,11 @@
 
             <div id="chat-container">
                 <div id="chat-history"></div>
+                <div class="typing-indicator">
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot" style="animation-delay: 0.2s"></div>
+                    <div class="typing-dot" style="animation-delay: 0.4s"></div>
+                </div>
                 <div id="chat-input">
                     <div class="input-container">
                         <input type="text" id="user-input" placeholder="MarulGPT'ye sorun...">
@@ -368,6 +680,7 @@
         const DAILY_LIMIT = 15;
         const RESET_TIME = 2 * 60 * 60 * 1000; // 2 saat
         let isRegistering = false;
+        let sidebarOpen = false;
 
         // Yardımcı Fonksiyonlar
         function saveUsers() {
@@ -391,7 +704,7 @@
             chatList.innerHTML = '';
             users[currentUser].chats.forEach(chat => {
                 const div = document.createElement('div');
-                div.className = 'chat-item';
+                div.className = `chat-item ${currentChatId === chat.id ? 'active' : ''}`;
                 div.innerHTML = `
                     <span>${chat.title}</span>
                     <span class="chat-delete" onclick="deleteChat('${chat.id}')">×</span>
@@ -407,15 +720,23 @@
             const history = document.getElementById('chat-history');
             history.innerHTML = '';
             chat.messages.forEach(msg => addMessage(msg.role, msg.content, false));
+            updateChatList();
+            
+            // Scroll to bottom
+            setTimeout(() => {
+                history.scrollTop = history.scrollHeight;
+            }, 50);
         }
 
         function deleteChat(chatId) {
-            users[currentUser].chats = users[currentUser].chats.filter(c => c.id !== chatId);
-            saveUsers();
-            updateChatList();
-            if(currentChatId === chatId) {
-                currentChatId = createChat();
-                loadChat(currentChatId);
+            if (confirm('Bu sohbeti silmek istediğinize emin misiniz?')) {
+                users[currentUser].chats = users[currentUser].chats.filter(c => c.id !== chatId);
+                saveUsers();
+                updateChatList();
+                if(currentChatId === chatId) {
+                    currentChatId = createChat();
+                    loadChat(currentChatId);
+                }
             }
         }
 
@@ -429,8 +750,7 @@
                 <div class="message-content">${role === 'user' ? content : ''}</div>
             `;
             history.appendChild(messageDiv);
-            history.scrollTop = history.scrollHeight;
-
+            
             if (role === 'marulgpt') {
                 typeResponse(messageDiv.querySelector('.message-content'), content);
             }
@@ -442,19 +762,25 @@
                 saveUsers();
                 updateChatList();
             }
+            
+            // Scroll to bottom
+            setTimeout(() => {
+                history.scrollTop = history.scrollHeight;
+            }, 50);
         }
 
         // Yazma Efekti
         function typeResponse(element, text) {
             let index = 0;
+            element.textContent = '';
             const interval = setInterval(() => {
                 if (index < text.length) {
                     element.textContent += text[index++];
-                    element.parentElement.scrollIntoView({ behavior: 'smooth' });
+                    element.parentElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                 } else {
                     clearInterval(interval);
                 }
-            }, 30); // Her harf arası 30ms
+            }, 20);
         }
 
         // Auth İşlemleri
@@ -463,6 +789,7 @@
             const password = document.getElementById('password').value;
 
             if(isRegistering) {
+                if(!username || !password) return alert('Kullanıcı adı ve şifre gerekli!');
                 if(users[username]) return alert('Kullanıcı zaten var!');
                 users[username] = {
                     password,
@@ -503,10 +830,8 @@
             document.getElementById('auth-toggle').innerHTML = isRegistering 
                 ? 'Zaten hesabınız var mı? <a href="#" id="toggle-link">Giriş Yap</a>'
                 : 'Hesabınız yok mu? <a href="#" id="toggle-link">Kayıt Ol</a>';
-            document.getElementById('toggle-link').addEventListener('click', (e) => {
-                e.preventDefault();
-                toggleAuthMode();
-            });
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
         }
 
         document.getElementById('toggle-link').addEventListener('click', (e) => {
@@ -534,20 +859,26 @@
             const user = users[currentUser];
             if(user.type === 'normal') {
                 if(user.questionCount >= DAILY_LIMIT) {
-                    return alert('Günlük limit doldu! 2 saat sonra tekrar deneyin.');
+                    return alert(`Günlük limit doldu! ${Math.floor((RESET_TIME - (Date.now() - user.lastReset))/3600000)} saat sonra tekrar deneyin.`);
                 }
                 user.questionCount++;
             }
 
             addMessage('user', message);
             input.value = '';
-
+            
+            // Typing indicator göster
+            document.querySelector('.typing-indicator').classList.add('active');
+            
             try {
                 const response = await fetchGeminiResponse(message);
+                document.querySelector('.typing-indicator').classList.remove('active');
                 addMessage('marulgpt', response);
                 saveUsers();
             } catch (error) {
+                document.querySelector('.typing-indicator').classList.remove('active');
                 addMessage('marulgpt', '⚠️ Bir hata oluştu. Lütfen tekrar deneyin.');
+                console.error('Error:', error);
             }
         }
 
@@ -565,13 +896,22 @@
                 })
             });
 
+            if (!response.ok) {
+                throw new Error(`API error: ${response.status}`);
+            }
+
             const data = await response.json();
             return data.candidates[0].content.parts[0].text;
         }
 
         // Menü İşlemleri
-        document.getElementById('menu-btn').addEventListener('click', () => {
+        document.getElementById('menu-btn').addEventListener('click', (e) => {
+            e.stopPropagation();
             document.getElementById('dropdown-menu').classList.toggle('show');
+        });
+
+        document.addEventListener('click', () => {
+            document.getElementById('dropdown-menu').classList.remove('show');
         });
 
         document.getElementById('account-info').addEventListener('click', () => {
@@ -580,12 +920,14 @@
                 <p>Kullanıcı Adı: ${currentUser}</p>
                 <p>Hesap Türü: ${user.type === 'owner' ? 'Yönetici' : user.type === 'premium' ? 'Premium' : 'Normal'}</p>
                 <p>Kayıt Tarihi: ${new Date(user.createdAt).toLocaleDateString()}</p>
+                ${user.type === 'normal' ? `<p>Soru Hakkı: ${DAILY_LIMIT - user.questionCount}/${DAILY_LIMIT}</p>` : ''}
             `;
             document.getElementById('account-modal').style.display = 'flex';
         });
 
         document.getElementById('upgrade-account').addEventListener('click', () => {
             document.getElementById('upgrade-modal').style.display = 'flex';
+            document.getElementById('upgrade-code').focus();
         });
 
         document.getElementById('submit-upgrade').addEventListener('click', () => {
@@ -605,12 +947,15 @@
             const current = document.getElementById('current-password').value;
             const newPass = document.getElementById('new-password').value;
             
+            if(!current || !newPass) return alert('Lütfen tüm alanları doldurun!');
             if(users[currentUser].password !== current) return alert('Mevcut şifre hatalı!');
             if(currentUser === 'admin') return alert('Admin şifresi değiştirilemez!');
             
             users[currentUser].password = newPass;
             saveUsers();
             alert('Şifre başarıyla değiştirildi!');
+            document.getElementById('current-password').value = '';
+            document.getElementById('new-password').value = '';
         });
 
         // Modal Kapatma
@@ -625,6 +970,34 @@
             currentUser = null;
             document.getElementById('main-interface').style.display = 'none';
             document.getElementById('auth-container').style.display = 'block';
+            isRegistering = false;
+            document.getElementById('auth-btn').textContent = 'Giriş Yap';
+            document.getElementById('auth-toggle').innerHTML = 'Hesabınız yok mu? <a href="#" id="toggle-link">Kayıt Ol</a>';
+        });
+
+        // Mobil Sidebar Toggle
+        function toggleSidebar() {
+            sidebarOpen = !sidebarOpen;
+            document.body.classList.toggle('sidebar-open', sidebarOpen);
+        }
+
+        // Touch Swipe
+        let touchStartX = 0;
+        document.addEventListener('touchstart', e => {
+            touchStartX = e.touches[0].clientX;
+        });
+
+        document.addEventListener('touchend', e => {
+            const touchEndX = e.changedTouches[0].clientX;
+            if(Math.abs(touchEndX - touchStartX) > 50 && window.innerWidth <= 768) {
+                toggleSidebar();
+            }
+        });
+
+        // Scroll Header Efekti
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            header.classList.toggle('scrolled-header', window.scrollY > 50);
         });
     </script>
 </body>
