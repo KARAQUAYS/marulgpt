@@ -2,1005 +2,1855 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>MarulGPT</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MarulGPT - Akıllı Sohbet Asistanı</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@800;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #2d6df6;
-            --primary-light: #4d8bf5;
-            --background: #171717;
-            --background-secondary: #232323;
-            --background-tertiary: #2e2e2e;
-            --text-primary: #ffffff;
-            --text-secondary: #b0b0b0;
-            --marulgpt-color: #4CAF50;
-            --gradient-1: #2d6df6;
-            --gradient-2: #4CAF50;
-            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --primary-color: #00c896;
+            --primary-dark: #00a178;
+            --dark-bg: #0f172a;
+            --darker-bg: #0a0f1f;
+            --card-bg: #1e293b;
+            --light-text: #f1f5f9;
+            --gray-text: #94a3b8;
+            --border-color: #334155;
+            --user-msg: #3b82f6;
+            --ai-msg: #10b981;
+            --error-color: #ef4444;
+            --warning-color: #f59e0b;
         }
 
-        /* Logo Tasarımı */
-        .logo {
-            background: linear-gradient(45deg, var(--gradient-1), var(--gradient-2));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            font-weight: 800;
-            font-size: 1.8rem;
-            letter-spacing: -0.5px;
-            transition: var(--transition);
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         body {
-            margin: 0;
-            padding: 0;
-            background: var(--background);
-            color: var(--text-primary);
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, sans-serif;
-            height: 100vh;
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--light-text);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .app-container {
             display: flex;
-            overflow: hidden;
+            height: 100vh;
+            position: relative;
         }
 
-        /* Header Scroll Efekti */
-        header {
-            position: sticky;
-            top: 0;
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            background: rgba(35, 35, 35, 0.8);
-            z-index: 1000;
-            transition: var(--transition);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 0 20px;
-        }
-
-        .scrolled-header {
-            background: rgba(23, 23, 23, 0.95);
-            box-shadow: var(--shadow-md);
-        }
-
-        /* Sidebar Animasyon */
-        #sidebar {
-            width: 260px;
-            background: var(--background-secondary);
-            border-right: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 20px;
+        /* Sol Sidebar - Sohbet Geçmişi */
+        .sidebar {
+            width: 300px;
+            background-color: var(--darker-bg);
+            border-right: 1px solid var(--border-color);
             display: flex;
             flex-direction: column;
-            overflow: hidden;
-            transform: translateX(0);
-            transition: var(--transition);
-            z-index: 1001;
+            transition: transform 0.3s ease;
+            z-index: 10;
         }
 
-        @media (max-width: 768px) {
-            #sidebar {
-                position: fixed;
-                height: 100vh;
-                transform: translateX(-100%);
-            }
-            .sidebar-open #sidebar {
-                transform: translateX(0);
-                box-shadow: var(--shadow-lg);
-            }
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+            text-align: center;
         }
 
-        #new-chat-btn {
-            background: linear-gradient(45deg, var(--gradient-1), var(--gradient-2));
+        .logo {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 28px;
+            font-weight: 900;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .logo i {
+            color: var(--ai-msg);
+        }
+
+        .user-section {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 15px;
+            background-color: rgba(0, 200, 150, 0.1);
+            border-radius: 10px;
+            margin-top: 10px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color), var(--user-msg));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .user-info h3 {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .user-info p {
+            font-size: 12px;
+            color: var(--gray-text);
+        }
+
+        .new-chat-btn {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
             color: white;
             border: none;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            cursor: pointer;
+            padding: 12px 20px;
+            border-radius: 10px;
             font-weight: 600;
-            transition: var(--transition);
-            box-shadow: var(--shadow-sm);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin: 15px 20px;
+            transition: all 0.3s ease;
         }
 
-        #new-chat-btn:hover {
+        .new-chat-btn:hover {
             transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
+            box-shadow: 0 5px 15px rgba(0, 200, 150, 0.3);
         }
 
-        #chat-list {
+        .chat-history {
             flex: 1;
             overflow-y: auto;
-            scrollbar-width: thin;
-            scrollbar-color: var(--primary) var(--background);
+            padding: 10px;
+        }
+
+        .chat-history-title {
+            font-size: 14px;
+            color: var(--gray-text);
+            margin: 15px 10px 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .chat-item {
-            padding: 12px;
-            margin: 8px 0;
-            border-radius: 8px;
+            padding: 12px 15px;
+            border-radius: 10px;
+            margin-bottom: 8px;
             cursor: pointer;
+            transition: all 0.2s ease;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: var(--background-tertiary);
-            transition: var(--transition);
-            transform-style: preserve-3d;
         }
 
         .chat-item:hover {
-            background: rgba(255, 255, 255, 0.05);
-            transform: translateZ(8px);
-            box-shadow: var(--shadow-sm);
+            background-color: rgba(255, 255, 255, 0.05);
         }
 
         .chat-item.active {
-            background: rgba(45, 109, 246, 0.15);
-            border-left: 3px solid var(--primary);
+            background-color: rgba(0, 200, 150, 0.15);
+            border-left: 3px solid var(--primary-color);
         }
 
-        .chat-delete {
-            color: #ff4444;
-            display: none;
-            font-weight: bold;
-            transition: var(--transition);
-        }
-
-        .chat-item:hover .chat-delete {
-            display: block;
-        }
-
-        .chat-delete:hover {
-            transform: scale(1.2);
-        }
-
-        /* Ana İçerik */
-        #main-content {
+        .chat-item-content {
             flex: 1;
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
             overflow: hidden;
         }
 
-        .menu-container {
-            position: relative;
-        }
-
-        #menu-btn {
-            background: none;
-            border: none;
-            color: var(--text-primary);
-            font-size: 24px;
-            cursor: pointer;
-            padding: 8px;
-            border-radius: 50%;
-            transition: var(--transition);
-        }
-
-        #menu-btn:hover {
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .dropdown-menu {
-            position: absolute;
-            right: 0;
-            top: 50px;
-            background: var(--background-secondary);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
-            min-width: 200px;
-            display: none;
-            z-index: 1000;
-            box-shadow: var(--shadow-lg);
+        .chat-item-title {
+            font-weight: 500;
+            font-size: 14px;
+            white-space: nowrap;
             overflow: hidden;
+            text-overflow: ellipsis;
         }
 
-        .dropdown-menu.show {
-            display: block;
-            animation: fadeIn 0.2s ease-out;
+        .chat-item-date {
+            font-size: 11px;
+            color: var(--gray-text);
+            margin-top: 3px;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .menu-item {
-            padding: 12px 16px;
-            cursor: pointer;
-            color: var(--text-primary);
-            transition: var(--transition);
-        }
-
-        .menu-item:hover {
-            background: rgba(255, 255, 255, 0.05);
-        }
-
-        /* Sohbet Alanı - GÜNCELLENMİŞ KISIM */
-        #chat-container {
-            flex: 1;
+        .chat-item-actions {
             display: flex;
-            flex-direction: column;
-            width: 100%;
-            padding: 0;
-            box-sizing: border-box;
-            height: calc(100vh - 80px);
-            overflow: hidden;
-            background: linear-gradient(135deg, rgba(45, 109, 246, 0.1) 0%, rgba(76, 175, 80, 0.1) 100%);
-        }
-
-        #chat-history {
-            flex: 1;
-            overflow-y: auto;
-            padding: 20px;
-            width: 100%;
-            box-sizing: border-box;
-        }
-
-        .message {
-            margin: 20px 0;
-            display: flex;
-            gap: 20px;
+            gap: 8px;
             opacity: 0;
-            transform: translateY(20px);
-            animation: messageAppear 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            transition: opacity 0.2s ease;
         }
 
-        @keyframes messageAppear {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .chat-item:hover .chat-item-actions {
+            opacity: 1;
         }
 
-        .message.user {
-            flex-direction: row-reverse;
-        }
-
-        .message-header {
-            font-size: 0.9em;
-            color: var(--text-secondary);
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            justify-content: flex-end; /* Sağa hizalı */
-        }
-
-        .message-content {
-            max-width: 90%;
-            padding: 14px 18px;
-            border-radius: 12px;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-            line-height: 1.5;
-            transition: var(--transition);
-        }
-
-        .message.user .message-content {
-            background: var(--background-secondary);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: var(--text-primary);
-            box-shadow: var(--shadow-sm);
-        }
-
-        .message.marulgpt .message-content {
-            background: rgba(45, 109, 246, 0.15);
-            border: 1px solid rgba(45, 109, 246, 0.2);
-            color: var(--text-primary);
-        }
-
-        #chat-input {
-            padding: 15px 20px;
-            background: var(--background);
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .input-container {
-            max-width: 100%;
-            margin: 0 auto;
-            position: relative;
-            padding: 0 20px;
-        }
-
-        #user-input {
-            width: 100%;
-            padding: 14px 50px 14px 18px;
-            background: var(--background-secondary);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            color: var(--text-primary);
-            font-size: 16px;
-            transition: var(--transition);
-            box-shadow: var(--shadow-sm);
-        }
-
-        #user-input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 2px rgba(45, 109, 246, 0.2);
-        }
-
-        #send-btn {
-            position: absolute;
-            right: 30px;
-            top: 50%;
-            transform: translateY(-50%);
+        .chat-item-action-btn {
             background: none;
             border: none;
-            color: var(--text-secondary);
+            color: var(--gray-text);
             cursor: pointer;
-            font-size: 20px;
-            transition: var(--transition);
+            font-size: 12px;
+            transition: color 0.2s ease;
         }
 
-        #send-btn:hover {
-            color: var(--primary);
-            transform: translateY(-50%) scale(1.1);
+        .chat-item-action-btn:hover {
+            color: var(--light-text);
         }
 
-        /* Typing Indicator */
-        .typing-indicator {
-            display: none;
-            padding: 15px;
-            justify-content: center;
-            align-items: center;
-            gap: 8px;
-            margin: 20px 0;
-        }
-
-        .typing-indicator.active {
+        .sidebar-footer {
+            padding: 20px;
+            border-top: 1px solid var(--border-color);
             display: flex;
+            flex-direction: column;
+            gap: 15px;
         }
 
-        .typing-dot {
-            width: 10px;
-            height: 10px;
-            background: var(--primary);
-            border-radius: 50%;
-            animation: typing 1.4s infinite ease-in-out;
-        }
-
-        @keyframes typing {
-            0%, 60%, 100% { transform: translateY(0); opacity: 0.6; }
-            30% { transform: translateY(-8px); opacity: 1; }
-        }
-
-        /* Auth Screen */
-        .auth-container {
-            max-width: 400px;
-            margin: auto;
-            padding: 40px;
-            background: var(--background-secondary);
-            border-radius: 16px;
-            text-align: center;
-            box-shadow: var(--shadow-lg);
-            animation: fadeInUp 0.5s ease;
-        }
-
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .auth-container h2 {
-            margin-bottom: 30px;
-            color: var(--text-primary);
-            font-weight: 600;
-        }
-
-        .auth-container input {
-            width: 100%;
-            padding: 14px;
-            margin-bottom: 15px;
-            background: var(--background);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
-            color: var(--text-primary);
-            font-size: 16px;
-            transition: var(--transition);
-        }
-
-        .auth-container input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 2px rgba(45, 109, 246, 0.2);
-        }
-
-        .auth-container button {
-            width: 100%;
-            padding: 14px;
-            background: linear-gradient(45deg, var(--gradient-1), var(--gradient-2));
+        .sidebar-toggle {
+            display: none;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background-color: var(--card-bg);
             border: none;
-            border-radius: 8px;
-            color: white;
-            font-weight: 600;
+            color: var(--light-text);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
             cursor: pointer;
-            transition: var(--transition);
-            box-shadow: var(--shadow-sm);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
         }
 
-        .auth-container button:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
+        /* Ana Sohbet Alanı */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            position: relative;
         }
 
-        #auth-toggle {
-            margin-top: 20px;
-            color: var(--text-secondary);
+        .chat-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 5;
+        }
+
+        .chat-title-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chat-title {
+            font-size: 20px;
+            font-weight: 600;
+            max-width: 300px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .chat-title-edit {
+            background: none;
+            border: none;
+            color: var(--gray-text);
+            cursor: pointer;
             font-size: 14px;
         }
 
-        #auth-toggle a {
-            color: var(--primary-light);
-            text-decoration: none;
-            font-weight: 500;
-            transition: var(--transition);
+        .chat-actions {
+            display: flex;
+            gap: 15px;
         }
 
-        #auth-toggle a:hover {
-            text-decoration: underline;
+        .chat-action-btn {
+            background: none;
+            border: none;
+            color: var(--gray-text);
+            cursor: pointer;
+            font-size: 18px;
+            transition: color 0.2s ease;
         }
 
-        /* Modaller */
-        .modal {
-            display: none;
-            position: fixed;
+        .chat-action-btn:hover {
+            color: var(--primary-color);
+        }
+
+        .messages-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .message {
+            display: flex;
+            max-width: 80%;
+            animation: messageAppear 0.3s ease;
+        }
+
+        @keyframes messageAppear {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message.user {
+            align-self: flex-end;
+        }
+
+        .message.ai {
+            align-self: flex-start;
+        }
+
+        .message-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+
+        .message.user .message-avatar {
+            background: linear-gradient(135deg, var(--user-msg), #1d4ed8);
+            margin-left: 10px;
+        }
+
+        .message.ai .message-avatar {
+            background: linear-gradient(135deg, var(--ai-msg), #047857);
+            margin-right: 10px;
+        }
+
+        .message-content {
+            padding: 15px;
+            border-radius: 15px;
+            position: relative;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .message.user .message-content {
+            background-color: var(--user-msg);
+            border-bottom-right-radius: 5px;
+        }
+
+        .message.ai .message-content {
+            background-color: var(--card-bg);
+            border-bottom-left-radius: 5px;
+            border: 1px solid var(--border-color);
+        }
+
+        .message-text {
+            line-height: 1.5;
+            font-size: 15px;
+        }
+
+        .message-time {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.7);
+            text-align: right;
+            margin-top: 5px;
+        }
+
+        .message.ai .message-time {
+            color: var(--gray-text);
+        }
+
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 10px 15px;
+            background-color: var(--card-bg);
+            border-radius: 15px;
+            border: 1px solid var(--border-color);
+            width: fit-content;
+            margin-left: 46px;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            animation: typingAnimation 1.5s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(1) { animation-delay: 0s; }
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typingAnimation {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-10px); }
+        }
+
+        /* Giriş Formu */
+        .auth-container {
+            position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.5);
-            justify-content: center;
+            background-color: var(--dark-bg);
+            display: flex;
             align-items: center;
-            z-index: 1002;
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
-            animation: fadeIn 0.3s ease;
+            justify-content: center;
+            z-index: 100;
+            transition: opacity 0.5s ease;
         }
 
-        .modal-content {
-            background: var(--background-secondary);
-            padding: 25px;
-            border-radius: 12px;
-            min-width: 300px;
-            max-width: 90%;
-            box-shadow: var(--shadow-lg);
-            transform: scale(0.95);
-            animation: modalAppear 0.3s ease forwards;
+        .auth-container.hidden {
+            opacity: 0;
+            pointer-events: none;
         }
 
-        @keyframes modalAppear {
-            to { transform: scale(1); }
-        }
-
-        .modal h3 {
-            margin-top: 0;
-            color: var(--text-primary);
-            font-size: 1.5rem;
-        }
-
-        .modal input {
+        .auth-box {
+            background-color: var(--card-bg);
+            border-radius: 20px;
+            padding: 40px;
             width: 100%;
-            margin: 12px 0;
-            padding: 12px;
-            background: var(--background);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
-            color: var(--text-primary);
-            font-size: 16px;
+            max-width: 450px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color);
+            animation: authBoxAppear 0.5s ease;
         }
 
-        .modal input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 2px rgba(45, 109, 246, 0.2);
+        @keyframes authBoxAppear {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .modal button {
-            width: 100%;
-            padding: 12px;
-            background: var(--primary);
+        .auth-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 32px;
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 30px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .auth-tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            background: none;
             border: none;
-            border-radius: 8px;
-            color: white;
+            color: var(--gray-text);
             font-weight: 600;
             cursor: pointer;
-            transition: var(--transition);
+            transition: all 0.3s ease;
+            position: relative;
         }
 
-        .modal button:hover {
-            background: var(--primary-light);
+        .auth-tab.active {
+            color: var(--primary-color);
+        }
+
+        .auth-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--primary-color);
+            border-radius: 3px 3px 0 0;
+        }
+
+        .auth-form {
+            display: none;
+        }
+
+        .auth-form.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--light-text);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 14px;
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            color: var(--light-text);
+            font-size: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 200, 150, 0.1);
+        }
+
+        .auth-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .auth-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 200, 150, 0.2);
+        }
+
+        .auth-footer {
+            text-align: center;
+            margin-top: 25px;
+            color: var(--gray-text);
+            font-size: 14px;
+        }
+
+        .auth-footer a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        /* Girdi Alanı */
+        .input-container {
+            padding: 20px;
+            border-top: 1px solid var(--border-color);
+            background-color: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(10px);
+        }
+
+        .input-wrapper {
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+        }
+
+        .message-input {
+            flex: 1;
+            padding: 15px 20px;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 15px;
+            color: var(--light-text);
+            font-size: 15px;
+            resize: none;
+            min-height: 56px;
+            max-height: 150px;
+            transition: all 0.3s ease;
+        }
+
+        .message-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 200, 150, 0.1);
+        }
+
+        .send-btn {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            border: none;
+            border-radius: 15px;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .send-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 200, 150, 0.3);
+        }
+
+        .input-features {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            font-size: 13px;
+            color: var(--gray-text);
+        }
+
+        .input-features span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Animasyonlar */
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(0, 200, 150, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(0, 200, 150, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 200, 150, 0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         /* Responsive Tasarım */
         @media (max-width: 1024px) {
-            .message-content {
-                max-width: 85% !important;
+            .sidebar {
+                position: absolute;
+                height: 100%;
+                transform: translateX(-100%);
+            }
+            
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            
+            .sidebar-toggle {
+                display: flex;
+            }
+            
+            .message {
+                max-width: 90%;
             }
         }
 
         @media (max-width: 768px) {
-            #sidebar {
-                width: 280px;
-            }
-            
-            .message-content {
-                max-width: 90% !important;
-                padding: 12px 16px !important;
-            }
-            
-            #user-input {
-                padding: 12px 45px 12px 16px !important;
-            }
-            
-            #chat-history {
-                padding: 15px;
-            }
-            
-            .input-container {
-                padding: 0 15px;
-            }
-            
-            #send-btn {
-                right: 25px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .auth-container {
-                padding: 30px 20px;
-                width: 90%;
+            .auth-box {
+                margin: 20px;
+                padding: 30px;
             }
             
             .logo {
-                font-size: 1.5rem;
+                font-size: 24px;
+            }
+            
+            .chat-title {
+                max-width: 200px;
             }
             
             .message {
-                gap: 12px;
+                max-width: 95%;
             }
             
-            .message-content {
-                max-width: 95% !important;
-                padding: 10px 14px !important;
-            }
-            
-            #chat-input {
-                padding: 15px;
-            }
-            
-            #send-btn {
-                right: 20px;
+            .message-avatar {
+                width: 32px;
+                height: 32px;
+                font-size: 14px;
             }
         }
 
-        /* Scrollbar */
+        /* Özel Scrollbar */
         ::-webkit-scrollbar {
             width: 8px;
-            height: 8px;
         }
 
         ::-webkit-scrollbar-track {
-            background: var(--background);
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
         }
 
         ::-webkit-scrollbar-thumb {
-            background: var(--primary);
-            border-radius: 4px;
+            background: var(--primary-color);
+            border-radius: 10px;
         }
 
         ::-webkit-scrollbar-thumb:hover {
-            background: var(--primary-light);
+            background: var(--primary-dark);
         }
     </style>
 </head>
 <body>
-    <!-- Auth Screen -->
-    <div id="auth-container" class="auth-container">
-        <h2>Giriş Yap</h2>
-        <input type="text" id="username" placeholder="Kullanıcı Adı">
-        <input type="password" id="password" placeholder="Şifre">
-        <button id="auth-btn">Giriş Yap</button>
-        <p id="auth-toggle">Hesabınız yok mu? <a href="#" id="toggle-link">Kayıt Ol</a></p>
-    </div>
+    <div class="app-container">
+        <!-- Sidebar Toggle (Mobil için) -->
+        <button class="sidebar-toggle" id="sidebarToggle">
+            <i class="fas fa-bars"></i>
+        </button>
 
-    <!-- Main Interface -->
-    <div id="main-interface" style="display:none;">
-        <div id="sidebar">
-            <button id="new-chat-btn">+ Yeni Sohbet</button>
-            <div id="chat-list"></div>
-        </div>
-
-        <div id="main-content">
-            <header>
-                <h1 class="logo">MarulGPT</h1>
-                <div class="menu-container">
-                    <button id="menu-btn">⋮</button>
-                    <div class="dropdown-menu" id="dropdown-menu">
-                        <div class="menu-item" id="account-info">Hesap Bilgileri</div>
-                        <div class="menu-item" id="upgrade-account">Hesabı Yükselt</div>
-                        <div class="menu-item" id="logout-btn">Çıkış Yap</div>
-                    </div>
+        <!-- Sol Sidebar - Sohbet Geçmişi -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-robot"></i>
+                    <span>MarulGPT</span>
                 </div>
-            </header>
-
-            <div id="chat-container">
-                <div id="chat-history"></div>
-                <div class="typing-indicator">
-                    <div class="typing-dot"></div>
-                    <div class="typing-dot" style="animation-delay: 0.2s"></div>
-                    <div class="typing-dot" style="animation-delay: 0.4s"></div>
-                </div>
-                <div id="chat-input">
-                    <div class="input-container">
-                        <input type="text" id="user-input" placeholder="MarulGPT'ye sorun...">
-                        <button id="send-btn">➤</button>
+                <div class="user-section">
+                    <div class="user-avatar" id="userAvatar">A</div>
+                    <div class="user-info">
+                        <h3 id="userName">Ahmet</h3>
+                        <p id="userStatus">Çevrimiçi</p>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
 
-    <!-- Modals -->
-    <div id="account-modal" class="modal">
-        <div class="modal-content">
-            <h3>Hesap Bilgileri</h3>
-            <div id="account-details"></div>
-            <div id="password-change">
-                <input type="password" id="current-password" placeholder="Mevcut Şifre">
-                <input type="password" id="new-password" placeholder="Yeni Şifre">
-                <button id="save-password">Şifreyi Kaydet</button>
+            <button class="new-chat-btn" id="newChatBtn">
+                <i class="fas fa-plus"></i>
+                <span>Yeni Sohbet</span>
+            </button>
+
+            <div class="chat-history">
+                <div class="chat-history-title">Sohbet Geçmişi</div>
+                <div id="chatHistoryList">
+                    <!-- Sohbet öğeleri buraya dinamik olarak eklenecek -->
+                </div>
+            </div>
+
+            <div class="sidebar-footer">
+                <button class="chat-action-btn" id="clearHistoryBtn" title="Tüm geçmişi temizle">
+                    <i class="fas fa-trash-alt"></i>
+                    <span>Geçmişi Temizle</span>
+                </button>
+                <button class="chat-action-btn" id="logoutBtn" title="Çıkış yap">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Çıkış Yap</span>
+                </button>
             </div>
         </div>
-    </div>
 
-    <div id="upgrade-modal" class="modal">
-        <div class="modal-content">
-            <h3>Premium Yükseltme</h3>
-            <input type="text" id="upgrade-code" placeholder="Yükseltme Kodu">
-            <button id="submit-upgrade">Yükselt</button>
+        <!-- Ana İçerik Alanı -->
+        <div class="main-content">
+            <!-- Sohbet Başlığı -->
+            <div class="chat-header">
+                <div class="chat-title-container">
+                    <h2 class="chat-title" id="currentChatTitle">Yeni Sohbet</h2>
+                    <button class="chat-title-edit" id="editChatTitleBtn" title="Sohbet adını düzenle">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                </div>
+                <div class="chat-actions">
+                    <button class="chat-action-btn" id="exportChatBtn" title="Sohbeti dışa aktar">
+                        <i class="fas fa-download"></i>
+                    </button>
+                    <button class="chat-action-btn" id="shareChatBtn" title="Sohbeti paylaş">
+                        <i class="fas fa-share-alt"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mesajlar Alanı -->
+            <div class="messages-container" id="messagesContainer">
+                <!-- Mesajlar buraya dinamik olarak eklenecek -->
+                <div class="welcome-message">
+                    <div class="message ai">
+                        <div class="message-avatar">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="message-content">
+                            <div class="message-text">
+                                Merhaba! Ben <strong>MarulGPT</strong>. Size nasıl yardımcı olabilirim? Adınızı öğrenmek isterim!
+                            </div>
+                            <div class="message-time">Şimdi</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mesaj Giriş Alanı -->
+            <div class="input-container">
+                <div class="input-wrapper">
+                    <textarea class="message-input" id="messageInput" placeholder="MarulGPT'ye bir mesaj yazın..."></textarea>
+                    <button class="send-btn pulse" id="sendMessageBtn">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+                <div class="input-features">
+                    <span><i class="fas fa-lightbulb"></i> MarulGPT bağlamı hatırlar</span>
+                    <span><i class="fas fa-history"></i> Sohbet geçmişiniz kaydedilir</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Giriş/Kayıt Formu -->
+        <div class="auth-container" id="authContainer">
+            <div class="auth-box">
+                <h1 class="auth-title">
+                    <i class="fas fa-robot"></i>
+                    MarulGPT
+                </h1>
+                
+                <div class="auth-tabs">
+                    <button class="auth-tab active" id="loginTab">Giriş Yap</button>
+                    <button class="auth-tab" id="registerTab">Hesap Oluştur</button>
+                </div>
+                
+                <!-- Giriş Formu -->
+                <form class="auth-form active" id="loginForm">
+                    <div class="form-group">
+                        <label class="form-label" for="loginEmail">E-posta</label>
+                        <input type="email" class="form-input" id="loginEmail" placeholder="E-posta adresinizi girin" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="loginPassword">Şifre</label>
+                        <input type="password" class="form-input" id="loginPassword" placeholder="Şifrenizi girin" required>
+                    </div>
+                    <button type="submit" class="auth-btn">Giriş Yap</button>
+                    <div class="auth-footer">
+                        Hesabınız yok mu? <a href="#" id="switchToRegister">Kayıt Olun</a>
+                    </div>
+                </form>
+                
+                <!-- Kayıt Formu -->
+                <form class="auth-form" id="registerForm">
+                    <div class="form-group">
+                        <label class="form-label" for="registerName">Adınız</label>
+                        <input type="text" class="form-input" id="registerName" placeholder="Adınızı girin" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="registerEmail">E-posta</label>
+                        <input type="email" class="form-input" id="registerEmail" placeholder="E-posta adresinizi girin" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="registerPassword">Şifre</label>
+                        <input type="password" class="form-input" id="registerPassword" placeholder="Şifrenizi oluşturun" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="registerPasswordConfirm">Şifre Tekrar</label>
+                        <input type="password" class="form-input" id="registerPasswordConfirm" placeholder="Şifrenizi tekrar girin" required>
+                    </div>
+                    <button type="submit" class="auth-btn">Hesap Oluştur</button>
+                    <div class="auth-footer">
+                        Zaten hesabınız var mı? <a href="#" id="switchToLogin">Giriş Yapın</a>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 
     <script>
-        // Veritabanı Simülasyonu
-        let users = JSON.parse(localStorage.getItem('users')) || {
-            'admin': {
-                password: 'admin123',
-                type: 'owner',
-                chats: [],
-                createdAt: new Date().toISOString()
-            }
+        // Groq API Anahtarı
+        const GROQ_API_KEY = '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';
+        
+        // Uygulama durumu
+        const state = {
+            currentUser: null,
+            currentChatId: null,
+            chats: [],
+            isAuthenticated: false,
+            isTyping: false,
+            currentContext: [],
+            userName: 'Ahmet'
         };
 
-        let currentUser = null;
-        let currentChatId = null;
-        const PREMIUM_CODE = 'PREMIUM123';
-        const DAILY_LIMIT = 15;
-        const RESET_TIME = 2 * 60 * 60 * 1000; // 2 saat
-        let isRegistering = false;
-        let sidebarOpen = false;
+        // DOM Elementleri
+        const elements = {
+            authContainer: document.getElementById('authContainer'),
+            loginForm: document.getElementById('loginForm'),
+            registerForm: document.getElementById('registerForm'),
+            loginTab: document.getElementById('loginTab'),
+            registerTab: document.getElementById('registerTab'),
+            switchToRegister: document.getElementById('switchToRegister'),
+            switchToLogin: document.getElementById('switchToLogin'),
+            sidebarToggle: document.getElementById('sidebarToggle'),
+            sidebar: document.getElementById('sidebar'),
+            newChatBtn: document.getElementById('newChatBtn'),
+            chatHistoryList: document.getElementById('chatHistoryList'),
+            messagesContainer: document.getElementById('messagesContainer'),
+            messageInput: document.getElementById('messageInput'),
+            sendMessageBtn: document.getElementById('sendMessageBtn'),
+            currentChatTitle: document.getElementById('currentChatTitle'),
+            editChatTitleBtn: document.getElementById('editChatTitleBtn'),
+            userAvatar: document.getElementById('userAvatar'),
+            userName: document.getElementById('userName'),
+            clearHistoryBtn: document.getElementById('clearHistoryBtn'),
+            logoutBtn: document.getElementById('logoutBtn'),
+            exportChatBtn: document.getElementById('exportChatBtn'),
+            shareChatBtn: document.getElementById('shareChatBtn')
+        };
 
-        // Yardımcı Fonksiyonlar
-        function saveUsers() {
-            localStorage.setItem('users', JSON.stringify(users));
-        }
+        // Sayfa yüklendiğinde
+        document.addEventListener('DOMContentLoaded', function() {
+            initApp();
+            setupEventListeners();
+        });
 
-        function createChat() {
-            const chatId = Date.now().toString();
-            users[currentUser].chats.push({
-                id: chatId,
-                title: `Sohbet ${users[currentUser].chats.length + 1}`,
-                messages: [],
-                createdAt: new Date().toISOString()
-            });
-            saveUsers();
-            return chatId;
-        }
-
-        function updateChatList() {
-            const chatList = document.getElementById('chat-list');
-            chatList.innerHTML = '';
-            users[currentUser].chats.forEach(chat => {
-                const div = document.createElement('div');
-                div.className = `chat-item ${currentChatId === chat.id ? 'active' : ''}`;
-                div.innerHTML = `
-                    <span>${chat.title}</span>
-                    <span class="chat-delete" onclick="deleteChat('${chat.id}')">×</span>
-                `;
-                div.addEventListener('click', () => loadChat(chat.id));
-                chatList.appendChild(div);
-            });
-        }
-
-        function loadChat(chatId) {
-            currentChatId = chatId;
-            const chat = users[currentUser].chats.find(c => c.id === chatId);
-            const history = document.getElementById('chat-history');
-            history.innerHTML = '';
-            chat.messages.forEach(msg => addMessage(msg.role, msg.content, false));
-            updateChatList();
+        // Uygulamayı başlat
+        function initApp() {
+            // localStorage'dan kullanıcı bilgilerini yükle
+            const savedUser = localStorage.getItem('marulgpt_user');
+            const savedChats = localStorage.getItem('marulgpt_chats');
             
-            // Scroll to bottom
-            setTimeout(() => {
-                history.scrollTop = history.scrollHeight;
-            }, 50);
-        }
-
-        function deleteChat(chatId) {
-            if (confirm('Bu sohbeti silmek istediğinize emin misiniz?')) {
-                users[currentUser].chats = users[currentUser].chats.filter(c => c.id !== chatId);
-                saveUsers();
-                updateChatList();
-                if(currentChatId === chatId) {
-                    currentChatId = createChat();
-                    loadChat(currentChatId);
-                }
-            }
-        }
-
-        // Mesaj İşlemleri
-        function addMessage(role, content, saveToHistory = true) {
-            const history = document.getElementById('chat-history');
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `message ${role}`;
-            messageDiv.innerHTML = `
-                <div class="message-header">${role === 'user' ? currentUser : 'MarulGPT'}</div>
-                <div class="message-content">${role === 'user' ? content : ''}</div>
-            `;
-            history.appendChild(messageDiv);
-            
-            if (role === 'marulgpt') {
-                typeResponse(messageDiv.querySelector('.message-content'), content);
-            }
-
-            if(saveToHistory) {
-                const chat = users[currentUser].chats.find(c => c.id === currentChatId);
-                chat.messages.push({ role, content });
-                chat.title = content.substring(0, 50);
-                saveUsers();
-                updateChatList();
-            }
-            
-            // Scroll to bottom
-            setTimeout(() => {
-                history.scrollTop = history.scrollHeight;
-            }, 50);
-        }
-
-        // Yazma Efekti
-        function typeResponse(element, text) {
-            let index = 0;
-            element.textContent = '';
-            const interval = setInterval(() => {
-                if (index < text.length) {
-                    element.textContent += text[index++];
-                    element.parentElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                } else {
-                    clearInterval(interval);
-                }
-            }, 20);
-        }
-
-        // Auth İşlemleri
-        document.getElementById('auth-btn').addEventListener('click', () => {
-            const username = document.getElementById('username').value.trim();
-            const password = document.getElementById('password').value;
-
-            if(isRegistering) {
-                if(!username || !password) return alert('Kullanıcı adı ve şifre gerekli!');
-                if(users[username]) return alert('Kullanıcı zaten var!');
-                users[username] = {
-                    password,
-                    type: 'normal',
-                    chats: [],
-                    questionCount: 0,
-                    lastReset: Date.now(),
-                    createdAt: new Date().toISOString()
-                };
-                saveUsers();
-                alert('Kayıt başarılı! Giriş yapabilirsiniz.');
-                toggleAuthMode(); // Kayıt sonrası giriş moduna geç
-            } else {
-                const user = users[username];
-                if(!user || user.password !== password) return alert('Geçersiz bilgiler!');
+            if (savedUser) {
+                state.currentUser = JSON.parse(savedUser);
+                state.isAuthenticated = true;
+                state.userName = state.currentUser.name;
                 
-                // Limit kontrolü
-                if(user.type === 'normal') {
-                    const timeSinceReset = Date.now() - user.lastReset;
-                    if(timeSinceReset > RESET_TIME) {
-                        user.lastReset = Date.now();
-                        user.questionCount = 0;
+                // Kullanıcı arayüzünü güncelle
+                elements.userName.textContent = state.userName;
+                elements.userAvatar.textContent = state.userName.charAt(0).toUpperCase();
+                
+                // Giriş ekranını gizle
+                elements.authContainer.classList.add('hidden');
+            } else {
+                // Giriş ekranını göster
+                elements.authContainer.classList.remove('hidden');
+            }
+            
+            // Sohbet geçmişini yükle
+            if (savedChats) {
+                state.chats = JSON.parse(savedChats);
+                renderChatHistory();
+                
+                // Son sohbeti aç
+                if (state.chats.length > 0) {
+                    const lastChat = state.chats[state.chats.length - 1];
+                    openChat(lastChat.id);
+                }
+            } else {
+                // Yeni bir sohbet oluştur
+                createNewChat();
+            }
+        }
+
+        // Event listener'ları kur
+        function setupEventListeners() {
+            // Giriş/Kayıt formları
+            elements.loginTab.addEventListener('click', () => switchAuthTab('login'));
+            elements.registerTab.addEventListener('click', () => switchAuthTab('register'));
+            elements.switchToRegister.addEventListener('click', (e) => {
+                e.preventDefault();
+                switchAuthTab('register');
+            });
+            elements.switchToLogin.addEventListener('click', (e) => {
+                e.preventDefault();
+                switchAuthTab('login');
+            });
+            
+            elements.loginForm.addEventListener('submit', handleLogin);
+            elements.registerForm.addEventListener('submit', handleRegister);
+            
+            // Sidebar toggle (mobil için)
+            elements.sidebarToggle.addEventListener('click', toggleSidebar);
+            
+            // Sohbet işlemleri
+            elements.newChatBtn.addEventListener('click', createNewChat);
+            elements.messageInput.addEventListener('keydown', handleMessageInputKeydown);
+            elements.sendMessageBtn.addEventListener('click', sendMessage);
+            elements.editChatTitleBtn.addEventListener('click', editChatTitle);
+            
+            // Sohbet geçmişi işlemleri
+            elements.clearHistoryBtn.addEventListener('click', clearChatHistory);
+            elements.logoutBtn.addEventListener('click', handleLogout);
+            elements.exportChatBtn.addEventListener('click', exportChat);
+            elements.shareChatBtn.addEventListener('click', shareChat);
+            
+            // Mesaj giriş alanı otomatik yüksekliği
+            elements.messageInput.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = (this.scrollHeight) + 'px';
+            });
+        }
+
+        // Giriş/Kayıt tab'ları arasında geçiş
+        function switchAuthTab(tab) {
+            // Tüm tab'ları ve formları sıfırla
+            elements.loginTab.classList.remove('active');
+            elements.registerTab.classList.remove('active');
+            elements.loginForm.classList.remove('active');
+            elements.registerForm.classList.remove('active');
+            
+            // Seçilen tab'ı aktif yap
+            if (tab === 'login') {
+                elements.loginTab.classList.add('active');
+                elements.loginForm.classList.add('active');
+            } else {
+                elements.registerTab.classList.add('active');
+                elements.registerForm.classList.add('active');
+            }
+        }
+
+        // Giriş işlemi
+        function handleLogin(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            // Basit doğrulama
+            if (!email || !password) {
+                showNotification('Lütfen tüm alanları doldurun', 'error');
+                return;
+            }
+            
+            // Demo amaçlı - normalde sunucu doğrulaması yapılır
+            // localStorage'da kullanıcı var mı kontrol et
+            const savedUser = localStorage.getItem('marulgpt_user');
+            if (savedUser) {
+                const user = JSON.parse(savedUser);
+                if (user.email === email && user.password === password) {
+                    // Giriş başarılı
+                    state.currentUser = user;
+                    state.isAuthenticated = true;
+                    state.userName = user.name;
+                    
+                    // Kullanıcı arayüzünü güncelle
+                    elements.userName.textContent = state.userName;
+                    elements.userAvatar.textContent = state.userName.charAt(0).toUpperCase();
+                    
+                    // Giriş ekranını gizle
+                    elements.authContainer.classList.add('hidden');
+                    
+                    // Bildirim göster
+                    showNotification(`Hoş geldiniz, ${state.userName}!`, 'success');
+                    
+                    // Formu temizle
+                    elements.loginForm.reset();
+                    
+                    // Sohbet geçmişini yükle
+                    const savedChats = localStorage.getItem('marulgpt_chats');
+                    if (savedChats) {
+                        state.chats = JSON.parse(savedChats);
+                        renderChatHistory();
+                    }
+                } else {
+                    showNotification('E-posta veya şifre hatalı', 'error');
+                }
+            } else {
+                // Demo kullanıcısı oluştur
+                state.currentUser = {
+                    name: 'Ahmet',
+                    email: email,
+                    password: password
+                };
+                
+                state.isAuthenticated = true;
+                state.userName = 'Ahmet';
+                
+                // Kullanıcıyı kaydet
+                localStorage.setItem('marulgpt_user', JSON.stringify(state.currentUser));
+                
+                // Kullanıcı arayüzünü güncelle
+                elements.userName.textContent = state.userName;
+                elements.userAvatar.textContent = state.userName.charAt(0).toUpperCase();
+                
+                // Giriş ekranını gizle
+                elements.authContainer.classList.add('hidden');
+                
+                // Bildirim göster
+                showNotification(`Hoş geldiniz, ${state.userName}!`, 'success');
+                
+                // Formu temizle
+                elements.loginForm.reset();
+                
+                // Yeni sohbet oluştur
+                createNewChat();
+            }
+        }
+
+        // Kayıt işlemi
+        function handleRegister(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('registerName').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const passwordConfirm = document.getElementById('registerPasswordConfirm').value;
+            
+            // Doğrulamalar
+            if (!name || !email || !password || !passwordConfirm) {
+                showNotification('Lütfen tüm alanları doldurun', 'error');
+                return;
+            }
+            
+            if (password !== passwordConfirm) {
+                showNotification('Şifreler eşleşmiyor', 'error');
+                return;
+            }
+            
+            if (password.length < 6) {
+                showNotification('Şifre en az 6 karakter olmalıdır', 'error');
+                return;
+            }
+            
+            // Kullanıcı oluştur
+            state.currentUser = {
+                name: name,
+                email: email,
+                password: password
+            };
+            
+            state.isAuthenticated = true;
+            state.userName = name;
+            
+            // Kullanıcıyı kaydet
+            localStorage.setItem('marulgpt_user', JSON.stringify(state.currentUser));
+            
+            // Kullanıcı arayüzünü güncelle
+            elements.userName.textContent = state.userName;
+            elements.userAvatar.textContent = state.userName.charAt(0).toUpperCase();
+            
+            // Giriş ekranını gizle
+            elements.authContainer.classList.add('hidden');
+            
+            // Bildirim göster
+            showNotification(`Hesabınız oluşturuldu, hoş geldiniz ${state.userName}!`, 'success');
+            
+            // Formu temizle
+            elements.registerForm.reset();
+            
+            // Yeni sohbet oluştur
+            createNewChat();
+        }
+
+        // Sidebar'ı aç/kapa (mobil için)
+        function toggleSidebar() {
+            elements.sidebar.classList.toggle('open');
+        }
+
+        // Yeni sohbet oluştur
+        function createNewChat() {
+            const chatId = 'chat_' + Date.now();
+            const chatTitle = 'Yeni Sohbet';
+            
+            const newChat = {
+                id: chatId,
+                title: chatTitle,
+                messages: [],
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString()
+            };
+            
+            state.chats.push(newChat);
+            state.currentChatId = chatId;
+            
+            // Sohbet geçmişini güncelle
+            renderChatHistory();
+            
+            // Sohbet başlığını güncelle
+            elements.currentChatTitle.textContent = chatTitle;
+            
+            // Mesajları temizle
+            clearMessages();
+            
+            // Karşılama mesajı göster
+            showWelcomeMessage();
+            
+            // Bağlamı temizle
+            state.currentContext = [];
+            
+            // LocalStorage'a kaydet
+            saveChatsToLocalStorage();
+            
+            // Mobilde sidebar'ı kapat
+            if (window.innerWidth <= 1024) {
+                elements.sidebar.classList.remove('open');
+            }
+        }
+
+        // Sohbet geçmişini render et
+        function renderChatHistory() {
+            elements.chatHistoryList.innerHTML = '';
+            
+            if (state.chats.length === 0) {
+                elements.chatHistoryList.innerHTML = '<div style="text-align: center; color: var(--gray-text); padding: 20px;">Henüz sohbet yok</div>';
+                return;
+            }
+            
+            // Sohbetleri ters çevir (en yeni en üstte)
+            const reversedChats = [...state.chats].reverse();
+            
+            reversedChats.forEach(chat => {
+                const chatItem = document.createElement('div');
+                chatItem.className = `chat-item ${chat.id === state.currentChatId ? 'active' : ''}`;
+                chatItem.dataset.chatId = chat.id;
+                
+                // Tarihi formatla
+                const date = new Date(chat.updatedAt);
+                const dateStr = date.toLocaleDateString('tr-TR', { 
+                    day: 'numeric', 
+                    month: 'short',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+                
+                // İlk mesajdan başlık oluştur (eğer başlık yoksa)
+                let title = chat.title;
+                if (!title || title === 'Yeni Sohbet') {
+                    if (chat.messages.length > 0) {
+                        const firstUserMessage = chat.messages.find(m => m.sender === 'user');
+                        if (firstUserMessage) {
+                            title = firstUserMessage.text.substring(0, 30) + (firstUserMessage.text.length > 30 ? '...' : '');
+                        }
                     }
                 }
-
-                currentUser = username;
-                document.getElementById('auth-container').style.display = 'none';
-                document.getElementById('main-interface').style.display = 'flex';
-                currentChatId = createChat();
-                loadChat(currentChatId);
-            }
-        });
-
-        // Giriş/Kayıt Toggle
-        function toggleAuthMode() {
-            isRegistering = !isRegistering;
-            document.getElementById('auth-btn').textContent = isRegistering ? 'Kayıt Ol' : 'Giriş Yap';
-            document.getElementById('auth-toggle').innerHTML = isRegistering 
-                ? 'Zaten hesabınız var mı? <a href="#" id="toggle-link">Giriş Yap</a>'
-                : 'Hesabınız yok mu? <a href="#" id="toggle-link">Kayıt Ol</a>';
-            document.getElementById('username').value = '';
-            document.getElementById('password').value = '';
-        }
-
-        document.getElementById('toggle-link').addEventListener('click', (e) => {
-            e.preventDefault();
-            toggleAuthMode();
-        });
-
-        // Sohbet İşlemleri
-        document.getElementById('new-chat-btn').addEventListener('click', () => {
-            currentChatId = createChat();
-            loadChat(currentChatId);
-        });
-
-        // Mesaj Gönderme
-        document.getElementById('send-btn').addEventListener('click', sendMessage);
-        document.getElementById('user-input').addEventListener('keypress', e => {
-            if(e.key === 'Enter') sendMessage();
-        });
-
-        async function sendMessage() {
-            const input = document.getElementById('user-input');
-            const message = input.value.trim();
-            if(!message) return;
-
-            const user = users[currentUser];
-            if(user.type === 'normal') {
-                if(user.questionCount >= DAILY_LIMIT) {
-                    return alert(`Günlük limit doldu! ${Math.floor((RESET_TIME - (Date.now() - user.lastReset))/3600000)} saat sonra tekrar deneyin.`);
-                }
-                user.questionCount++;
-            }
-
-            addMessage('user', message);
-            input.value = '';
-            
-            // Typing indicator göster
-            document.querySelector('.typing-indicator').classList.add('active');
-            
-            try {
-                const response = await fetchGeminiResponse(message);
-                document.querySelector('.typing-indicator').classList.remove('active');
-                addMessage('marulgpt', response);
-                saveUsers();
-            } catch (error) {
-                document.querySelector('.typing-indicator').classList.remove('active');
-                addMessage('marulgpt', '⚠️ Bir hata oluştu. Lütfen tekrar deneyin.');
-                console.error('Error:', error);
-            }
-        }
-
-        async function fetchGeminiResponse(prompt) {
-            const API_KEY = 'AIzaSyCh6rRBqfvPcB4ljlwcWD8PqYuZ5LNAwtA';
-            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${API_KEY}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    contents: [{
-                        parts: [{text: prompt}]
-                    }]
-                })
+                
+                chatItem.innerHTML = `
+                    <div class="chat-item-content">
+                        <div class="chat-item-title">${title || 'Yeni Sohbet'}</div>
+                        <div class="chat-item-date">${dateStr}</div>
+                    </div>
+                    <div class="chat-item-actions">
+                        <button class="chat-item-action-btn" title="Sohbeti sil" data-action="delete" data-chat-id="${chat.id}">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+                
+                // Sohbeti açma event'i
+                chatItem.addEventListener('click', function(e) {
+                    if (!e.target.closest('.chat-item-action-btn')) {
+                        const chatId = this.dataset.chatId;
+                        openChat(chatId);
+                        
+                        // Mobilde sidebar'ı kapat
+                        if (window.innerWidth <= 1024) {
+                            elements.sidebar.classList.remove('open');
+                        }
+                    }
+                });
+                
+                // Silme event'i
+                const deleteBtn = chatItem.querySelector('[data-action="delete"]');
+                deleteBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const chatId = this.dataset.chatId;
+                    deleteChat(chatId);
+                });
+                
+                elements.chatHistoryList.appendChild(chatItem);
             });
-
-            if (!response.ok) {
-                throw new Error(`API error: ${response.status}`);
-            }
-
-            const data = await response.json();
-            return data.candidates[0].content.parts[0].text;
         }
 
-        // Menü İşlemleri
-        document.getElementById('menu-btn').addEventListener('click', (e) => {
-            e.stopPropagation();
-            document.getElementById('dropdown-menu').classList.toggle('show');
-        });
+        // Sohbeti aç
+        function openChat(chatId) {
+            const chat = state.chats.find(c => c.id === chatId);
+            if (!chat) return;
+            
+            state.currentChatId = chatId;
+            
+            // Sohbet başlığını güncelle
+            elements.currentChatTitle.textContent = chat.title || 'Yeni Sohbet';
+            
+            // Mesajları temizle ve yükle
+            clearMessages();
+            
+            // Bağlamı temizle
+            state.currentContext = [];
+            
+            // Mesajları render et
+            chat.messages.forEach(message => {
+                addMessageToUI(message.sender, message.text, message.timestamp, false);
+                
+                // Bağlama ekle (AI mesajları hariç)
+                if (message.sender === 'user') {
+                    state.currentContext.push({
+                        role: 'user',
+                        parts: [{ text: message.text }]
+                    });
+                }
+            });
+            
+            // Sohbet geçmişini güncelle (aktif sohbeti işaretle)
+            renderChatHistory();
+            
+            // Mesaj konteynırını en alta kaydır
+            scrollToBottom();
+        }
 
-        document.addEventListener('click', () => {
-            document.getElementById('dropdown-menu').classList.remove('show');
-        });
+        // Sohbeti sil
+        function deleteChat(chatId) {
+            if (!confirm('Bu sohbeti silmek istediğinize emin misiniz?')) return;
+            
+            // Sohbeti listeden çıkar
+            state.chats = state.chats.filter(chat => chat.id !== chatId);
+            
+            // Eğer silinen sohbet şu an açıksa, yeni sohbet aç
+            if (state.currentChatId === chatId) {
+                if (state.chats.length > 0) {
+                    // Başka bir sohbet varsa onu aç
+                    openChat(state.chats[0].id);
+                } else {
+                    // Yeni sohbet oluştur
+                    createNewChat();
+                }
+            }
+            
+            // LocalStorage'a kaydet
+            saveChatsToLocalStorage();
+            
+            // Sohbet geçmişini güncelle
+            renderChatHistory();
+            
+            showNotification('Sohbet silindi', 'warning');
+        }
 
-        document.getElementById('account-info').addEventListener('click', () => {
-            const user = users[currentUser];
-            document.getElementById('account-details').innerHTML = `
-                <p>Kullanıcı Adı: ${currentUser}</p>
-                <p>Hesap Türü: ${user.type === 'owner' ? 'Yönetici' : user.type === 'premium' ? 'Premium' : 'Normal'}</p>
-                <p>Kayıt Tarihi: ${new Date(user.createdAt).toLocaleDateString()}</p>
-                ${user.type === 'normal' ? `<p>Soru Hakkı: ${DAILY_LIMIT - user.questionCount}/${DAILY_LIMIT}</p>` : ''}
+        // Mesaj gönder
+        function sendMessage() {
+            const messageText = elements.messageInput.value.trim();
+            
+            if (!messageText) return;
+            
+            // Kullanıcı giriş yapmış mı kontrol et
+            if (!state.isAuthenticated) {
+                showNotification('Mesaj göndermek için giriş yapmalısınız', 'error');
+                elements.authContainer.classList.remove('hidden');
+                return;
+            }
+            
+            // Mesajı arayüze ekle
+            addMessageToUI('user', messageText);
+            
+            // Giriş alanını temizle
+            elements.messageInput.value = '';
+            elements.messageInput.style.height = 'auto';
+            
+            // AI yanıtı için typing göstergesi göster
+            showTypingIndicator();
+            
+            // Mesajı bağlama ekle
+            state.currentContext.push({
+                role: 'user',
+                parts: [{ text: messageText }]
+            });
+            
+            // Groq API'ye istek gönder
+            generateAIResponse(messageText);
+            
+            // Sohbet başlığını güncelle (ilk mesajsa)
+            updateChatTitleIfNeeded(messageText);
+        }
+
+        // AI yanıtı oluştur
+        async function generateAIResponse(userMessage) {
+            try {
+                // Groq için context formatını dönüştür
+                const convertedContext = [];
+                for (let i = 0; i < state.currentContext.length; i++) {
+                    const msg = state.currentContext[i];
+                    convertedContext.push({
+                        role: msg.role === "user" ? "user" : "assistant",
+                        content: msg.parts[0].text
+                    });
+                }
+                
+                const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${GROQ_API_KEY}`
+                    },
+                    body: JSON.stringify({
+                        model: "llama-3.1-8b-instant",
+                        messages: [
+                            { role: "system", content: `Sen MarulGPT'sin. Kullanıcının adı ${state.userName}.` },
+                            ...convertedContext
+                        ],
+                        temperature: 0.7,
+                        max_tokens: 1024
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`API hatası: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                // Typing göstergesini kaldır
+                hideTypingIndicator();
+                
+                // AI yanıtını al (Groq formatı)
+                let aiResponse = '';
+                if (data.choices && data.choices[0] && data.choices[0].message) {
+                    aiResponse = data.choices[0].message.content;
+                } else {
+                    aiResponse = "Üzgünüm, bir yanıt oluşturamadım. Lütfen tekrar deneyin.";
+                }
+                
+                // AI yanıtını arayüze ekle (harf harf animasyonlu)
+                addMessageToUI('ai', aiResponse, null, true);
+                
+                // AI yanıtını bağlama ekle
+                state.currentContext.push({
+                    role: 'model',
+                    parts: [{ text: aiResponse }]
+                });
+                
+                // Sohbeti güncelle
+                updateCurrentChat();
+                
+            } catch (error) {
+                console.error('AI yanıtı oluşturma hatası:', error);
+                
+                // Typing göstergesini kaldır
+                hideTypingIndicator();
+                
+                // Hata mesajı göster
+                addMessageToUI('ai', "Üzgünüm, bir hata oluştu. Lütfen daha sonra tekrar deneyin veya internet bağlantınızı kontrol edin.");
+                
+                // Sohbeti güncelle
+                updateCurrentChat();
+            }
+        }
+
+        // Mesajı arayüze ekle
+        function addMessageToUI(sender, text, timestamp = null, animate = false) {
+            // Typing göstergesini kaldır (varsa)
+            hideTypingIndicator();
+            
+            // Mesaj elementi oluştur
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+            
+            // Zaman damgası
+            const time = timestamp ? new Date(timestamp) : new Date();
+            const timeStr = time.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
+            
+            // Avatar
+            const avatarContent = sender === 'user' 
+                ? state.userName.charAt(0).toUpperCase() 
+                : '<i class="fas fa-robot"></i>';
+            
+            messageDiv.innerHTML = `
+                ${sender === 'ai' ? `<div class="message-avatar">${avatarContent}</div>` : ''}
+                <div class="message-content">
+                    <div class="message-text" id="message-text-${Date.now()}">${animate ? '' : text}</div>
+                    <div class="message-time">${timeStr}</div>
+                </div>
+                ${sender === 'user' ? `<div class="message-avatar">${avatarContent}</div>` : ''}
             `;
-            document.getElementById('account-modal').style.display = 'flex';
-        });
-
-        document.getElementById('upgrade-account').addEventListener('click', () => {
-            document.getElementById('upgrade-modal').style.display = 'flex';
-            document.getElementById('upgrade-code').focus();
-        });
-
-        document.getElementById('submit-upgrade').addEventListener('click', () => {
-            const code = document.getElementById('upgrade-code').value;
-            if(code === PREMIUM_CODE) {
-                users[currentUser].type = 'premium';
-                saveUsers();
-                alert('Hesabınız premiuma yükseltildi!');
-                document.getElementById('upgrade-modal').style.display = 'none';
-            } else {
-                alert('Geçersiz kod!');
+            
+            elements.messagesContainer.appendChild(messageDiv);
+            
+            // Animasyonlu yazma efekti
+            if (animate && text) {
+                animateTextWriting(`message-text-${Date.now()}`, text);
             }
-        });
-
-        // Şifre Değiştirme
-        document.getElementById('save-password').addEventListener('click', () => {
-            const current = document.getElementById('current-password').value;
-            const newPass = document.getElementById('new-password').value;
             
-            if(!current || !newPass) return alert('Lütfen tüm alanları doldurun!');
-            if(users[currentUser].password !== current) return alert('Mevcut şifre hatalı!');
-            if(currentUser === 'admin') return alert('Admin şifresi değiştirilemez!');
-            
-            users[currentUser].password = newPass;
-            saveUsers();
-            alert('Şifre başarıyla değiştirildi!');
-            document.getElementById('current-password').value = '';
-            document.getElementById('new-password').value = '';
-        });
+            // En alta kaydır
+            scrollToBottom();
+        }
 
-        // Modal Kapatma
-        window.onclick = function(event) {
-            if(event.target.className === 'modal') {
-                event.target.style.display = 'none';
+        // Yazma animasyonu
+        function animateTextWriting(elementId, text) {
+            const element = document.getElementById(elementId);
+            let index = 0;
+            
+            function writeChar() {
+                if (index < text.length) {
+                    element.innerHTML += text.charAt(index);
+                    index++;
+                    
+                    // Rastgele hızda yazma efekti
+                    const speed = Math.random() * 30 + 20;
+                    setTimeout(writeChar, speed);
+                    
+                    // Her karakterde en alta kaydır
+                    scrollToBottom();
+                }
+            }
+            
+            writeChar();
+        }
+
+        // Typing göstergesi göster
+        function showTypingIndicator() {
+            if (state.isTyping) return;
+            
+            state.isTyping = true;
+            
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'typing-indicator';
+            typingDiv.id = 'typingIndicator';
+            typingDiv.innerHTML = `
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+            `;
+            
+            elements.messagesContainer.appendChild(typingDiv);
+            scrollToBottom();
+        }
+
+        // Typing göstergesini kaldır
+        function hideTypingIndicator() {
+            state.isTyping = false;
+            const typingIndicator = document.getElementById('typingIndicator');
+            if (typingIndicator) {
+                typingIndicator.remove();
             }
         }
 
-        // Çıkış İşlemi
-        document.getElementById('logout-btn').addEventListener('click', () => {
-            currentUser = null;
-            document.getElementById('main-interface').style.display = 'none';
-            document.getElementById('auth-container').style.display = 'block';
-            isRegistering = false;
-            document.getElementById('auth-btn').textContent = 'Giriş Yap';
-            document.getElementById('auth-toggle').innerHTML = 'Hesabınız yok mu? <a href="#" id="toggle-link">Kayıt Ol</a>';
-        });
-
-        // Mobil Sidebar Toggle
-        function toggleSidebar() {
-            sidebarOpen = !sidebarOpen;
-            document.body.classList.toggle('sidebar-open', sidebarOpen);
+        // Mesajları temizle
+        function clearMessages() {
+            elements.messagesContainer.innerHTML = '';
         }
 
-        // Touch Swipe
-        let touchStartX = 0;
-        document.addEventListener('touchstart', e => {
-            touchStartX = e.touches[0].clientX;
-        });
+        // Karşılama mesajı göster
+        function showWelcomeMessage() {
+            const welcomeDiv = document.createElement('div');
+            welcomeDiv.className = 'welcome-message';
+            
+            const welcomeText = state.userName 
+                ? `Merhaba ${state.userName}! Ben <strong>MarulGPT</strong>. Size nasıl yardımcı olabilirim?`
+                : `Merhaba! Ben <strong>MarulGPT</strong>. Size nasıl yardımcı olabilirim? Adınızı öğrenmek isterim!`;
+            
+            welcomeDiv.innerHTML = `
+                <div class="message ai">
+                    <div class="message-avatar">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="message-content">
+                        <div class="message-text">${welcomeText}</div>
+                        <div class="message-time">Şimdi</div>
+                    </div>
+                </div>
+            `;
+            
+            elements.messagesContainer.appendChild(welcomeDiv);
+            scrollToBottom();
+        }
 
-        document.addEventListener('touchend', e => {
-            const touchEndX = e.changedTouches[0].clientX;
-            if(Math.abs(touchEndX - touchStartX) > 50 && window.innerWidth <= 768) {
-                toggleSidebar();
+        // Sohbet başlığını güncelle (ilk mesajsa)
+        function updateChatTitleIfNeeded(firstMessage) {
+            if (!state.currentChatId) return;
+            
+            const chat = state.chats.find(c => c.id === state.currentChatId);
+            if (!chat) return;
+            
+            // Eğer başlık hala "Yeni Sohbet" ise, ilk mesajdan başlık oluştur
+            if (chat.title === 'Yeni Sohbet' || !chat.title) {
+                const newTitle = firstMessage.substring(0, 40) + (firstMessage.length > 40 ? '...' : '');
+                chat.title = newTitle;
+                
+                // Arayüzü güncelle
+                elements.currentChatTitle.textContent = newTitle;
+                
+                // Sohbet geçmişini güncelle
+                renderChatHistory();
             }
-        });
+        }
 
-        // Scroll Header Efekti
-        window.addEventListener('scroll', () => {
-            const header = document.querySelector('header');
-            header.classList.toggle('scrolled-header', window.scrollY > 50);
-        });
+        // Güncel sohbeti güncelle
+        function updateCurrentChat() {
+            if (!state.currentChatId) return;
+            
+            const chat = state.chats.find(c => c.id === state.currentChatId);
+            if (!chat) return;
+            
+            // Mesajları topla
+            const messageElements = elements.messagesContainer.querySelectorAll('.message');
+            const messages = [];
+            
+            messageElements.forEach(el => {
+                const isAI = el.classList.contains('ai');
+                const textElement = el.querySelector('.message-text');
+                const timeElement = el.querySelector('.message-time');
+                
+                if (textElement) {
+                    messages.push({
+                        sender: isAI ? 'ai' : 'user',
+                        text: textElement.textContent || textElement.innerText,
+                        timestamp: timeElement ? new Date().toISOString() : new Date().toISOString()
+                    });
+                }
+            });
+            
+            // Sohbeti güncelle
+            chat.messages = messages;
+            chat.updatedAt = new Date().toISOString();
+            
+            // LocalStorage'a kaydet
+            saveChatsToLocalStorage();
+            
+            // Sohbet geçmişini güncelle
+            renderChatHistory();
+        }
+
+        // Sohbet başlığını düzenle
+        function editChatTitle() {
+            const currentTitle = elements.currentChatTitle.textContent;
+            const newTitle = prompt('Sohbet başlığını girin:', currentTitle);
+            
+            if (newTitle && newTitle.trim() && newTitle !== currentTitle) {
+                elements.currentChatTitle.textContent = newTitle.trim();
+                
+                // Sohbeti güncelle
+                if (state.currentChatId) {
+                    const chat = state.chats.find(c => c.id === state.currentChatId);
+                    if (chat) {
+                        chat.title = newTitle.trim();
+                        chat.updatedAt = new Date().toISOString();
+                        
+                        // LocalStorage'a kaydet
+                        saveChatsToLocalStorage();
+                        
+                        // Sohbet geçmişini güncelle
+                        renderChatHistory();
+                    }
+                }
+            }
+        }
+
+        // Tüm sohbet geçmişini temizle
+        function clearChatHistory() {
+            if (state.chats.length === 0) return;
+            
+            if (!confirm('Tüm sohbet geçmişiniz silinecek. Emin misiniz?')) return;
+            
+            // Tüm sohbetleri temizle
+            state.chats = [];
+            
+            // Yeni sohbet oluştur
+            createNewChat();
+            
+            // LocalStorage'ı güncelle
+            saveChatsToLocalStorage();
+            
+            showNotification('Tüm sohbet geçmişi temizlendi', 'warning');
+        }
+
+        // Çıkış yap
+        function handleLogout() {
+            if (!confirm('Çıkış yapmak istediğinize emin misiniz?')) return;
+            
+            // State'i sıfırla
+            state.currentUser = null;
+            state.isAuthenticated = false;
+            state.currentChatId = null;
+            state.chats = [];
+            state.currentContext = [];
+            
+            // Giriş ekranını göster
+            elements.authContainer.classList.remove('hidden');
+            
+            // Formları sıfırla
+            elements.loginForm.reset();
+            elements.registerForm.reset();
+            
+            // Giriş tab'ını göster
+            switchAuthTab('login');
+            
+            showNotification('Başarıyla çıkış yaptınız', 'success');
+        }
+
+        // Sohbeti dışa aktar
+        function exportChat() {
+            if (!state.currentChatId) {
+                showNotification('Dışa aktarılacak sohbet bulunamadı', 'error');
+                return;
+            }
+            
+            const chat = state.chats.find(c => c.id === state.currentChatId);
+            if (!chat || chat.messages.length === 0) {
+                showNotification('Bu sohbet boş, dışa aktarılamaz', 'warning');
+                return;
+            }
+            
+            // Sohbeti metin formatına dönüştür
+            let chatText = `MarulGPT Sohbet Geçmişi - ${chat.title}\n`;
+            chatText += `Tarih: ${new Date(chat.updatedAt).toLocaleString('tr-TR')}\n`;
+            chatText += `Kullanıcı: ${state.userName}\n`;
+            chatText += '='.repeat(50) + '\n\n';
+            
+            chat.messages.forEach(msg => {
+                const sender = msg.sender === 'user' ? state.userName : 'MarulGPT';
+                chatText += `${sender} (${new Date(msg.timestamp).toLocaleTimeString('tr-TR')}):\n`;
+                chatText += `${msg.text}\n\n`;
+            });
+            
+            // Blob oluştur ve indir
+            const blob = new Blob([chatText], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `marulgpt-sohbet-${chat.title.replace(/[^a-z0-9]/gi, '-').toLowerCase()}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            showNotification('Sohbet başarıyla dışa aktarıldı', 'success');
+        }
+
+        // Sohbeti paylaş (demo - gerçekte backend gerektirir)
+        function shareChat() {
+            showNotification('Paylaşım özelliği şu anda demo modundadır', 'info');
+        }
+
+        // Mesaj girişi klavye kontrolü
+        function handleMessageInputKeydown(e) {
+            // Enter'a basıldığında mesaj gönder (Shift+Enter ile yeni satır)
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        }
+
+        // En alta kaydır
+        function scrollToBottom() {
+            elements.messagesContainer.scrollTop = elements.messagesContainer.scrollHeight;
+        }
+
+        // LocalStorage'a sohbetleri kaydet
+        function saveChatsToLocalStorage() {
+            localStorage.setItem('marulgpt_chats', JSON.stringify(state.chats));
+        }
+
+        // Bildirim göster
+        function showNotification(message, type = 'info') {
+            // Mevcut bildirimleri temizle
+            const existingNotifications = document.querySelectorAll('.notification');
+            existingNotifications.forEach(notification => {
+                notification.remove();
+            });
+            
+            // Bildirim elementi oluştur
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            
+            // İkon belirle
+            let icon = 'info-circle';
+            if (type === 'success') icon = 'check-circle';
+            if (type === 'error') icon = 'exclamation-circle';
+            if (type === 'warning') icon = 'exclamation-triangle';
+            
+            notification.innerHTML = `
+                <i class="fas fa-${icon}"></i>
+                <span>${message}</span>
+            `;
+            
+            // Stil ekle
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background-color: ${type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : type === 'warning' ? '#f59e0b' : '#3b82f6'};
+                color: white;
+                padding: 15px 20px;
+                border-radius: 10px;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+                z-index: 1000;
+                animation: slideIn 0.3s ease;
+            `;
+            
+            // Sayfaya ekle
+            document.body.appendChild(notification);
+            
+            // 3 saniye sonra kaldır
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            }, 3000);
+            
+            // Animasyonlar
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes slideIn {
+                    from { transform: translateX(100%); opacity: 0; }
+                    to { transform: translateX(0); opacity: 1; }
+                }
+                @keyframes slideOut {
+                    from { transform: translateX(0); opacity: 1; }
+                    to { transform: translateX(100%); opacity: 0; }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+
+        // Demo sohbetler oluştur (ilk kullanım için)
+        function createDemoChats() {
+            if (state.chats.length > 0) return;
+            
+            const demoChats = [
+                {
+                    id: 'demo_1',
+                    title: 'JavaScript Öğreniyorum',
+                    messages: [
+                        {
+                            sender: 'user',
+                            text: 'JavaScript\'te async/await nasıl kullanılır?',
+                            timestamp: new Date(Date.now() - 86400000).toISOString()
+                        },
+                        {
+                            sender: 'ai',
+                            text: 'Async/await, JavaScript\'te asenkron işlemleri daha okunabilir hale getirmek için kullanılan bir sözdizimidir. Async fonksiyonları her zaman bir Promise döndürür ve await anahtar kelimesi bir Promise\'in çözülmesini bekler.',
+                            timestamp: new Date(Date.now() - 86350000).toISOString()
+                        }
+                    ],
+                    createdAt: new Date(Date.now() - 86400000).toISOString(),
+                    updatedAt: new Date(Date.now() - 86350000).toISOString()
+                },
+                {
+                    id: 'demo_2',
+                    title: 'Yapay Zeka Hakkında',
+                    messages: [
+                        {
+                            sender: 'user',
+                            text: 'Yapay zeka günlük hayatımızı nasıl etkiliyor?',
+                            timestamp: new Date(Date.now() - 43200000).toISOString()
+                        },
+                        {
+                            sender: 'ai',
+                            text: 'Yapay zeka günlük hayatımızı birçok yönden etkiliyor: kişisel asistanlar (Siri, Alexa), öneri sistemleri (Netflix, Spotify), akıllı ev cihazları, sağlık hizmetlerinde teşhis yardımcıları ve daha birçok alanda. Etkileri giderek artıyor ve hayatımızı kolaylaştırıyor.',
+                            timestamp: new Date(Date.now() - 43150000).toISOString()
+                        }
+                    ],
+                    createdAt: new Date(Date.now() - 43200000).toISOString(),
+                    updatedAt: new Date(Date.now() - 43150000).toISOString()
+                }
+            ];
+            
+            state.chats.push(...demoChats);
+            saveChatsToLocalStorage();
+        }
+        
+        // Uygulama başlatıldığında demo sohbetler oluştur
+        if (!localStorage.getItem('marulgpt_chats')) {
+            createDemoChats();
+        }
     </script>
 </body>
 </html>
-
-
