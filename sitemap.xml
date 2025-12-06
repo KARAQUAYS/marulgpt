@@ -4,10 +4,3 @@
     <loc>https://marulgpt.site/</loc>
     <priority>1.00</priority>
   </url>
-  
-  <!-- Eğer /marul.html ana sayfan ise onu ekle -->
-  <url>
-    <loc>https://marulgpt.site/marul.html</loc>
-    <priority>0.80</priority>
-  </url>
-</urlset>
