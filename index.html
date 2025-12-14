@@ -47,6 +47,8 @@
             --ai-msg: #10b981;
             --error-color: #ef4444;
             --warning-color: #f59e0b;
+            --donate-color: #ff6b6b;
+            --logout-color: #f43f5e;
         }
 
         * {
@@ -56,7 +58,6 @@
         }
 
         body{
-            
             font-family: 'Poppins', sans-serif;
             background-color: var(--dark-bg);
             color: var(--light-text);
@@ -111,6 +112,7 @@
             background-color: rgba(0, 200, 150, 0.1);
             border-radius: 10px;
             margin-top: 10px;
+            position: relative;
         }
 
         .user-avatar {
@@ -125,6 +127,10 @@
             font-size: 18px;
         }
 
+        .guest-avatar {
+            background: linear-gradient(135deg, #94a3b8, #64748b);
+        }
+
         .user-info h3 {
             font-size: 16px;
             font-weight: 600;
@@ -133,6 +139,19 @@
         .user-info p {
             font-size: 12px;
             color: var(--gray-text);
+        }
+
+        .question-counter {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--warning-color);
+            color: white;
+            border-radius: 10px;
+            padding: 2px 8px;
+            font-size: 10px;
+            font-weight: bold;
+            animation: pulse 2s infinite;
         }
 
         .new-chat-btn {
@@ -238,7 +257,88 @@
             border-top: 1px solid var(--border-color);
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 10px;
+        }
+
+        .donate-btn {
+            background: linear-gradient(135deg, var(--donate-color), #ff4757);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .donate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
+        }
+
+        .auth-sidebar-btn {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .auth-sidebar-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 200, 150, 0.3);
+        }
+
+        .logout-btn {
+            background: linear-gradient(135deg, var(--logout-color), #e11d48);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            margin-top: 5px;
+        }
+
+        .logout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(244, 63, 94, 0.3);
+        }
+
+        .clear-history-btn {
+            background: linear-gradient(135deg, #64748b, #475569);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .clear-history-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(100, 116, 139, 0.3);
         }
 
         .sidebar-toggle {
@@ -629,9 +729,15 @@
             transition: all 0.3s ease;
         }
 
-        .send-btn:hover {
+        .send-btn:hover:not(:disabled) {
             transform: translateY(-3px);
             box-shadow: 0 10px 20px rgba(0, 200, 150, 0.3);
+        }
+
+        .send-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            animation: none;
         }
 
         .input-features {
@@ -646,6 +752,97 @@
             display: flex;
             align-items: center;
             gap: 5px;
+        }
+
+        /* Footer Alanı */
+        .app-footer {
+            background-color: var(--darker-bg);
+            padding: 20px;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+            color: var(--gray-text);
+            font-size: 14px;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 10px;
+        }
+
+        .footer-link {
+            color: var(--gray-text);
+            text-decoration: none;
+            transition: color 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .footer-link:hover {
+            color: var(--primary-color);
+        }
+
+        .copyright {
+            font-size: 12px;
+            color: var(--gray-text);
+            opacity: 0.8;
+        }
+
+        .footer-note {
+            font-size: 13px;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.5;
+            color: var(--gray-text);
+        }
+
+        /* Limit Uyarısı */
+        .limit-warning {
+            background-color: rgba(239, 68, 68, 0.1);
+            border: 1px solid var(--error-color);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 20px;
+            text-align: center;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .limit-warning h4 {
+            color: var(--error-color);
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        .limit-warning p {
+            font-size: 14px;
+            color: var(--gray-text);
+            margin-bottom: 10px;
+        }
+
+        .limit-warning-btn {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .limit-warning-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 200, 150, 0.3);
         }
 
         /* Animasyonlar */
@@ -712,6 +909,15 @@
                 height: 32px;
                 font-size: 14px;
             }
+            
+            .footer-links {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .footer-content {
+                padding: 0 10px;
+            }
         }
 
         /* Özel Scrollbar */
@@ -749,11 +955,12 @@
                     <span>MarulGPT</span>
                 </div>
                 <div class="user-section">
-                    <div class="user-avatar" id="userAvatar">A</div>
+                    <div class="user-avatar" id="userAvatar">M</div>
                     <div class="user-info">
-                        <h3 id="userName">Ahmet</h3>
+                        <h3 id="userName">Misafir Kullanıcı</h3>
                         <p id="userStatus">Çevrimiçi</p>
                     </div>
+                    <div class="question-counter" id="questionCounter">10/10</div>
                 </div>
             </div>
 
@@ -770,11 +977,19 @@
             </div>
 
             <div class="sidebar-footer">
-                <button class="chat-action-btn" id="clearHistoryBtn" title="Tüm geçmişi temizle">
+                <button class="donate-btn" id="donateBtn">
+                    <i class="fas fa-heart"></i>
+                    <span>Bize Destek Ol</span>
+                </button>
+                <button class="auth-sidebar-btn" id="authSidebarBtn">
+                    <i class="fas fa-sign-in-alt"></i>
+                    <span>Giriş Yap / Kayıt Ol</span>
+                </button>
+                <button class="clear-history-btn" id="clearHistoryBtn">
                     <i class="fas fa-trash-alt"></i>
                     <span>Geçmişi Temizle</span>
                 </button>
-                <button class="chat-action-btn" id="logoutBtn" title="Çıkış yap">
+                <button class="logout-btn" id="logoutBtn">
                     <i class="fas fa-sign-out-alt"></i>
                     <span>Çıkış Yap</span>
                 </button>
@@ -811,7 +1026,7 @@
                         </div>
                         <div class="message-content">
                             <div class="message-text">
-                                Merhaba! Ben <strong>MarulGPT</strong>. Size nasıl yardımcı olabilirim? Adınızı öğrenmek isterim!
+                                Merhaba! Ben <strong>MarulGPT</strong>. Size nasıl yardımcı olabilirim? Misafir modundasınız ve 10 soru hakkınız bulunuyor. Daha fazla soru sormak için giriş yapabilirsiniz!
                             </div>
                             <div class="message-time">Şimdi</div>
                         </div>
@@ -821,6 +1036,11 @@
 
             <!-- Mesaj Giriş Alanı -->
             <div class="input-container">
+                <div id="limitWarning" class="limit-warning" style="display: none;">
+                    <h4><i class="fas fa-exclamation-triangle"></i> Soru Hakkınız Doldu!</h4>
+                    <p>Günlük 10 soru hakkınızı kullandınız. Daha fazla soru sormak için giriş yapın veya hesap oluşturun.</p>
+                    <button class="limit-warning-btn" id="limitAuthBtn">Giriş Yap / Kayıt Ol</button>
+                </div>
                 <div class="input-wrapper">
                     <textarea class="message-input" id="messageInput" placeholder="MarulGPT'ye bir mesaj yazın..."></textarea>
                     <button class="send-btn pulse" id="sendMessageBtn">
@@ -829,7 +1049,30 @@
                 </div>
                 <div class="input-features">
                     <span><i class="fas fa-lightbulb"></i> MarulGPT bağlamı hatırlar</span>
-                    <span><i class="fas fa-history"></i> Sohbet geçmişiniz kaydedilir</span>
+                    <span><i class="fas fa-user-clock"></i> Soru hakkı: <span id="questionCountDisplay">10/10</span></span>
+                </div>
+            </div>
+
+            <!-- Footer Alanı -->
+            <div class="app-footer">
+                <div class="footer-content">
+                    <div class="footer-links">
+                        <a href="#" class="footer-link" id="footerAbout">
+                            <i class="fas fa-info-circle"></i> Hakkımızda
+                        </a>
+                        <a href="#" class="footer-link" id="footerContact">
+                            <i class="fas fa-envelope"></i> Bize Ulaşın
+                        </a>
+                        <a href="#" class="footer-link" id="footerPrivacy">
+                            <i class="fas fa-shield-alt"></i> Gizlilik Politikası
+                        </a>
+                    </div>
+                    <div class="footer-note">
+                        <p><strong>MarulGPT</strong>, 2024 yılında Ahmet Karakuş tarafından geliştirilmeye başlanmıştır. Dil modelimiz sürekli olarak geliştirilmekte ve güncellenmektedir. Sunduğumuz hizmetler deneysel nitelikte olup, verilen bilgilerin doğruluğu garanti edilmemektedir.</p>
+                    </div>
+                    <div class="copyright">
+                        © 2024 MarulGPT. Tüm hakları saklıdır. Bu site Google AdSense ile desteklenmektedir.
+                    </div>
                 </div>
             </div>
         </div>
@@ -892,7 +1135,7 @@
 
     <script>
         // Groq API Anahtarı
-        const GROQ_API_KEY = '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';
+        const GROQ_API_KEY = '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';
         
         // Uygulama durumu
         const state = {
@@ -902,7 +1145,10 @@
             isAuthenticated: false,
             isTyping: false,
             currentContext: [],
-            userName: 'Ahmet'
+            userName: 'Misafir',
+            isGuest: true,
+            guestQuestionCount: 10, // Misafirler için 10 soru hakkı
+            maxGuestQuestions: 10
         };
 
         // DOM Elementleri
@@ -925,10 +1171,19 @@
             editChatTitleBtn: document.getElementById('editChatTitleBtn'),
             userAvatar: document.getElementById('userAvatar'),
             userName: document.getElementById('userName'),
+            questionCounter: document.getElementById('questionCounter'),
             clearHistoryBtn: document.getElementById('clearHistoryBtn'),
             logoutBtn: document.getElementById('logoutBtn'),
             exportChatBtn: document.getElementById('exportChatBtn'),
-            shareChatBtn: document.getElementById('shareChatBtn')
+            shareChatBtn: document.getElementById('shareChatBtn'),
+            authSidebarBtn: document.getElementById('authSidebarBtn'),
+            donateBtn: document.getElementById('donateBtn'),
+            limitWarning: document.getElementById('limitWarning'),
+            limitAuthBtn: document.getElementById('limitAuthBtn'),
+            questionCountDisplay: document.getElementById('questionCountDisplay'),
+            footerAbout: document.getElementById('footerAbout'),
+            footerContact: document.getElementById('footerContact'),
+            footerPrivacy: document.getElementById('footerPrivacy')
         };
 
         // Sayfa yüklendiğinde
@@ -942,21 +1197,39 @@
             // localStorage'dan kullanıcı bilgilerini yükle
             const savedUser = localStorage.getItem('marulgpt_user');
             const savedChats = localStorage.getItem('marulgpt_chats');
+            const savedGuestQuestions = localStorage.getItem('marulgpt_guest_questions');
             
             if (savedUser) {
+                // Kullanıcı giriş yapmış
                 state.currentUser = JSON.parse(savedUser);
                 state.isAuthenticated = true;
+                state.isGuest = false;
                 state.userName = state.currentUser.name;
                 
                 // Kullanıcı arayüzünü güncelle
-                elements.userName.textContent = state.userName;
-                elements.userAvatar.textContent = state.userName.charAt(0).toUpperCase();
+                updateUserUI();
                 
                 // Giriş ekranını gizle
                 elements.authContainer.classList.add('hidden');
             } else {
-                // Giriş ekranını göster
-                elements.authContainer.classList.remove('hidden');
+                // Misafir modu
+                state.isGuest = true;
+                state.isAuthenticated = false;
+                state.userName = 'Misafir Kullanıcı';
+                
+                // Soru hakkını yükle
+                if (savedGuestQuestions) {
+                    state.guestQuestionCount = parseInt(savedGuestQuestions);
+                }
+                
+                // Kullanıcı arayüzünü güncelle
+                updateUserUI();
+                
+                // Giriş ekranını gizle (misafir modunda doğrudan sohbet ekranı)
+                elements.authContainer.classList.add('hidden');
+                
+                // Soru limiti kontrolü
+                checkQuestionLimit();
             }
             
             // Sohbet geçmişini yükle
@@ -972,6 +1245,31 @@
             } else {
                 // Yeni bir sohbet oluştur
                 createNewChat();
+            }
+        }
+
+        // Kullanıcı arayüzünü güncelle
+        function updateUserUI() {
+            elements.userName.textContent = state.userName;
+            elements.userAvatar.textContent = state.userName.charAt(0).toUpperCase();
+            
+            if (state.isGuest) {
+                elements.userAvatar.classList.add('guest-avatar');
+                elements.questionCounter.textContent = `${state.guestQuestionCount}/${state.maxGuestQuestions}`;
+                elements.questionCounter.style.display = 'block';
+                elements.questionCountDisplay.textContent = `${state.guestQuestionCount}/${state.maxGuestQuestions}`;
+                
+                // Sidebar butonunu güncelle
+                elements.authSidebarBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i><span>Giriş Yap / Kayıt Ol</span>';
+                elements.logoutBtn.style.display = 'none'; // Misafirde çıkış butonu gizli
+            } else {
+                elements.userAvatar.classList.remove('guest-avatar');
+                elements.questionCounter.style.display = 'none';
+                elements.questionCountDisplay.textContent = 'Sınırsız';
+                
+                // Sidebar butonunu güncelle
+                elements.authSidebarBtn.innerHTML = '<i class="fas fa-user"></i><span>Profil</span>';
+                elements.logoutBtn.style.display = 'flex'; // Giriş yapıldığında çıkış butonu görünür
             }
         }
 
@@ -1001,9 +1299,19 @@
             elements.sendMessageBtn.addEventListener('click', sendMessage);
             elements.editChatTitleBtn.addEventListener('click', editChatTitle);
             
-            // Sohbet geçmişi işlemleri
+            // Sidebar butonları
+            elements.authSidebarBtn.addEventListener('click', handleAuthSidebar);
+            elements.donateBtn.addEventListener('click', handleDonate);
             elements.clearHistoryBtn.addEventListener('click', clearChatHistory);
             elements.logoutBtn.addEventListener('click', handleLogout);
+            elements.limitAuthBtn.addEventListener('click', showAuthModal);
+            
+            // Footer linkleri
+            elements.footerAbout.addEventListener('click', showAboutInfo);
+            elements.footerContact.addEventListener('click', showContactInfo);
+            elements.footerPrivacy.addEventListener('click', showPrivacyInfo);
+            
+            // Diğer butonlar
             elements.exportChatBtn.addEventListener('click', exportChat);
             elements.shareChatBtn.addEventListener('click', shareChat);
             
@@ -1054,14 +1362,21 @@
                     // Giriş başarılı
                     state.currentUser = user;
                     state.isAuthenticated = true;
+                    state.isGuest = false;
                     state.userName = user.name;
                     
                     // Kullanıcı arayüzünü güncelle
-                    elements.userName.textContent = state.userName;
-                    elements.userAvatar.textContent = state.userName.charAt(0).toUpperCase();
+                    updateUserUI();
                     
                     // Giriş ekranını gizle
                     elements.authContainer.classList.add('hidden');
+                    
+                    // Soru limiti uyarısını gizle
+                    elements.limitWarning.style.display = 'none';
+                    
+                    // Mesaj gönderme butonunu aktif et
+                    elements.sendMessageBtn.disabled = false;
+                    elements.sendMessageBtn.classList.add('pulse');
                     
                     // Bildirim göster
                     showNotification(`Hoş geldiniz, ${state.userName}!`, 'success');
@@ -1069,44 +1384,47 @@
                     // Formu temizle
                     elements.loginForm.reset();
                     
-                    // Sohbet geçmişini yükle
-                    const savedChats = localStorage.getItem('marulgpt_chats');
-                    if (savedChats) {
-                        state.chats = JSON.parse(savedChats);
-                        renderChatHistory();
-                    }
+                    // Karşılama mesajını güncelle
+                    updateWelcomeMessage();
                 } else {
                     showNotification('E-posta veya şifre hatalı', 'error');
                 }
             } else {
                 // Demo kullanıcısı oluştur
                 state.currentUser = {
-                    name: 'Ahmet',
+                    name: 'Kullanıcı',
                     email: email,
                     password: password
                 };
                 
                 state.isAuthenticated = true;
-                state.userName = 'Ahmet';
+                state.isGuest = false;
+                state.userName = 'Kullanıcı';
                 
                 // Kullanıcıyı kaydet
                 localStorage.setItem('marulgpt_user', JSON.stringify(state.currentUser));
                 
                 // Kullanıcı arayüzünü güncelle
-                elements.userName.textContent = state.userName;
-                elements.userAvatar.textContent = state.userName.charAt(0).toUpperCase();
+                updateUserUI();
                 
                 // Giriş ekranını gizle
                 elements.authContainer.classList.add('hidden');
                 
+                // Soru limiti uyarısını gizle
+                elements.limitWarning.style.display = 'none';
+                
+                // Mesaj gönderme butonunu aktif et
+                elements.sendMessageBtn.disabled = false;
+                elements.sendMessageBtn.classList.add('pulse');
+                
                 // Bildirim göster
-                showNotification(`Hoş geldiniz, ${state.userName}!`, 'success');
+                showNotification(`Hesabınız oluşturuldu, hoş geldiniz ${state.userName}!`, 'success');
                 
                 // Formu temizle
                 elements.loginForm.reset();
                 
-                // Yeni sohbet oluştur
-                createNewChat();
+                // Karşılama mesajını güncelle
+                updateWelcomeMessage();
             }
         }
 
@@ -1143,17 +1461,24 @@
             };
             
             state.isAuthenticated = true;
+            state.isGuest = false;
             state.userName = name;
             
             // Kullanıcıyı kaydet
             localStorage.setItem('marulgpt_user', JSON.stringify(state.currentUser));
             
             // Kullanıcı arayüzünü güncelle
-            elements.userName.textContent = state.userName;
-            elements.userAvatar.textContent = state.userName.charAt(0).toUpperCase();
+            updateUserUI();
             
             // Giriş ekranını gizle
             elements.authContainer.classList.add('hidden');
+            
+            // Soru limiti uyarısını gizle
+            elements.limitWarning.style.display = 'none';
+            
+            // Mesaj gönderme butonunu aktif et
+            elements.sendMessageBtn.disabled = false;
+            elements.sendMessageBtn.classList.add('pulse');
             
             // Bildirim göster
             showNotification(`Hesabınız oluşturuldu, hoş geldiniz ${state.userName}!`, 'success');
@@ -1161,13 +1486,91 @@
             // Formu temizle
             elements.registerForm.reset();
             
-            // Yeni sohbet oluştur
-            createNewChat();
+            // Karşılama mesajını güncelle
+            updateWelcomeMessage();
+        }
+
+        // Karşılama mesajını güncelle
+        function updateWelcomeMessage() {
+            const welcomeMessage = elements.messagesContainer.querySelector('.welcome-message');
+            if (welcomeMessage) {
+                welcomeMessage.innerHTML = `
+                    <div class="message ai">
+                        <div class="message-avatar">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="message-content">
+                            <div class="message-text">
+                                Merhaba <strong>${state.userName}</strong>! Ben <strong>MarulGPT</strong>. Size nasıl yardımcı olabilirim? Artık hesabınız olduğu için sınırsız soru sorma hakkınız var!
+                            </div>
+                            <div class="message-time">Şimdi</div>
+                        </div>
+                    </div>
+                `;
+            }
         }
 
         // Sidebar'ı aç/kapa (mobil için)
         function toggleSidebar() {
             elements.sidebar.classList.toggle('open');
+        }
+
+        // Sidebar auth butonuna tıklama
+        function handleAuthSidebar() {
+            if (state.isGuest) {
+                // Misafir ise giriş ekranını göster
+                elements.authContainer.classList.remove('hidden');
+                switchAuthTab('login');
+            } else {
+                // Giriş yapmışsa profil bilgisi göster
+                showNotification(`Hoş geldiniz ${state.userName}!`, 'info');
+            }
+        }
+
+        // Bağış butonuna tıklama
+        function handleDonate() {
+            // Bağış linki - kendi bağış linkinizi buraya ekleyin
+            const donateUrl = 'https://www.bynogame.com/destekle/marulgpt'; // Örnek link
+            window.open(donateUrl, '_blank');
+            showNotification('Bağış sayfasına yönlendiriliyorsunuz...', 'info');
+        }
+
+        // Soru limitini kontrol et
+        function checkQuestionLimit() {
+            if (state.isGuest && state.guestQuestionCount <= 0) {
+                // Soru hakkı dolmuş
+                elements.limitWarning.style.display = 'block';
+                elements.sendMessageBtn.disabled = true;
+                elements.sendMessageBtn.classList.remove('pulse');
+                elements.messageInput.placeholder = 'Soru hakkınız doldu. Giriş yapın!';
+                elements.messageInput.disabled = true;
+            } else {
+                // Soru hakkı var
+                elements.limitWarning.style.display = 'none';
+                elements.sendMessageBtn.disabled = false;
+                elements.sendMessageBtn.classList.add('pulse');
+                elements.messageInput.placeholder = 'MarulGPT\'ye bir mesaj yazın...';
+                elements.messageInput.disabled = false;
+            }
+            
+            // Soru sayacını güncelle
+            updateUserUI();
+        }
+
+        // Soru hakkını azalt
+        function decreaseQuestionCount() {
+            if (state.isGuest && state.guestQuestionCount > 0) {
+                state.guestQuestionCount--;
+                localStorage.setItem('marulgpt_guest_questions', state.guestQuestionCount.toString());
+                updateUserUI();
+                checkQuestionLimit();
+            }
+        }
+
+        // Auth modalını göster
+        function showAuthModal() {
+            elements.authContainer.classList.remove('hidden');
+            switchAuthTab('login');
         }
 
         // Yeni sohbet oluştur
@@ -1353,11 +1756,16 @@
             
             if (!messageText) return;
             
-            // Kullanıcı giriş yapmış mı kontrol et
-            if (!state.isAuthenticated) {
-                showNotification('Mesaj göndermek için giriş yapmalısınız', 'error');
-                elements.authContainer.classList.remove('hidden');
+            // Misafir ise soru hakkını kontrol et
+            if (state.isGuest && state.guestQuestionCount <= 0) {
+                showNotification('Soru hakkınız doldu. Giriş yapın!', 'error');
+                elements.limitWarning.style.display = 'block';
                 return;
+            }
+            
+            // Misafir ise soru hakkını azalt
+            if (state.isGuest) {
+                decreaseQuestionCount();
             }
             
             // Mesajı arayüze ekle
@@ -1554,9 +1962,12 @@
             const welcomeDiv = document.createElement('div');
             welcomeDiv.className = 'welcome-message';
             
-            const welcomeText = state.userName 
-                ? `Merhaba ${state.userName}! Ben <strong>MarulGPT</strong>. Size nasıl yardımcı olabilirim?`
-                : `Merhaba! Ben <strong>MarulGPT</strong>. Size nasıl yardımcı olabilirim? Adınızı öğrenmek isterim!`;
+            let welcomeText;
+            if (state.isGuest) {
+                welcomeText = `Merhaba! Ben <strong>MarulGPT</strong>. Size nasıl yardımcı olabilirim? Misafir modundasınız ve ${state.guestQuestionCount} soru hakkınız bulunuyor. Daha fazla soru sormak için giriş yapabilirsiniz!`;
+            } else {
+                welcomeText = `Merhaba <strong>${state.userName}</strong>! Ben <strong>MarulGPT</strong>. Size nasıl yardımcı olabilirim?`;
+            }
             
             welcomeDiv.innerHTML = `
                 <div class="message ai">
@@ -1675,26 +2086,55 @@
 
         // Çıkış yap
         function handleLogout() {
+            if (!state.isAuthenticated) {
+                showNotification('Zaten misafir modundasınız', 'info');
+                return;
+            }
+            
             if (!confirm('Çıkış yapmak istediğinize emin misiniz?')) return;
             
             // State'i sıfırla
             state.currentUser = null;
             state.isAuthenticated = false;
+            state.isGuest = true;
+            state.userName = 'Misafir Kullanıcı';
+            state.guestQuestionCount = 10;
             state.currentChatId = null;
-            state.chats = [];
-            state.currentContext = [];
             
-            // Giriş ekranını göster
-            elements.authContainer.classList.remove('hidden');
+            // Sohbetleri ve bağlamı temizleme (isteğe bağlı)
+            // state.chats = [];
+            // state.currentContext = [];
             
-            // Formları sıfırla
-            elements.loginForm.reset();
-            elements.registerForm.reset();
+            // LocalStorage'dan kullanıcı bilgilerini sil
+            localStorage.removeItem('marulgpt_user');
+            localStorage.setItem('marulgpt_guest_questions', '10');
             
-            // Giriş tab'ını göster
-            switchAuthTab('login');
+            // Kullanıcı arayüzünü güncelle
+            updateUserUI();
             
-            showNotification('Başarıyla çıkış yaptınız', 'success');
+            // Karşılama mesajını güncelle
+            updateWelcomeMessage();
+            
+            // Soru limiti kontrolü
+            checkQuestionLimit();
+            
+            showNotification('Başarıyla çıkış yaptınız. Misafir moduna geçtiniz.', 'success');
+        }
+
+        // Footer link işlevleri
+        function showAboutInfo(e) {
+            e.preventDefault();
+            showNotification('MarulGPT 2024 yılında Ahmet Karakuş tarafından geliştirilmeye başlanmıştır. Amacımız kullanıcılara ücretsiz ve kaliteli yapay zeka deneyimi sunmaktır.', 'info');
+        }
+        
+        function showContactInfo(e) {
+            e.preventDefault();
+            showNotification('Bize marulgpt@gmail.com adresinden ulaşabilirsiniz. Geri bildirimleriniz ve sorularınız için her zaman açığız!', 'info');
+        }
+        
+        function showPrivacyInfo(e) {
+            e.preventDefault();
+            showNotification('Gizlilik politikamız kullanıcı verilerinin güvenliğini ön planda tutar. Sohbet verileriniz sadece sizin cihazınızda saklanır.', 'info');
         }
 
         // Sohbeti dışa aktar
@@ -1882,10 +2322,3 @@
     </script>
 </body>
 </html>
-
-
-
-
-
-
-
