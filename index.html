@@ -1266,7 +1266,8 @@
             guestQuestionCount: 10,
             maxGuestQuestions: 10,
             sessionToken: null,
-            userId: null
+            userId: null,
+            guestChats: []
         };
 
         const elements = {
@@ -1371,12 +1372,29 @@
             state.currentUser = null;
             state.sessionToken = null;
             state.userId = null;
-            state.chats = [];
+            state.guestChats = [];
             state.currentChatId = null;
+            state.chats = [];
+            
+            const savedGuestChats = localStorage.getItem('marulgpt_guest_chats');
+            if (savedGuestChats) {
+                try {
+                    state.guestChats = JSON.parse(savedGuestChats);
+                } catch (e) {
+                    console.error('Misafir sohbetleri yükleme hatası:', e);
+                }
+            }
             
             updateUserUI();
             elements.authContainer.classList.add('hidden');
-            showWelcomeMessage();
+            
+            renderGuestChatHistory();
+            
+            if (state.guestChats.length > 0) {
+                openGuestChat(state.guestChats[0].id);
+            } else {
+                createNewGuestChat();
+            }
         }
 
         function setupEventListeners() {
@@ -1396,7 +1414,14 @@
             
             elements.sidebarToggle.addEventListener('click', toggleSidebar);
             
-            elements.newChatBtn.addEventListener('click', createNewChat);
+            elements.newChatBtn.addEventListener('click', () => {
+                if (state.isGuest) {
+                    createNewGuestChat();
+                } else {
+                    createNewChat();
+                }
+            });
+            
             elements.messageInput.addEventListener('keydown', handleMessageInputKeydown);
             elements.sendMessageBtn.addEventListener('click', sendMessage);
             elements.editChatTitleBtn.addEventListener('click', editChatTitle);
@@ -1408,8 +1433,17 @@
                     showNotification(`Hoş geldiniz ${state.userName}!`, 'info');
                 }
             });
+            
             elements.donateBtn.addEventListener('click', handleDonate);
-            elements.clearHistoryBtn.addEventListener('click', clearChatHistory);
+            
+            elements.clearHistoryBtn.addEventListener('click', () => {
+                if (state.isGuest) {
+                    clearGuestHistory();
+                } else {
+                    clearChatHistory();
+                }
+            });
+            
             elements.logoutBtn.addEventListener('click', handleLogout);
             elements.limitAuthBtn.addEventListener('click', showAuthModal);
             
@@ -1581,6 +1615,69 @@
             }
         }
 
+        function renderGuestChatHistory() {
+            elements.chatHistoryList.innerHTML = '';
+            
+            if (state.isGuest) {
+                const sortedChats = [...state.guestChats].sort((a, b) => 
+                    new Date(b.updated_at) - new Date(a.updated_at)
+                );
+                
+                if (sortedChats.length === 0) {
+                    elements.chatHistoryList.innerHTML = '<div style="text-align: center; color: var(--gray-text); padding: 20px;">Henüz sohbet yok</div>';
+                    return;
+                }
+                
+                sortedChats.forEach(chat => {
+                    const chatItem = document.createElement('div');
+                    chatItem.className = `chat-item ${chat.id === state.currentChatId ? 'active' : ''}`;
+                    chatItem.dataset.chatId = chat.id;
+                    
+                    const date = new Date(chat.updated_at);
+                    const dateStr = date.toLocaleDateString('tr-TR', { 
+                        day: 'numeric', 
+                        month: 'short',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+                    
+                    chatItem.innerHTML = `
+                        <div class="chat-item-content">
+                            <div class="chat-item-title">${chat.title || 'Yeni Sohbet'}</div>
+                            <div class="chat-item-date">${dateStr}</div>
+                        </div>
+                        <div class="chat-item-actions">
+                            <button class="chat-item-action-btn" title="Sohbeti sil" data-action="delete" data-chat-id="${chat.id}">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    `;
+                    
+                    chatItem.addEventListener('click', function(e) {
+                        if (!e.target.closest('.chat-item-action-btn')) {
+                            const chatId = this.dataset.chatId;
+                            openGuestChat(chatId);
+                            
+                            if (window.innerWidth <= 1024) {
+                                elements.sidebar.classList.remove('open');
+                            }
+                        }
+                    });
+                    
+                    const deleteBtn = chatItem.querySelector('[data-action="delete"]');
+                    deleteBtn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const chatId = this.dataset.chatId;
+                        deleteGuestChat(chatId);
+                    });
+                    
+                    elements.chatHistoryList.appendChild(chatItem);
+                });
+            } else {
+                renderChatHistory();
+            }
+        }
+
         async function loadChatHistory() {
             if (!state.isAuthenticated) return;
             
@@ -1669,15 +1766,31 @@
             });
         }
 
-        async function createNewChat() {
-            if (state.isGuest) {
-                state.currentChatId = 'guest_' + Date.now();
-                clearMessages();
-                elements.currentChatTitle.textContent = 'Yeni Sohbet';
-                showWelcomeMessage();
-                return;
-            }
+        function createNewGuestChat() {
+            const chatId = 'guest_' + Date.now();
+            const newChat = {
+                id: chatId,
+                title: 'Yeni Sohbet',
+                created_at: new Date().toISOString(),
+                updated_at: new Date().toISOString(),
+                messages: []
+            };
             
+            state.guestChats.unshift(newChat);
+            state.currentChatId = chatId;
+            
+            saveGuestChatsToStorage();
+            renderGuestChatHistory();
+            clearMessages();
+            elements.currentChatTitle.textContent = 'Yeni Sohbet';
+            showWelcomeMessage();
+            
+            if (window.innerWidth <= 1024) {
+                elements.sidebar.classList.remove('open');
+            }
+        }
+
+        async function createNewChat() {
             if (!state.isAuthenticated) {
                 showAuthModal();
                 return;
@@ -1719,19 +1832,30 @@
             }
         }
 
-        async function openChat(chatId) {
-            if (state.isGuest) {
-                state.currentChatId = chatId;
-                const chat = state.chats.find(c => c.id === chatId);
-                if (chat) {
-                    elements.currentChatTitle.textContent = chat.title;
-                    clearMessages();
-                    loadGuestMessages(chatId);
+        function openGuestChat(chatId) {
+            if (!state.isGuest) return;
+            
+            state.currentChatId = chatId;
+            const chat = state.guestChats.find(c => c.id === chatId);
+            
+            if (chat) {
+                elements.currentChatTitle.textContent = chat.title;
+                clearMessages();
+                
+                if (chat.messages && chat.messages.length > 0) {
+                    chat.messages.forEach(msg => {
+                        addMessageToUI(msg.role, msg.content, msg.timestamp, false);
+                    });
+                } else {
+                    showWelcomeMessage();
                 }
-                renderChatHistory();
-                return;
             }
             
+            renderGuestChatHistory();
+            scrollToBottom();
+        }
+
+        async function openChat(chatId) {
             if (!state.isAuthenticated) return;
             
             try {
@@ -1773,23 +1897,6 @@
             }
         }
 
-        function loadGuestMessages(chatId) {
-            const guestMessages = localStorage.getItem(`marulgpt_guest_messages_${chatId}`);
-            if (guestMessages) {
-                try {
-                    const messages = JSON.parse(guestMessages);
-                    messages.forEach(msg => {
-                        addMessageToUI(msg.role, msg.content, msg.timestamp, false);
-                    });
-                } catch (e) {
-                    console.error('Misafir mesajları yükleme hatası:', e);
-                    showWelcomeMessage();
-                }
-            } else {
-                showWelcomeMessage();
-            }
-        }
-
         async function sendMessage() {
             const messageText = elements.messageInput.value.trim();
             
@@ -1801,98 +1908,122 @@
                 return;
             }
             
-            if (state.isGuest) {
-                state.guestQuestionCount--;
-                localStorage.setItem('marulgpt_guest_questions', state.guestQuestionCount.toString());
-                updateUserUI();
-                checkQuestionLimit();
-            }
-            
             addMessageToUI('user', messageText);
             elements.messageInput.value = '';
             elements.messageInput.style.height = 'auto';
             
             if (state.isGuest) {
-                setTimeout(() => {
-                    const response = 'Giriş yaparak daha fazla soru sorabilir, sohbet geçmişinizi kaydedebilir ve daha akıllı yanıtlar alabilirsiniz!';
-                    addMessageToUI('ai', response);
+                state.guestQuestionCount--;
+                localStorage.setItem('marulgpt_guest_questions', state.guestQuestionCount.toString());
+                updateUserUI();
+                checkQuestionLimit();
+                
+                const currentChat = state.guestChats.find(chat => chat.id === state.currentChatId);
+                if (currentChat) {
+                    currentChat.messages.push({
+                        role: 'user',
+                        content: messageText,
+                        timestamp: new Date().toISOString()
+                    });
                     
-                    saveGuestMessage(messageText, response);
-                }, 1000);
-                return;
-            }
-            
-            try {
+                    if (currentChat.title === 'Yeni Sohbet' && messageText.length > 0) {
+                        currentChat.title = messageText.substring(0, 40) + (messageText.length > 40 ? '...' : '');
+                        elements.currentChatTitle.textContent = currentChat.title;
+                    }
+                    
+                    currentChat.updated_at = new Date().toISOString();
+                    saveGuestChatsToStorage();
+                }
+                
                 showTypingIndicator();
                 
-                const response = await fetch(`${BACKEND_URL}/chat`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${state.sessionToken}`
-                    },
-                    body: JSON.stringify({
-                        chatId: state.currentChatId || 'new',
-                        message: messageText
-                    })
-                });
-                
-                hideTypingIndicator();
-                
-                if (response.ok) {
-                    const data = await response.json();
-                    addMessageToUI('ai', data.response, null, true);
+                try {
+                    const response = await fetch(`${BACKEND_URL}/guest-chat`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            message: messageText
+                        })
+                    });
                     
-                    if (data.chatId && (data.isNewChat || !state.currentChatId)) {
-                        state.currentChatId = data.chatId;
-                        await loadChatHistory();
-                    } else if (state.currentChatId) {
-                        await updateChatTitleIfNeeded(messageText);
+                    hideTypingIndicator();
+                    
+                    if (response.ok) {
+                        const data = await response.json();
+                        addMessageToUI('ai', data.response, null, true);
+                        
+                        if (currentChat) {
+                            currentChat.messages.push({
+                                role: 'ai',
+                                content: data.response,
+                                timestamp: new Date().toISOString()
+                            });
+                            currentChat.updated_at = new Date().toISOString();
+                            saveGuestChatsToStorage();
+                        }
+                        
+                        renderGuestChatHistory();
+                    } else {
+                        const errorData = await response.json();
+                        addMessageToUI('ai', `Üzgünüm, bir hata oluştu: ${errorData.error || 'Bilinmeyen hata'}`);
+                        showNotification(`Hata: ${errorData.error}`, 'error');
                     }
-                } else {
-                    const errorData = await response.json();
-                    const errorMessage = errorData.error || 'Bilinmeyen hata';
-                    addMessageToUI('ai', `Üzgünüm, bir hata oluştu: ${errorMessage}`);
-                    showNotification(`Hata: ${errorMessage}`, 'error');
+                } catch (error) {
+                    hideTypingIndicator();
+                    addMessageToUI('ai', 'Bağlantı hatası. Lütfen daha sonra tekrar deneyin.');
+                    showNotification('Bağlantı hatası', 'error');
                 }
-            } catch (error) {
-                hideTypingIndicator();
-                addMessageToUI('ai', 'Bağlantı hatası. Lütfen daha sonra tekrar deneyin.');
-                showNotification('Bağlantı hatası', 'error');
+            } else {
+                try {
+                    showTypingIndicator();
+                    
+                    const response = await fetch(`${BACKEND_URL}/chat`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${state.sessionToken}`
+                        },
+                        body: JSON.stringify({
+                            chatId: state.currentChatId || 'new',
+                            message: messageText
+                        })
+                    });
+                    
+                    hideTypingIndicator();
+                    
+                    if (response.ok) {
+                        const data = await response.json();
+                        addMessageToUI('ai', data.response, null, true);
+                        
+                        if (data.chatId && (data.isNewChat || !state.currentChatId)) {
+                            state.currentChatId = data.chatId;
+                            await loadChatHistory();
+                        } else if (state.currentChatId) {
+                            await updateChatTitleIfNeeded(messageText);
+                        }
+                    } else {
+                        const errorData = await response.json();
+                        const errorMessage = errorData.error || 'Bilinmeyen hata';
+                        addMessageToUI('ai', `Üzgünüm, bir hata oluştu: ${errorMessage}`);
+                        showNotification(`Hata: ${errorMessage}`, 'error');
+                    }
+                } catch (error) {
+                    hideTypingIndicator();
+                    addMessageToUI('ai', 'Bağlantı hatası. Lütfen daha sonra tekrar deneyin.');
+                    showNotification('Bağlantı hatası', 'error');
+                }
             }
         }
 
-        function saveGuestMessage(userMessage, aiResponse) {
-            if (!state.currentChatId) return;
-            
-            const chatId = state.currentChatId;
-            let messages = [];
+        function saveGuestChatsToStorage() {
+            if (!state.isGuest) return;
             
             try {
-                const stored = localStorage.getItem(`marulgpt_guest_messages_${chatId}`);
-                if (stored) {
-                    messages = JSON.parse(stored);
-                }
+                localStorage.setItem('marulgpt_guest_chats', JSON.stringify(state.guestChats));
             } catch (e) {
-                console.error('Misafir mesajları okuma hatası:', e);
-            }
-            
-            messages.push({
-                role: 'user',
-                content: userMessage,
-                timestamp: new Date().toISOString()
-            });
-            
-            messages.push({
-                role: 'ai',
-                content: aiResponse,
-                timestamp: new Date().toISOString()
-            });
-            
-            try {
-                localStorage.setItem(`marulgpt_guest_messages_${chatId}`, JSON.stringify(messages));
-            } catch (e) {
-                console.error('Misafir mesajları kaydetme hatası:', e);
+                console.error('Misafir sohbetleri kaydetme hatası:', e);
             }
         }
 
@@ -2064,10 +2195,35 @@
             document.getElementById(`${tabId}Content`).classList.add('active');
         }
 
-        async function deleteChat(chatId) {
+        function deleteGuestChat(chatId) {
+            if (!state.isGuest) return;
+            
             if (!confirm('Bu sohbeti silmek istediğinize emin misiniz?')) return;
             
+            const chatItem = document.querySelector(`[data-chat-id="${chatId}"]`);
+            if (chatItem) {
+                chatItem.remove();
+            }
+            
+            state.guestChats = state.guestChats.filter(chat => chat.id !== chatId);
+            
+            if (state.currentChatId === chatId) {
+                if (state.guestChats.length > 0) {
+                    openGuestChat(state.guestChats[0].id);
+                } else {
+                    createNewGuestChat();
+                }
+            }
+            
+            saveGuestChatsToStorage();
+            
+            showNotification('Sohbet silindi', 'success');
+        }
+
+        async function deleteChat(chatId) {
             if (!state.isAuthenticated) return;
+            
+            if (!confirm('Bu sohbeti silmek istediğinize emin misiniz?')) return;
             
             try {
                 const response = await fetch(`${BACKEND_URL}/chats/${chatId}`, {
@@ -2081,6 +2237,11 @@
                 if (response.ok) {
                     state.chats = state.chats.filter(chat => chat.id !== chatId);
                     
+                    const chatItem = document.querySelector(`[data-chat-id="${chatId}"]`);
+                    if (chatItem) {
+                        chatItem.remove();
+                    }
+                    
                     if (state.currentChatId === chatId) {
                         if (state.chats.length > 0) {
                             await openChat(state.chats[0].id);
@@ -2089,7 +2250,6 @@
                         }
                     }
                     
-                    renderChatHistory();
                     showNotification('Sohbet silindi', 'success');
                 } else {
                     const errorData = await response.json();
@@ -2129,9 +2289,29 @@
             }
         }
 
+        function clearGuestHistory() {
+            if (!state.isGuest) return;
+            
+            if (!confirm('Tüm sohbet geçmişiniz silinecek. Emin misiniz?')) return;
+            
+            state.guestChats = [];
+            localStorage.removeItem('marulgpt_guest_chats');
+            
+            createNewGuestChat();
+            
+            showNotification('Tüm sohbet geçmişi temizlendi', 'success');
+        }
+
         async function handleLogout() {
             if (!state.isAuthenticated) {
-                showNotification('Zaten misafir modundasınız', 'info');
+                if (confirm('Misafir modundasınız. Tüm geçmişinizi temizlemek ister misiniz?')) {
+                    state.guestChats = [];
+                    localStorage.removeItem('marulgpt_guest_chats');
+                    localStorage.removeItem('marulgpt_guest_questions');
+                    
+                    state.guestQuestionCount = 10;
+                    createNewGuestChat();
+                }
                 return;
             }
             
@@ -2151,7 +2331,7 @@
             
             updateUserUI();
             clearMessages();
-            renderChatHistory();
+            renderGuestChatHistory();
             checkQuestionLimit();
             showWelcomeMessage();
             
@@ -2163,13 +2343,7 @@
             localStorage.removeItem('marulgpt_user_id');
             localStorage.removeItem('marulgpt_user_data');
             localStorage.removeItem('marulgpt_guest_questions');
-            
-            for (let i = 0; i < localStorage.length; i++) {
-                const key = localStorage.key(i);
-                if (key && key.startsWith('marulgpt_guest_messages_')) {
-                    localStorage.removeItem(key);
-                }
-            }
+            localStorage.removeItem('marulgpt_guest_chats');
         }
 
         function handleDonate() {
