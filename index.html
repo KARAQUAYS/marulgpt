@@ -1,10 +1,20 @@
 <!DOCTYPE html>
 <html lang="tr">
+
 <head>
-    <link rel="icon" href="/favicon.ico" type="image/x-icon">
-    <link rel="icon" type="image/png" href="/favicon.png">
-    <link rel="apple-touch-icon" href="/favicon.png">
-    <meta name="description" content="Marul AI, günlük işlerinizi kolaylaştıran güçlü bir yapay zekâ asistanı. Soru sorun, fikir isteyin, kod yazdırın, hesap yaptırın—Marul AI her zaman hazır!">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <meta name="description"
+        content="Marul AI, günlük işlerinizi kolaylaştıran güçlü bir yapay zekâ asistanı. Soru sorun, fikir isteyin, kod yazdırın, hesap yaptırın—Marul AI her zaman hazır!">
+
+    <title>Marul AI - Akıllı Sohbet Asistanı</title>
+
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="apple-touch-icon" href="favicon.png">
+
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -15,348 +25,362 @@
     }
     </script>
 
-    <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    <link rel="shortcut icon" href="/favicon.ico">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9887645562823181"
-     crossorigin="anonymous"></script>
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-V0TG9J2D9C"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+        crossorigin="anonymous"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-V0TG9J2D9C"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-V0TG9J2D9C');
+    </script>
 
-  gtag('config', 'G-V0TG9J2D9C');
-</script>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Marul AI - Akıllı Sohbet Asistanı</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@800;900&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;700&display=swap"
+        rel="stylesheet">
+
     <style>
         :root {
-            --primary-color: #00c896;
-            --primary-dark: #00a178;
-            --dark-bg: #0f172a;
-            --darker-bg: #0a0f1f;
-            --card-bg: #1e293b;
-            --light-text: #f1f5f9;
-            --gray-text: #94a3b8;
-            --border-color: #334155;
-            --user-msg: #3b82f6;
-            --ai-msg: #10b981;
-            --error-color: #ef4444;
-            --warning-color: #f59e0b;
-            --donate-color: #ff6b6b;
-            --logout-color: #f43f5e;
+            --bg-deep: #050505;
+            --bg-dark: #0a0a0f;
+            --bg-card: rgba(20, 20, 30, 0.6);
+            --bg-sidebar: rgba(10, 12, 16, 0.7);
+            --border-light: rgba(255, 255, 255, 0.08);
+
+            --primary: #00ff9d;
+            --primary-glow: rgba(0, 255, 157, 0.4);
+            --secondary: #7000ff;
+            --accent: #00e5ff;
+            --donate-color: #ff4757;
+
+            --text-main: #ffffff;
+            --text-muted: #8b9bb4;
+
+            --msg-user-bg: linear-gradient(135deg, rgba(112, 0, 255, 0.15), rgba(0, 229, 255, 0.15));
+            --msg-user-border: rgba(112, 0, 255, 0.3);
+            --msg-ai-bg: rgba(255, 255, 255, 0.03);
+
+            --radius-xl: 24px;
+            --radius-lg: 16px;
+            --radius-md: 12px;
+
+            --sidebar-w: 280px;
+            --anim-fast: 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            --anim-smooth: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            --shadow-card: 0 20px 50px rgba(0, 0, 0, 0.7);
+        }
+
+        [data-theme="light"] {
+            --bg-deep: #f0f2f5;
+            --bg-dark: #ffffff;
+            --bg-card: rgba(255, 255, 255, 0.7);
+            --bg-sidebar: rgba(255, 255, 255, 0.8);
+            --border-light: rgba(0, 0, 0, 0.08);
+
+            --primary: #00bf72;
+            --primary-glow: rgba(0, 191, 114, 0.2);
+            --secondary: #6c5ce7;
+
+            --text-main: #2d3436;
+            --text-muted: #636e72;
+
+            --msg-user-bg: linear-gradient(135deg, #6c5ce7, #74b9ff);
+            --msg-user-border: transparent;
+            --msg-ai-bg: #ffffff;
+            --shadow-card: 0 10px 30px rgba(0, 0, 0, 0.1);
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            outline: none;
         }
 
-        body{
-            font-family: 'Poppins', sans-serif;
-            background-color: var(--dark-bg);
-            color: var(--light-text);
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        .app-container {
-            display: flex;
+        body {
+            background: var(--bg-deep);
+            color: var(--text-main);
+            font-family: 'Outfit', sans-serif;
             height: 100vh;
-            position: relative;
+            overflow: hidden;
+            transition: background 0.5s ease, color 0.5s ease;
+        }
+
+        .nebula-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 10% 20%, rgba(112, 0, 255, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(0, 255, 157, 0.05) 0%, transparent 40%);
+            pointer-events: none;
+            z-index: -2;
+            transition: opacity 0.5s;
+        }
+
+        [data-theme="light"] .nebula-bg {
+            background: radial-gradient(circle at 10% 20%, rgba(108, 92, 231, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 90% 10%, rgba(0, 191, 114, 0.1) 0%, transparent 40%);
+        }
+
+        .grid-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            opacity: 0.4;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        [data-theme="light"] .grid-overlay {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+        }
+
+        .app-wrapper {
+            display: flex;
+            height: 100%;
         }
 
         .sidebar {
-            width: 300px;
-            background-color: var(--darker-bg);
-            border-right: 1px solid var(--border-color);
+            width: var(--sidebar-w);
+            background: var(--bg-sidebar);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid var(--border-light);
             display: flex;
             flex-direction: column;
-            transition: transform 0.3s ease;
-            z-index: 10;
+            padding: 1.5rem;
+            z-index: 50;
+            transition: transform var(--anim-smooth), background 0.3s;
         }
 
-        .sidebar-header {
-            padding: 20px;
-            border-bottom: 1px solid var(--border-color);
-            text-align: center;
-        }
-
-        .logo {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 28px;
-            font-weight: 900;
-            color: var(--primary-color);
-            margin-bottom: 5px;
+        .brand-section {
             display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 10px;
+            gap: 12px;
+            margin-bottom: 2rem;
         }
 
-        .logo i {
-            color: var(--ai-msg);
+        .brand-logo-img {
+            width: 38px;
+            height: 38px;
+            filter: drop-shadow(0 0 10px var(--primary-glow));
         }
 
-        .user-section {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px 15px;
-            background-color: rgba(0, 200, 150, 0.1);
-            border-radius: 10px;
-            margin-top: 10px;
+        .brand-text {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 1.4rem;
+            color: var(--text-main);
+        }
+
+        .btn-new-chat {
             position: relative;
-        }
-
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary-color), var(--user-msg));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 18px;
-        }
-
-        .guest-avatar {
-            background: linear-gradient(135deg, #94a3b8, #64748b);
-        }
-
-        .user-info h3 {
-            font-size: 16px;
-            font-weight: 600;
-        }
-
-        .user-info p {
-            font-size: 12px;
-            color: var(--gray-text);
-        }
-
-        .question-counter {
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            background: var(--warning-color);
-            color: white;
-            border-radius: 10px;
-            padding: 2px 8px;
-            font-size: 10px;
-            font-weight: bold;
-            animation: pulse 2s infinite;
-        }
-
-        .new-chat-btn {
-            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 10px;
-            font-weight: 600;
+            background: linear-gradient(135deg, rgba(128, 128, 128, 0.1), rgba(128, 128, 128, 0.05));
+            border: 1px solid var(--border-light);
+            color: var(--text-main);
+            padding: 14px;
+            border-radius: var(--radius-lg);
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
-            margin: 15px 20px;
-            transition: all 0.3s ease;
+            font-weight: 600;
+            overflow: hidden;
+            transition: var(--anim-fast);
         }
 
-        .new-chat-btn:hover {
+        .btn-new-chat:hover {
+            border-color: var(--primary);
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 200, 150, 0.3);
+            box-shadow: 0 5px 20px rgba(0, 255, 157, 0.15);
         }
 
-        .chat-history {
+        .sidebar-scroll-area {
             flex: 1;
             overflow-y: auto;
-            padding: 10px;
+            margin-top: 1.5rem;
+            padding-right: 5px;
         }
 
-        .chat-history-title {
-            font-size: 14px;
-            color: var(--gray-text);
-            margin: 15px 10px 10px;
-            text-transform: uppercase;
+        .history-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
             letter-spacing: 1px;
+            margin-bottom: 15px;
+            font-weight: 600;
         }
 
-        .chat-item {
-            padding: 12px 15px;
-            border-radius: 10px;
+        .history-item {
+            padding: 12px;
             margin-bottom: 8px;
+            border-radius: var(--radius-md);
             cursor: pointer;
-            transition: all 0.2s ease;
+            color: var(--text-muted);
+            font-size: 0.9rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            transition: var(--anim-fast);
+            border: 1px solid transparent;
+            position: relative;
+            overflow: hidden;
         }
 
-        .chat-item:hover {
-            background-color: rgba(255, 255, 255, 0.05);
+        .history-item:hover {
+            background: rgba(128, 128, 128, 0.1);
+            color: var(--text-main);
         }
 
-        .chat-item.active {
-            background-color: rgba(0, 200, 150, 0.15);
-            border-left: 3px solid var(--primary-color);
+        .history-item.active {
+            background: rgba(0, 255, 157, 0.08);
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            box-shadow: 0 0 15px rgba(0, 255, 157, 0.1) inset;
         }
 
-        .chat-item-content {
+        [data-theme="light"] .history-item.active {
+            background: rgba(0, 191, 114, 0.1);
+            border: 1px solid var(--primary);
+            box-shadow: 0 0 15px rgba(0, 191, 114, 0.15) inset;
+        }
+
+        .history-date {
+            font-size: 0.75rem;
+            margin-top: 4px;
+            color: #3498db;
+            font-weight: 500;
+        }
+
+        [data-theme="dark"] .history-date {
+            color: #5dade2;
+        }
+
+        .item-actions button {
+            background: none;
+            border: none;
+            color: inherit;
+            margin-left: 5px;
+            cursor: pointer;
+        }
+
+        .item-actions button:hover {
+            color: #ff6b6b;
+        }
+
+        .sidebar-footer {
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-light);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .donate-btn-sidebar {
+            background: linear-gradient(135deg, var(--donate-color), #ff6b81);
+            color: #fff;
+            border: none;
+            padding: 10px;
+            border-radius: var(--radius-md);
+            width: 100%;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: var(--anim-fast);
+        }
+
+        .donate-btn-sidebar:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 71, 87, 0.3);
+        }
+
+        .sidebar-link {
+            width: 100%;
+            text-align: left;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            padding: 10px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: var(--anim-fast);
+        }
+
+        .sidebar-link:hover {
+            color: var(--text-main);
+            background: rgba(128, 128, 128, 0.05);
+            border-radius: var(--radius-sm);
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background: rgba(128, 128, 128, 0.05);
+            border-radius: var(--radius-md);
+            margin-top: 5px;
+        }
+
+        .avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #fff;
+            font-size: 1rem;
+        }
+
+        .user-info {
             flex: 1;
             overflow: hidden;
         }
 
-        .chat-item-title {
-            font-weight: 500;
-            font-size: 14px;
+        .user-name {
+            font-size: 0.9rem;
+            font-weight: 600;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
 
-        .chat-item-date {
-            font-size: 11px;
-            color: var(--gray-text);
-            margin-top: 3px;
+        .user-status {
+            font-size: 0.7rem;
+            color: var(--text-muted);
         }
 
-        .chat-item-actions {
-            display: flex;
-            gap: 8px;
-            opacity: 0;
-            transition: opacity 0.2s ease;
-        }
-
-        .chat-item:hover .chat-item-actions {
-            opacity: 1;
-        }
-
-        .chat-item-action-btn {
+        .login-btn-mini {
             background: none;
             border: none;
-            color: var(--gray-text);
+            color: var(--text-main);
             cursor: pointer;
-            font-size: 12px;
-            transition: color 0.2s ease;
+            padding: 5px;
+            opacity: 0.7;
         }
 
-        .chat-item-action-btn:hover {
-            color: var(--light-text);
+        .login-btn-mini:hover {
+            opacity: 1;
+            color: var(--primary);
         }
 
-        .sidebar-footer {
-            padding: 20px;
-            border-top: 1px solid var(--border-color);
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .donate-btn {
-            background: linear-gradient(135deg, var(--donate-color), #ff4757);
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 10px;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            transition: all 0.3s ease;
-        }
-
-        .donate-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
-        }
-
-        .auth-sidebar-btn {
-            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 10px;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            transition: all 0.3s ease;
-        }
-
-        .auth-sidebar-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 200, 150, 0.3);
-        }
-
-        .logout-btn {
-            background: linear-gradient(135deg, var(--logout-color), #e11d48);
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 10px;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            transition: all 0.3s ease;
-            margin-top: 5px;
-        }
-
-        .logout-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(244, 63, 94, 0.3);
-        }
-
-        .clear-history-btn {
-            background: linear-gradient(135deg, #64748b, #475569);
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 10px;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            transition: all 0.3s ease;
-        }
-
-        .clear-history-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(100, 116, 139, 0.3);
-        }
-
-        .sidebar-toggle {
-            display: none;
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            background-color: var(--card-bg);
-            border: none;
-            color: var(--light-text);
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            cursor: pointer;
-            z-index: 100;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .main-content {
+        .main-chat-area {
             flex: 1;
             display: flex;
             flex-direction: column;
@@ -364,2148 +388,1123 @@
         }
 
         .chat-header {
-            padding: 20px;
-            border-bottom: 1px solid var(--border-color);
+            height: 70px;
+            padding: 0 2rem;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            background-color: rgba(15, 23, 42, 0.8);
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border-light);
             backdrop-filter: blur(10px);
-            z-index: 5;
+            background: rgba(var(--bg-deep), 0.7);
         }
 
-        .chat-title-container {
+        .header-left {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 15px;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-main);
+            font-size: 1.5rem;
+            cursor: pointer;
         }
 
         .chat-title {
-            font-size: 20px;
-            font-weight: 600;
-            max-width: 300px;
+            font-family: 'Space Grotesk';
+            font-size: 1.1rem;
+            color: var(--text-main);
+            white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            white-space: nowrap;
         }
 
-        .chat-title-edit {
+        .edit-title-btn {
             background: none;
             border: none;
-            color: var(--gray-text);
+            color: var(--text-muted);
             cursor: pointer;
-            font-size: 14px;
         }
 
-        .chat-actions {
+        .header-action-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            background: rgba(128, 128, 128, 0.1);
+            border: 1px solid transparent;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: var(--anim-fast);
+        }
+
+        .header-action-btn:hover {
+            background: rgba(128, 128, 128, 0.2);
+            color: var(--text-main);
+        }
+
+        .theme-toggle-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 1px solid var(--border-light);
+            background: rgba(128, 128, 128, 0.1);
+            color: var(--text-main);
+            cursor: pointer;
             display: flex;
-            gap: 15px;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            margin-left: 10px;
         }
 
-        .chat-action-btn {
-            background: none;
-            border: none;
-            color: var(--gray-text);
-            cursor: pointer;
-            font-size: 18px;
-            transition: color 0.2s ease;
-        }
-
-        .chat-action-btn:hover {
-            color: var(--primary-color);
+        .theme-toggle-btn:hover {
+            transform: rotate(15deg) scale(1.1);
+            background: rgba(255, 255, 0, 0.1);
+            color: #ffd700;
         }
 
         .messages-container {
             flex: 1;
+            padding: 2rem;
             overflow-y: auto;
-            padding: 20px;
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 2rem;
+        }
+
+        .welcome-screen {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            opacity: 0;
+            animation: fadeIn 0.8s forwards;
+        }
+
+        .welcome-logo {
+            width: 80px;
+            height: 80px;
+            position: relative;
+            z-index: 2;
+            border-radius: 20px;
+        }
+
+        .welcome-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120px;
+            height: 120px;
+            background: radial-gradient(circle, var(--primary-glow) 0%, transparent 70%);
+            filter: blur(20px);
+            z-index: 1;
+            animation: pulse 3s infinite;
         }
 
         .message {
             display: flex;
-            max-width: 80%;
-            animation: messageAppear 0.3s ease;
-        }
-
-        @keyframes messageAppear {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            gap: 15px;
+            max-width: 800px;
+            margin: 0 auto;
+            width: 100%;
+            animation: slideUp 0.3s forwards;
         }
 
         .message.user {
-            align-self: flex-end;
-        }
-
-        .message.ai {
-            align-self: flex-start;
+            flex-direction: row-reverse;
         }
 
         .message-avatar {
             width: 36px;
             height: 36px;
-            border-radius: 50%;
+            border-radius: 10px;
+            flex-shrink: 0;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: bold;
-            margin-top: 5px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            background: #222;
+            border: 1px solid var(--border-light);
+        }
+
+        .message-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .message.user .message-avatar {
-            background: linear-gradient(135deg, var(--user-msg), #1d4ed8);
-            margin-left: 10px;
-        }
-
-        .message.ai .message-avatar {
-            background: linear-gradient(135deg, var(--ai-msg), #047857);
-            margin-right: 10px;
+            background: #333;
+            color: #fff;
         }
 
         .message-content {
-            padding: 15px;
-            border-radius: 15px;
+            padding: 1rem 1.2rem;
+            border-radius: var(--radius-lg);
+            line-height: 1.6;
+            font-size: 0.95rem;
             position: relative;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            background: var(--msg-ai-bg);
+            border: 1px solid var(--border-light);
+            color: var(--text-main);
         }
 
         .message.user .message-content {
-            background-color: var(--user-msg);
-            border-bottom-right-radius: 5px;
-        }
-
-        .message.ai .message-content {
-            background-color: var(--card-bg);
-            border-bottom-left-radius: 5px;
-            border: 1px solid var(--border-color);
-        }
-
-        .message-text {
-            line-height: 1.5;
-            font-size: 15px;
+            background: var(--msg-user-bg);
+            border: 1px solid var(--msg-user-border);
+            color: #fff;
         }
 
         .message-time {
-            font-size: 11px;
-            color: rgba(255, 255, 255, 0.7);
-            text-align: right;
+            font-size: 0.7rem;
+            color: var(--text-muted);
             margin-top: 5px;
+            text-align: right;
         }
 
-        .message.ai .message-time {
-            color: var(--gray-text);
+        .input-area {
+            padding: 1.5rem 2rem;
+            background: linear-gradient(to top, var(--bg-deep) 40%, transparent);
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
         }
 
-        .typing-indicator {
+        .api-disclaimer {
+            text-align: center;
+            font-size: 0.75rem;
+            color: #ffae00;
+            margin-bottom: 10px;
+            opacity: 0.8;
             display: flex;
             align-items: center;
-            gap: 5px;
-            padding: 10px 15px;
-            background-color: var(--card-bg);
-            border-radius: 15px;
-            border: 1px solid var(--border-color);
-            width: fit-content;
-            margin-left: 46px;
+            justify-content: center;
+            gap: 6px;
         }
 
-        .typing-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background-color: var(--primary-color);
-            animation: typingAnimation 1.5s infinite ease-in-out;
+        .input-wrapper {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: 24px;
+            padding: 8px 16px;
+            display: flex;
+            align-items: flex-end;
+            gap: 10px;
+            box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.2);
+            transition: var(--anim-fast);
         }
 
-        .typing-dot:nth-child(1) { animation-delay: 0s; }
-        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
-        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
-
-        @keyframes typingAnimation {
-            0%, 60%, 100% { transform: translateY(0); }
-            30% { transform: translateY(-10px); }
+        .input-wrapper:focus-within {
+            border-color: var(--primary);
+            box-shadow: 0 0 20px rgba(0, 255, 157, 0.1);
         }
 
-        .auth-container {
-            position: absolute;
+        textarea {
+            flex: 1;
+            background: none;
+            border: none;
+            color: var(--text-main);
+            padding: 12px 0;
+            resize: none;
+            max-height: 200px;
+            font-family: inherit;
+            font-size: 1rem;
+        }
+
+        .send-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            border: none;
+            background: var(--primary);
+            color: #000;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--anim-fast);
+            margin-bottom: 4px;
+        }
+
+        .send-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 15px var(--primary);
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            padding: 15px 20px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-main);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            animation: slideInRight 0.3s forwards;
+            backdrop-filter: blur(10px);
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-overlay {
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: var(--dark-bg);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 100;
-            transition: opacity 0.5s ease;
-        }
-
-        .auth-container.hidden {
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
             opacity: 0;
-            pointer-events: none;
-        }
-
-        .auth-box {
-            background-color: var(--card-bg);
-            border-radius: 20px;
-            padding: 40px;
-            width: 100%;
-            max-width: 450px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
-            border: 1px solid var(--border-color);
-            animation: authBoxAppear 0.5s ease;
-        }
-
-        @keyframes authBoxAppear {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .auth-title {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 32px;
-            color: var(--primary-color);
-            text-align: center;
-            margin-bottom: 30px;
+            visibility: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 15px;
+            transition: var(--anim-fast);
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-card {
+            background: var(--bg-dark);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-xl);
+            padding: 0;
+            width: 90%;
+            max-width: 800px;
+            position: relative;
+            transform: scale(0.95);
+            transition: var(--anim-smooth);
+            box-shadow: var(--shadow-card);
+            display: flex;
+            overflow: hidden;
+        }
+
+        .modal-card.small {
+            max-width: 400px;
+            padding: 2rem;
+            display: block;
+        }
+
+        .modal-overlay.active .modal-card {
+            transform: scale(1);
+        }
+
+        .modal-sidebar {
+            width: 200px;
+            background: rgba(128, 128, 128, 0.05);
+            border-right: 1px solid var(--border-light);
+            padding: 2rem 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .info-tab {
+            width: 100%;
+            text-align: left;
+            padding: 12px 15px;
+            background: transparent;
+            border: none;
+            border-radius: 10px;
+            color: var(--text-muted);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--anim-fast);
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .info-tab:hover {
+            background: rgba(128, 128, 128, 0.1);
+            color: var(--text-main);
+        }
+
+        .info-tab.active {
+            background: rgba(0, 255, 157, 0.1);
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        [data-theme="light"] .info-tab.active {
+            background: rgba(0, 191, 114, 0.15);
+        }
+
+        .modal-body {
+            flex: 1;
+            padding: 2.5rem;
+            overflow-y: auto;
+            max-height: 60vh;
+            color: var(--text-main);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            z-index: 10;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: rgba(128, 128, 128, 0.1);
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--anim-fast);
+        }
+
+        .modal-close:hover {
+            background: #ff4757;
+            color: #fff;
         }
 
         .auth-tabs {
             display: flex;
-            margin-bottom: 30px;
-            border-bottom: 1px solid var(--border-color);
+            gap: 10px;
+            margin-bottom: 20px;
+            background: rgba(128, 128, 128, 0.05);
+            padding: 5px;
+            border-radius: 12px;
         }
 
         .auth-tab {
             flex: 1;
-            padding: 15px;
-            text-align: center;
-            background: none;
+            padding: 10px;
+            background: transparent;
             border: none;
-            color: var(--gray-text);
-            font-weight: 600;
+            color: var(--text-muted);
+            border-radius: 8px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
+            font-weight: 600;
         }
 
         .auth-tab.active {
-            color: var(--primary-color);
-        }
-
-        .auth-tab.active::after {
-            content: '';
-            position: absolute;
-            bottom: -1px;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background-color: var(--primary-color);
-            border-radius: 3px 3px 0 0;
-        }
-
-        .auth-form {
-            display: none;
-        }
-
-        .auth-form.active {
-            display: block;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: var(--light-text);
+            background: var(--primary);
+            color: #000;
+            box-shadow: 0 4px 10px rgba(0, 255, 157, 0.3);
         }
 
         .form-input {
             width: 100%;
-            padding: 14px;
-            background-color: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--border-color);
+            padding: 12px 15px;
+            margin-bottom: 15px;
+            background: rgba(128, 128, 128, 0.05);
+            border: 1px solid var(--border-light);
             border-radius: 10px;
-            color: var(--light-text);
-            font-size: 15px;
-            transition: all 0.3s ease;
+            color: var(--text-main);
         }
 
-        .form-input:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(0, 200, 150, 0.1);
-        }
-
-        .auth-btn {
+        .primary-btn {
             width: 100%;
-            padding: 15px;
-            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
-            color: white;
+            padding: 14px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
             border: none;
-            border-radius: 10px;
-            font-weight: 600;
-            font-size: 16px;
+            border-radius: 12px;
+            color: #fff;
+            font-weight: 700;
             cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 10px;
         }
 
-        .auth-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(0, 200, 150, 0.2);
+        [data-theme="light"] .primary-btn {
+            color: #fff;
         }
 
-        .auth-footer {
-            text-align: center;
-            margin-top: 25px;
-            color: var(--gray-text);
-            font-size: 14px;
-        }
-
-        .auth-footer a {
-            color: var(--primary-color);
-            text-decoration: none;
-            font-weight: 500;
-        }
-
-        .input-container {
-            padding: 20px;
-            border-top: 1px solid var(--border-color);
-            background-color: rgba(15, 23, 42, 0.8);
-            backdrop-filter: blur(10px);
-        }
-
-        .input-wrapper {
-            display: flex;
-            gap: 10px;
-            align-items: flex-end;
-        }
-
-        .message-input {
-            flex: 1;
-            padding: 15px 20px;
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 15px;
-            color: var(--light-text);
-            font-size: 15px;
-            resize: none;
-            min-height: 56px;
-            max-height: 150px;
-            transition: all 0.3s ease;
-        }
-
-        .message-input:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(0, 200, 150, 0.1);
-        }
-
-        .send-btn {
-            width: 56px;
-            height: 56px;
-            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
-            border: none;
-            border-radius: 15px;
-            color: white;
-            cursor: pointer;
+        .social-item {
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            transition: all 0.3s ease;
-        }
-
-        .send-btn:hover:not(:disabled) {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(0, 200, 150, 0.3);
-        }
-
-        .send-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            animation: none;
-        }
-
-        .input-features {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 10px;
-            font-size: 13px;
-            color: var(--gray-text);
-        }
-
-        .input-features span {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .api-disclaimer {
-            margin-top: 12px;
-            padding: 10px 15px;
-            background-color: rgba(245, 158, 11, 0.1);
-            border: 1px solid var(--warning-color);
-            border-radius: 8px;
-            color: var(--warning-color);
-            font-size: 12px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            animation: fadeIn 0.5s ease;
-        }
-
-        .api-disclaimer i {
-            font-size: 14px;
-        }
-
-        .app-footer {
-            padding: 15px 20px;
-            border-top: 1px solid var(--border-color);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: var(--darker-bg);
-        }
-
-        .info-btn {
-            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-weight: 500;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.3s ease;
-            font-size: 14px;
-        }
-
-        .info-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 200, 150, 0.3);
-        }
-
-        .info-modal {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background-color: var(--darker-bg);
-            border-top: 1px solid var(--border-color);
-            border-radius: 20px 20px 0 0;
-            padding: 0;
-            transform: translateY(100%);
-            transition: transform 0.3s ease;
-            z-index: 1000;
-            max-height: 80vh;
-            overflow: hidden;
-        }
-
-        .info-modal.active {
-            transform: translateY(0);
-        }
-
-        .info-modal-header {
-            padding: 20px;
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .info-modal-header h3 {
-            font-size: 18px;
-            color: var(--primary-color);
-        }
-
-        .close-info {
-            background: none;
-            border: none;
-            color: var(--gray-text);
-            font-size: 20px;
-            cursor: pointer;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-        }
-
-        .close-info:hover {
-            background-color: rgba(255, 255, 255, 0.05);
-            color: var(--light-text);
-        }
-
-        .info-modal-content {
-            padding: 20px;
-            max-height: calc(80vh - 70px);
-            overflow-y: auto;
-        }
-
-        .info-tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 10px;
-        }
-
-        .info-tab {
-            padding: 10px 20px;
-            background: none;
-            border: none;
-            color: var(--gray-text);
-            cursor: pointer;
-            border-radius: 20px;
-            transition: all 0.3s ease;
-            font-weight: 500;
-        }
-
-        .info-tab.active {
-            background-color: var(--primary-color);
-            color: white;
-        }
-
-        .info-content {
-            display: none;
-            animation: fadeIn 0.5s ease;
-        }
-
-        .info-content.active {
-            display: block;
-        }
-
-        .info-content h4 {
-            font-size: 16px;
-            margin-bottom: 15px;
-            color: var(--primary-color);
-        }
-
-        .info-content p {
-            font-size: 14px;
-            line-height: 1.6;
-            color: var(--gray-text);
-            margin-bottom: 15px;
-        }
-        
-        .social-media-links {
-            margin-top: 20px;
-        }
-        
-        .social-media-links ul {
-            list-style-type: none;
-            padding-left: 0;
-        }
-        
-        .social-media-links li {
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .social-media-links i {
-            width: 24px;
-            text-align: center;
-            color: var(--primary-color);
-        }
-        
-        .social-media-links a {
-            color: var(--light-text);
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-        
-        .social-media-links a:hover {
-            color: var(--primary-color);
-        }
-
-        .limit-warning {
-            background-color: rgba(239, 68, 68, 0.1);
-            border: 1px solid var(--error-color);
-            border-radius: 10px;
-            padding: 15px;
-            margin: 15px 20px;
-            text-align: center;
-            animation: fadeIn 0.5s ease;
-        }
-
-        .limit-warning h4 {
-            color: var(--error-color);
-            margin-bottom: 8px;
-            font-size: 16px;
-        }
-
-        .limit-warning p {
-            font-size: 14px;
-            color: var(--gray-text);
+            gap: 12px;
+            padding: 12px;
+            background: rgba(128, 128, 128, 0.05);
+            border-radius: 12px;
             margin-bottom: 10px;
+            color: var(--text-main);
+            text-decoration: none;
+            transition: 0.2s;
         }
 
-        .limit-warning-btn {
-            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .limit-warning-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 200, 150, 0.3);
-        }
-
-        .pulse {
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(0, 200, 150, 0.7); }
-            70% { box-shadow: 0 0 0 10px rgba(0, 200, 150, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(0, 200, 150, 0); }
-        }
-
-        .fade-in {
-            animation: fadeIn 0.5s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        @media (max-width: 1024px) {
-            .sidebar {
-                position: absolute;
-                height: 100%;
-                transform: translateX(-100%);
-            }
-            
-            .sidebar.open {
-                transform: translateX(0);
-            }
-            
-            .sidebar-toggle {
-                display: flex;
-            }
-            
-            .message {
-                max-width: 90%;
-            }
+        .social-item:hover {
+            background: rgba(0, 255, 157, 0.1);
+            color: var(--primary);
+            transform: translateX(5px);
         }
 
         @media (max-width: 768px) {
-            .auth-box {
-                margin: 20px;
-                padding: 30px;
+            .sidebar {
+                position: fixed;
+                left: -100%;
+                height: 100%;
+                width: 85%;
             }
-            
-            .logo {
-                font-size: 24px;
+
+            .sidebar.open {
+                left: 0;
             }
-            
-            .chat-title {
-                max-width: 200px;
+
+            .mobile-menu-btn {
+                display: block;
             }
-            
-            .message {
-                max-width: 95%;
-            }
-            
-            .message-avatar {
-                width: 32px;
-                height: 32px;
-                font-size: 14px;
-            }
-            
-            .info-modal {
+
+            .modal-card {
+                flex-direction: column;
+                overflow-y: auto;
                 max-height: 90vh;
             }
-            
-            .info-modal-content {
-                max-height: calc(90vh - 70px);
+
+            .modal-sidebar {
+                width: 100%;
+                flex-direction: row;
+                overflow-x: auto;
+                padding: 10px;
+                border-bottom: 1px solid var(--border-light);
+            }
+
+            .info-tab {
+                white-space: nowrap;
+                text-align: center;
             }
         }
 
-        ::-webkit-scrollbar {
-            width: 8px;
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
         }
 
-        ::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
-        }
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
 
-        ::-webkit-scrollbar-thumb {
-            background: var(--primary-color);
-            border-radius: 10px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--primary-dark);
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
     </style>
 </head>
+
 <body>
-    <div class="app-container">
-        <button class="sidebar-toggle" id="sidebarToggle">
-            <i class="fas fa-bars"></i>
-        </button>
+    <div class="nebula-bg"></div>
+    <div class="grid-overlay"></div>
 
-        <div class="sidebar" id="sidebar">
-            <div class="sidebar-header">
-                <div class="logo">
-                    <i class="fas fa-robot"></i>
-                    <span>Marul AI</span>
-                </div>
-                <div class="user-section">
-                    <div class="user-avatar" id="userAvatar">M</div>
-                    <div class="user-info">
-                        <h3 id="userName">Misafir Kullanıcı</h3>
-                        <p id="userStatus">Çevrimiçi</p>
-                    </div>
-                    <div class="question-counter" id="questionCounter">10/10</div>
-                </div>
+    <div class="app-wrapper">
+        <nav class="sidebar" id="sidebar">
+            <div class="brand-section">
+                <img src="favicon.png" alt="Marul AI" class="brand-logo-img">
+                <span class="brand-text" style="font-family:'Space Grotesk'; font-size: 1.5rem; font-weight: 700;">Marul
+                    AI</span>
             </div>
-
-            <button class="new-chat-btn" id="newChatBtn">
-                <i class="fas fa-plus"></i>
-                <span>Yeni Sohbet</span>
+            <button class="btn-new-chat" id="newChatBtn">
+                <i class="fas fa-plus"></i> <span>Yeni Sohbet</span>
             </button>
-
-            <div class="chat-history">
-                <div class="chat-history-title">Sohbet Geçmişi</div>
-                <div id="chatHistoryList">
-                </div>
+            <div class="sidebar-scroll-area">
+                <div class="history-label">GEÇMİŞ</div>
+                <div class="history-container" id="chatHistoryList"></div>
             </div>
-
             <div class="sidebar-footer">
-                <button class="donate-btn" id="donateBtn">
-                    <i class="fas fa-heart"></i>
-                    <span>Bize Destek Ol</span>
+                <button class="donate-btn-sidebar" id="donateBtn">
+                    <i class="fas fa-heart"></i> Bağış Yap
                 </button>
-                <button class="auth-sidebar-btn" id="authSidebarBtn">
-                    <i class="fas fa-sign-in-alt"></i>
-                    <span>Giriş Yap / Kayıt Ol</span>
+                <button class="sidebar-link" id="infoBtn">
+                    <i class="fas fa-info-circle"></i> <span>Hakkında & İletişim</span>
                 </button>
-                <button class="clear-history-btn" id="clearHistoryBtn">
-                    <i class="fas fa-trash-alt"></i>
-                    <span>Geçmişi Temizle</span>
-                </button>
-                <button class="logout-btn" id="logoutBtn">
-                    <i class="fas fa-sign-out-alt"></i>
-                    <span>Çıkış Yap</span>
-                </button>
+                <div class="user-profile">
+                    <div class="avatar" id="userAvatar">M</div>
+                    <div class="user-info">
+                        <div class="user-name" id="userName">Misafir</div>
+                        <div class="user-status" id="questionCountDisplay">10/10 Hak</div>
+                    </div>
+                    <button id="authSidebarBtn" class="login-btn-mini"><i class="fas fa-sign-in-alt"></i></button>
+                    <button id="logoutBtn" class="login-btn-mini" style="display: none;"><i
+                            class="fas fa-sign-out-alt"></i></button>
+                </div>
             </div>
-        </div>
+        </nav>
 
-        <div class="main-content">
-            <div class="chat-header">
-                <div class="chat-title-container">
-                    <h2 class="chat-title" id="currentChatTitle">Yeni Sohbet</h2>
-                    <button class="chat-title-edit" id="editChatTitleBtn" title="Sohbet adını düzenle">
-                        <i class="fas fa-edit"></i>
+        <main class="main-chat-area">
+            <header class="chat-header">
+                <div class="header-left">
+                    <button class="mobile-menu-btn" id="sidebarToggle"><i class="fas fa-bars"></i></button>
+                    <h1 class="chat-title" id="currentChatTitle">Yeni Sohbet</h1>
+                    <button id="editChatTitleBtn" class="edit-title-btn"><i class="fas fa-pen"></i></button>
+                </div>
+                <div class="header-right" style="display: flex; align-items: center;">
+                    <button class="header-action-btn" id="shareChatBtn"><i class="fas fa-share-alt"></i></button>
+                    <button class="header-action-btn delete" id="clearHistoryBtn"><i
+                            class="fas fa-trash-alt"></i></button>
+                    <button class="theme-toggle-btn" id="themeToggleBtn" title="Temayı Değiştir">
+                        <i class="fas fa-moon"></i>
                     </button>
                 </div>
-                <div class="chat-actions">
-                    <button class="chat-action-btn" id="exportChatBtn" title="Sohbeti dışa aktar">
-                        <i class="fas fa-download"></i>
-                    </button>
-                    <button class="chat-action-btn" id="shareChatBtn" title="Sohbeti paylaş">
-                        <i class="fas fa-share-alt"></i>
-                    </button>
-                </div>
-            </div>
+            </header>
 
             <div class="messages-container" id="messagesContainer">
-                <div class="welcome-message">
-                    <div class="message ai">
-                        <div class="message-avatar">
-                            <i class="fas fa-robot"></i>
-                        </div>
-                        <div class="message-content">
-                            <div class="message-text">
-                                Merhaba! Ben <strong>Marul AI</strong>. Size nasıl yardımcı olabilirim? Misafir modundasınız ve 10 soru hakkınız bulunuyor. Daha fazla soru sormak için giriş yapabilirsiniz!
-                            </div>
-                            <div class="message-time">Şimdi</div>
-                        </div>
+                <div id="welcomeMessage" class="welcome-screen">
+                    <div class="welcome-logo-wrapper">
+                        <img src="favicon.png" alt="Marul AI" class="welcome-logo">
+                        <div class="welcome-glow"></div>
                     </div>
+                    <h2>Merhaba, Ben Marul AI</h2>
+                    <p>Sizlere yardımcı olmak için buradayım. Kod yazabilir, analiz yapabilir veya sohbet edebiliriz.
+                    </p>
                 </div>
             </div>
 
-            <div class="input-container">
-                <div id="limitWarning" class="limit-warning" style="display: none;">
-                    <h4><i class="fas fa-exclamation-triangle"></i> Soru Hakkınız Doldu!</h4>
-                    <p>Günlük 10 soru hakkınızı kullandınız. Daha fazla soru sormak için giriş yapın veya hesap oluşturun.</p>
-                    <button class="limit-warning-btn" id="limitAuthBtn">Giriş Yap / Kayıt Ol</button>
-                </div>
+            <div id="typingIndicator"
+                style="display:none; padding: 20px 40px; color: var(--primary); font-size: 0.9rem;">
+                <i class="fas fa-circle-notch fa-spin"></i> Marul AI düşünüyor...
+            </div>
+
+            <div class="input-area">
+                <div class="api-disclaimer"><i class="fas fa-robot"></i> Kendi dil modelimiz geliştirilmesi bitene kadar
+                    API kullanılmaktadır. Bu model bize ait değildir.</div>
                 <div class="input-wrapper">
-                    <textarea class="message-input" id="messageInput" placeholder="Marul AI'ye bir mesaj yazın..."></textarea>
-                    <button class="send-btn pulse" id="sendMessageBtn">
-                        <i class="fas fa-paper-plane"></i>
-                    </button>
-                </div>
-                <div class="api-disclaimer">
-                    <i class="fas fa-exclamation-triangle"></i>
-                    Konuştuğunuz model bize ait değildir. Kendi dil modelimiz hazırlanıp yayınlanana kadar harici bir API kullanılmaktadır.
-                </div>
-                <div class="input-features">
-                    <span><i class="fas fa-lightbulb"></i> Marul AI bağlamı hatırlar</span>
-                    <span><i class="fas fa-user-clock"></i> Soru hakkı: <span id="questionCountDisplay">10/10</span></span>
+                    <textarea id="messageInput" rows="1" placeholder="Bir şeyler yaz..."></textarea>
+                    <button class="send-btn" id="sendMessageBtn"><i class="fas fa-paper-plane"></i></button>
                 </div>
             </div>
+        </main>
+    </div>
 
-            <div class="app-footer">
-                <button class="info-btn" id="infoBtn">
-                    <i class="fas fa-info-circle"></i> Bilgiler
-                </button>
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-card" id="infoModal" style="display: none;">
+            <button class="modal-close" id="closeInfoModal"><i class="fas fa-times"></i></button>
+            <div class="modal-sidebar">
+                <button class="info-tab active" data-tab="about">Hakkında</button>
+                <button class="info-tab" data-tab="contact">İletişim</button>
+                <button class="info-tab" data-tab="terms">Kullanım Şartları</button>
+                <button class="info-tab" data-tab="privacy">Gizlilik</button>
+            </div>
+            <div class="modal-body">
+                <div id="aboutContent" class="info-content" style="display:block;">
+                    <h3 style="color:var(--primary); margin-bottom:15px; font-family:'Space Grotesk';">Marul AI Hakkında
+                    </h3>
+                    <p>Marul AI, 2024 yılında Ahmet Karakuş tarafından geliştirilmeye başlanmıştır. Amacımız, yapay zeka
+                        teknolojilerini herkes için erişilebilir, etkileşimli ve kullanıcı dostu hale getirmektir.</p>
+                    <p>Yerli bir yapay zeka girişimi olarak, dil modelimizi sürekli geliştiriyor ve kullanıcı deneyimine
+                        odaklanıyoruz.</p>
+                    <p>Sunduğumuz hizmetler deneysel nitelikte olup, verilen bilgilerin doğruluğu garanti
+                        edilmemektedir. Kullanıcıların önemli kararlar almadan önce birden fazla kaynaktan doğrulama
+                        yapmaları önerilir.</p>
+                </div>
+                <div id="contactContent" class="info-content" style="display:none;">
+                    <h3 style="color:var(--primary); margin-bottom:15px; font-family:'Space Grotesk';">İletişim</h3>
+                    <p style="margin-bottom:20px; color:var(--text-muted);">Bizimle iletişime geçmek için aşağıdaki
+                        kanalları kullanabilirsiniz:</p>
+                    <a href="https://instagram.com/marulai_resmi" target="_blank" class="social-item"><i
+                            class="fab fa-instagram"></i> Instagram (@marulai_resmi)</a>
+                    <a href="https://twitter.com/MarulAI_Resmi" target="_blank" class="social-item"><i
+                            class="fab fa-twitter"></i> Twitter / X (@MarulAI_Resmi)</a>
+                    <a href="mailto:iletisim@marulai.com" class="social-item"><i class="fas fa-envelope"></i>
+                        iletisim@marulai.com</a>
+                </div>
+                <div id="termsContent" class="info-content" style="display:none;">
+                    <h3 style="color:var(--primary); margin-bottom:15px; font-family:'Space Grotesk';">Kullanım Şartları
+                    </h3>
+                    <p>Marul AI hizmetini kullanarak aşağıdaki şartları kabul etmiş olursunuz:</p>
+                    <ul style="padding-left:20px; line-height:1.6; color:rgba(255,255,255,0.8);">
+                        <li>Hizmet "olduğu gibi" sunulmaktadır ve kesintisiz olacağı garanti edilmez.</li>
+                        <li>Sistem üzerinden yasa dışı, zararlı veya etik dışı içerik oluşturmak yasaktır.</li>
+                        <li>Hesap güvenliğinizden ve şifrenizden tamamen siz sorumlusunuz.</li>
+                        <li>Marul AI, hizmeti dilediği zaman değiştirme veya sonlandırma hakkını saklı tutar.</li>
+                    </ul>
+                </div>
+                <div id="privacyContent" class="info-content" style="display:none;">
+                    <h3 style="color:var(--primary); margin-bottom:15px; font-family:'Space Grotesk';">Gizlilik
+                        Politikası</h3>
+                    <p>Verilerinizin gizliliği bizim için önemlidir:</p>
+                    <ul style="padding-left:20px; line-height:1.6; color:rgba(255,255,255,0.8);">
+                        <li>Sohbet verileriniz anonimleştirilerek sistem iyileştirmesi için kullanılabilir.</li>
+                        <li>Kişisel verileriniz (e-posta vb.) üçüncü taraflarla paylaşılmaz.</li>
+                        <li>Çerezler (cookies) kullanıcı deneyimini iyileştirmek için kullanılır.</li>
+                    </ul>
+                </div>
             </div>
         </div>
 
-        <div class="auth-container" id="authContainer">
-            <div class="auth-box">
-                <h1 class="auth-title">
-                    <i class="fas fa-robot"></i>
-                    Marul AI
-                </h1>
-                
-                <div class="auth-tabs">
-                    <button class="auth-tab active" id="loginTab">Giriş Yap</button>
-                    <button class="auth-tab" id="registerTab">Hesap Oluştur</button>
-                </div>
-                
-                <form class="auth-form active" id="loginForm">
-                    <div class="form-group">
-                        <label class="form-label" for="loginEmail">E-posta</label>
-                        <input type="email" class="form-input" id="loginEmail" placeholder="E-posta adresinizi girin" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" for="loginPassword">Şifre</label>
-                        <input type="password" class="form-input" id="loginPassword" placeholder="Şifrenizi girin" required>
-                    </div>
-                    <button type="submit" class="auth-btn">Giriş Yap</button>
-                    <div class="auth-footer">
-                        Hesabınız yok mu? <a href="#" id="switchToRegister">Kayıt Olun</a>
-                    </div>
-                </form>
-                
-                <form class="auth-form" id="registerForm">
-                    <div class="form-group">
-                        <label class="form-label" for="registerName">Adınız</label>
-                        <input type="text" class="form-input" id="registerName" placeholder="Adınızı girin" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" for="registerEmail">E-posta</label>
-                        <input type="email" class="form-input" id="registerEmail" placeholder="E-posta adresinizi girin" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" for="registerPassword">Şifre</label>
-                        <input type="password" class="form-input" id="registerPassword" placeholder="Şifrenizi oluşturun (min. 6 karakter)" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" for="registerPasswordConfirm">Şifre Tekrar</label>
-                        <input type="password" class="form-input" id="registerPasswordConfirm" placeholder="Şifrenizi tekrar girin" required>
-                    </div>
-                    <button type="submit" class="auth-btn">Hesap Oluştur</button>
-                    <div class="auth-footer">
-                        Zaten hesabınız var mı? <a href="#" id="switchToLogin">Giriş Yapın</a>
-                    </div>
-                </form>
+        <div class="modal-card small" id="authModal" style="display: none;">
+            <button class="modal-close" id="closeAuthModal"><i class="fas fa-times"></i></button>
+            <div style="text-align: center; margin-bottom: 2rem;">
+                <img src="favicon.png" width="50" style="margin-bottom:10px;">
+                <h3>Giriş Yap</h3>
             </div>
+            <div class="auth-tabs">
+                <button class="auth-tab active" id="loginTab">Giriş</button>
+                <button class="auth-tab" id="registerTab">Kayıt</button>
+            </div>
+            <form id="loginForm">
+                <input type="email" id="loginEmail" class="form-input" placeholder="E-posta" required>
+                <input type="password" id="loginPassword" class="form-input" placeholder="Şifre" required>
+                <button type="submit" class="primary-btn">Giriş Yap</button>
+            </form>
+            <form id="registerForm" style="display:none;">
+                <input type="text" id="registerName" class="form-input" placeholder="Ad Soyad" required>
+                <input type="email" id="registerEmail" class="form-input" placeholder="E-posta" required>
+                <input type="password" id="registerPassword" class="form-input" placeholder="Şifre" required>
+                <input type="password" id="registerPasswordConfirm" class="form-input" placeholder="Şifre Tekrar"
+                    required>
+                <button type="submit" class="primary-btn">Kayıt Ol</button>
+            </form>
         </div>
 
-        <div class="info-modal" id="infoModal">
-            <div class="info-modal-header">
-                <h3>Bilgiler</h3>
-                <button class="close-info" id="closeInfo">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="info-modal-content">
-                <div class="info-tabs">
-                    <button class="info-tab active" data-tab="about">Hakkımızda</button>
-                    <button class="info-tab" data-tab="privacy">Gizlilik</button>
-                    <button class="info-tab" data-tab="terms">Kullanım Şartları</button>
-                    <button class="info-tab" data-tab="contact">İletişim</button>
-                </div>
-                
-                <div class="info-content active" id="aboutContent">
-                    <h4>Marul AI Hakkında</h4>
-                    <p>Marul AI, 2024 yılında Ahmet Karakuş tarafından geliştirilmeye başlanmıştır. Dil modelimiz sürekli olarak geliştirilmekte ve güncellenmektedir.</p>
-                    <p>Sunduğumuz hizmetler deneysel nitelikte olup, verilen bilgilerin doğruluğu garanti edilmemektedir. Kullanıcıların önemli kararlar almadan önce birden fazla kaynaktan doğrulama yapmaları önerilir.</p>
-                </div>
-                
-                <div class="info-content" id="privacyContent">
-                    <h4>Gizlilik Politikası</h4>
-                    <p>Gizliliğiniz bizim için önemlidir. Verilerinizin nasıl toplandığını, kullanıldığını ve korunduğunu açıklıyoruz:</p>
-                    <ul>
-                        <li>Sohbet geçmişiniz sadece sizin hesabınızda saklanır</li>
-                        <li>E-posta adresiniz sadece kimlik doğrulama için kullanılır</li>
-                        <li>Üçüncü taraf API'lerle paylaşılan mesajlarınız gizlilik politikalarına tabidir</li>
-                        <li>Verileriniz güvenli sunucularda saklanır</li>
-                    </ul>
-                </div>
-                
-                <div class="info-content" id="termsContent">
-                    <h4>Kullanım Şartları</h4>
-                    <p>Marul AI'yi kullanarak aşağıdaki şartları kabul etmiş olursunuz:</p>
-                    <ul>
-                        <li>Hizmeti yasal amaçlar için kullanacaksınız</li>
-                        <li>Başkalarının haklarına saygı göstereceksiniz</li>
-                        <li>Sistemin kötüye kullanılması durumunda hesabınız askıya alınabilir</li>
-                        <li>Hizmet "olduğu gibi" sunulmaktadır</li>
-                    </ul>
-                </div>
-                
-                <div class="info-content" id="contactContent">
-                    <h4>İletişim</h4>
-                    <p>Bizimle iletişime geçmek için aşağıdaki yöntemleri kullanabilirsiniz:</p>
-                    <p><strong>E-posta:</strong> marulgpt@gmail.com</p>
-                    <p><strong>Sosyal Medya Hesaplarımız:</strong></p>
-                    <div class="social-media-links">
-                        <ul>
-                            <li>
-                                <i class="fab fa-instagram"></i>
-                                <a href="https://www.instagram.com/marulai_resmi" target="_blank">Instagram: @marulai_resmi</a>
-                            </li>
-                            <li>
-                                <i class="fab fa-youtube"></i>
-                                <a href="https://www.youtube.com/@MarulAI_Resmi" target="_blank">YouTube: @MarulAI_Resmi</a>
-                            </li>
-                            <li>
-                                <i class="fab fa-twitter"></i>
-                                <a href="https://twitter.com/MarulAI_Resmi" target="_blank">X (Twitter): @MarulAI_Resmi</a>
-                            </li>
-                            <li>
-                                <i class="fab fa-tiktok"></i>
-                                <a href="https://www.tiktok.com/@marulai_resmi" target="_blank">TikTok: @marulai_resmi</a>
-                            </li>
-                        </ul>
-                    </div>
-                    <p><strong>Geri Bildirim:</strong> Uygulama içinden geri bildirim gönderebilirsiniz</p>
-                    <p>Geri bildirimleriniz ve önerileriniz bizim için değerlidir. Size en kısa sürede dönüş yapmaya çalışacağız.</p>
-                </div>
-            </div>
+        <div class="modal-card small" id="limitWarningModal" style="display: none; text-align:Center;">
+            <div style="font-size: 3rem; color: #ffae00; margin-bottom: 20px;"><i
+                    class="fas fa-exclamation-triangle"></i></div>
+            <h3>Soru Hakkı Bitti</h3>
+            <p style="color:var(--text-muted); margin-bottom: 20px;">Devam etmek için giriş yapmalısınız.</p>
+            <button class="primary-btn" id="limitAuthBtn">Giriş Yap</button>
         </div>
     </div>
 
     <script>
-        const BACKEND_URL = 'https://marulgpt-backend.marulgpt.workers.dev';
-        
+        const CONFIG = {
+            BACKEND_URL: 'https://marulgpt-backend.marulgpt.workers.dev',
+            MAX_GUEST_QUESTIONS: 10
+        };
+
         const state = {
-            currentUser: null,
-            currentChatId: null,
-            chats: [],
             isAuthenticated: false,
-            isTyping: false,
-            userName: 'Misafir',
             isGuest: true,
-            guestQuestionCount: 10,
-            maxGuestQuestions: 10,
+            currentUser: null,
             sessionToken: null,
             userId: null,
-            guestChats: []
+            guestQuestionCount: CONFIG.MAX_GUEST_QUESTIONS,
+            maxGuestQuestions: CONFIG.MAX_GUEST_QUESTIONS,
+            chats: [],
+            guestChats: [],
+            currentChatId: null,
+            userName: 'Misafir Kullanıcı',
+            theme: localStorage.getItem('theme') || 'dark'
         };
 
-        const elements = {
-            authContainer: document.getElementById('authContainer'),
-            loginForm: document.getElementById('loginForm'),
-            registerForm: document.getElementById('registerForm'),
-            loginTab: document.getElementById('loginTab'),
-            registerTab: document.getElementById('registerTab'),
-            switchToRegister: document.getElementById('switchToRegister'),
-            switchToLogin: document.getElementById('switchToLogin'),
-            sidebarToggle: document.getElementById('sidebarToggle'),
-            sidebar: document.getElementById('sidebar'),
-            newChatBtn: document.getElementById('newChatBtn'),
-            chatHistoryList: document.getElementById('chatHistoryList'),
-            messagesContainer: document.getElementById('messagesContainer'),
-            messageInput: document.getElementById('messageInput'),
-            sendMessageBtn: document.getElementById('sendMessageBtn'),
-            currentChatTitle: document.getElementById('currentChatTitle'),
-            editChatTitleBtn: document.getElementById('editChatTitleBtn'),
-            userAvatar: document.getElementById('userAvatar'),
-            userName: document.getElementById('userName'),
-            questionCounter: document.getElementById('questionCounter'),
-            clearHistoryBtn: document.getElementById('clearHistoryBtn'),
-            logoutBtn: document.getElementById('logoutBtn'),
-            exportChatBtn: document.getElementById('exportChatBtn'),
-            shareChatBtn: document.getElementById('shareChatBtn'),
-            authSidebarBtn: document.getElementById('authSidebarBtn'),
-            donateBtn: document.getElementById('donateBtn'),
-            limitWarning: document.getElementById('limitWarning'),
-            limitAuthBtn: document.getElementById('limitAuthBtn'),
-            questionCountDisplay: document.getElementById('questionCountDisplay'),
-            infoBtn: document.getElementById('infoBtn'),
-            infoModal: document.getElementById('infoModal'),
-            closeInfo: document.getElementById('closeInfo')
-        };
+        const elements = {};
 
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', () => {
+            cacheElements();
+            initTheme();
             initApp();
             setupEventListeners();
         });
 
+        function cacheElements() {
+            const ids = [
+                'loginTab', 'registerTab', 'loginForm', 'registerForm', 'sidebarToggle',
+                'sidebar', 'newChatBtn', 'chatHistoryList', 'messagesContainer',
+                'messageInput', 'sendMessageBtn', 'currentChatTitle', 'userAvatar',
+                'userName', 'modalOverlay', 'authModal', 'limitWarningModal', 'infoModal',
+                'logoutBtn', 'questionCountDisplay', 'infoBtn',
+                'loginEmail', 'loginPassword', 'registerName', 'registerEmail', 'registerPassword', 'registerPasswordConfirm',
+                'editChatTitleBtn', 'shareChatBtn', 'clearHistoryBtn',
+                'authSidebarBtn', 'closeAuthModal', 'limitAuthBtn', 'closeInfoModal',
+                'welcomeMessage', 'donateBtn', 'themeToggleBtn'
+            ];
+            ids.forEach(id => elements[id] = document.getElementById(id));
+        }
+
+        function initTheme() { setTheme(state.theme); }
+        function toggleTheme() { setTheme(state.theme === 'dark' ? 'light' : 'dark'); }
+        function setTheme(theme) {
+            state.theme = theme;
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+            elements.themeToggleBtn.innerHTML = theme === 'dark' ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
+        }
+
+        function showNotification(msg, type = 'info') {
+            const div = document.createElement('div');
+            div.className = 'notification';
+            div.style.borderColor = type === 'error' ? '#ff4757' : (type === 'success' ? '#00ff9d' : 'var(--border-light)');
+            div.innerHTML = `<i class="fas fa-${type === 'error' ? 'times-circle' : (type === 'success' ? 'check-circle' : 'info-circle')}"></i> ${msg}`;
+            document.body.appendChild(div);
+            setTimeout(() => div.remove(), 3000);
+        }
+
         async function initApp() {
             const token = localStorage.getItem('marulgpt_token');
-            const userId = localStorage.getItem('marulgpt_user_id');
             const userData = localStorage.getItem('marulgpt_user_data');
             const savedGuestQuestions = localStorage.getItem('marulgpt_guest_questions');
-            
-            if (savedGuestQuestions) {
-                state.guestQuestionCount = parseInt(savedGuestQuestions);
-            }
-            
-            if (token && userId && userData) {
-                try {
-                    const response = await fetch(`${BACKEND_URL}/verify-session`, {
-                        method: 'GET',
-                        headers: { 
-                            'Authorization': `Bearer ${token}`,
-                            'Content-Type': 'application/json'
-                        }
-                    });
-                    
-                    if (response.ok) {
-                        const data = await response.json();
-                        if (data.valid && data.user) {
-                            state.sessionToken = token;
-                            state.userId = userId;
-                            state.currentUser = data.user;
-                            state.isAuthenticated = true;
-                            state.isGuest = false;
-                            state.userName = data.user.name;
-                            
-                            updateUserUI();
-                            elements.authContainer.classList.add('hidden');
-                            
-                            await loadChatHistory();
-                            
-                            showNotification('Oturumunuz yenilendi', 'success');
-                        } else {
-                            clearLocalStorage();
-                            setupGuestMode();
-                        }
-                    } else {
-                        clearLocalStorage();
-                        setupGuestMode();
-                    }
-                } catch (error) {
-                    console.error('Session kontrol hatası:', error);
-                    clearLocalStorage();
-                    setupGuestMode();
-                }
-            } else {
-                setupGuestMode();
-            }
-            
-            checkQuestionLimit();
+            if (savedGuestQuestions) state.guestQuestionCount = parseInt(savedGuestQuestions);
+            if (token && userData) await verifySession(token);
+            else setupGuestMode();
+        }
+
+        async function verifySession(token) {
+            try {
+                const response = await fetch(`${CONFIG.BACKEND_URL}/verify-session`, { headers: { 'Authorization': `Bearer ${token}` } });
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.valid && data.user) loginUser(data.user, token);
+                    else logoutUser(false);
+                } else logoutUser(false);
+            } catch (e) { setupGuestMode(); }
         }
 
         function setupGuestMode() {
             state.isGuest = true;
             state.isAuthenticated = false;
             state.userName = 'Misafir Kullanıcı';
-            state.currentUser = null;
-            state.sessionToken = null;
-            state.userId = null;
-            state.guestChats = [];
-            state.currentChatId = null;
-            state.chats = [];
-            
-            const savedGuestChats = localStorage.getItem('marulgpt_guest_chats');
-            if (savedGuestChats) {
-                try {
-                    state.guestChats = JSON.parse(savedGuestChats);
-                } catch (e) {
-                    console.error('Misafir sohbetleri yükleme hatası:', e);
-                }
-            }
-            
-            updateUserUI();
-            elements.authContainer.classList.add('hidden');
-            
-            renderGuestChatHistory();
-            
-            if (state.guestChats.length > 0) {
-                openGuestChat(state.guestChats[0].id);
-            } else {
-                createNewGuestChat();
-            }
+            const savedChats = localStorage.getItem('marulgpt_guest_chats');
+            if (savedChats) { try { state.guestChats = JSON.parse(savedChats); } catch (e) { } }
+            if (state.guestChats.length === 0) createNewGuestChat();
+            else if (!state.currentChatId) openChat(state.guestChats[0].id);
+            renderChatHistory();
+            updateUI();
         }
 
-        function setupEventListeners() {
-            elements.loginTab.addEventListener('click', () => switchAuthTab('login'));
-            elements.registerTab.addEventListener('click', () => switchAuthTab('register'));
-            elements.switchToRegister.addEventListener('click', (e) => {
-                e.preventDefault();
-                switchAuthTab('register');
-            });
-            elements.switchToLogin.addEventListener('click', (e) => {
-                e.preventDefault();
-                switchAuthTab('login');
-            });
-            
-            elements.loginForm.addEventListener('submit', handleLogin);
-            elements.registerForm.addEventListener('submit', handleRegister);
-            
-            elements.sidebarToggle.addEventListener('click', toggleSidebar);
-            
-            elements.newChatBtn.addEventListener('click', () => {
-                if (state.isGuest) {
-                    createNewGuestChat();
-                } else {
-                    createNewChat();
-                }
-            });
-            
-            elements.messageInput.addEventListener('keydown', handleMessageInputKeydown);
-            elements.sendMessageBtn.addEventListener('click', sendMessage);
-            elements.editChatTitleBtn.addEventListener('click', editChatTitle);
-            
-            elements.authSidebarBtn.addEventListener('click', () => {
-                if (state.isGuest) {
-                    showAuthModal();
-                } else {
-                    showNotification(`Hoş geldiniz ${state.userName}!`, 'info');
-                }
-            });
-            
-            elements.donateBtn.addEventListener('click', handleDonate);
-            
-            elements.clearHistoryBtn.addEventListener('click', () => {
-                if (state.isGuest) {
-                    clearGuestHistory();
-                } else {
-                    clearChatHistory();
-                }
-            });
-            
-            elements.logoutBtn.addEventListener('click', handleLogout);
-            elements.limitAuthBtn.addEventListener('click', showAuthModal);
-            
-            elements.infoBtn.addEventListener('click', toggleInfoModal);
-            elements.closeInfo.addEventListener('click', toggleInfoModal);
-            
-            document.querySelectorAll('.info-tab').forEach(tab => {
-                tab.addEventListener('click', () => {
-                    const tabId = tab.dataset.tab;
-                    switchInfoTab(tabId);
-                });
-            });
-            
-            elements.exportChatBtn.addEventListener('click', exportChat);
-            elements.shareChatBtn.addEventListener('click', shareChat);
-            
-            elements.messageInput.addEventListener('input', function() {
-                this.style.height = 'auto';
-                this.style.height = (this.scrollHeight) + 'px';
+        function loginUser(user, token) {
+            state.isAuthenticated = true;
+            state.isGuest = false;
+            state.currentUser = user;
+            state.userName = user.name;
+            state.sessionToken = token;
+            state.userId = user.id;
+
+            localStorage.setItem('marulgpt_token', token);
+            localStorage.setItem('marulgpt_user_id', user.id);
+            localStorage.setItem('marulgpt_user_data', JSON.stringify(user));
+
+            updateUI();
+            closeAllModals();
+
+            elements.messagesContainer.innerHTML = '';
+            loadChatHistory().then(() => {
+                if (state.chats.length > 0) openChat(state.chats[0].id);
+                else createNewChat();
             });
         }
 
-        function switchAuthTab(tab) {
-            elements.loginTab.classList.remove('active');
-            elements.registerTab.classList.remove('active');
-            elements.loginForm.classList.remove('active');
-            elements.registerForm.classList.remove('active');
-            
-            if (tab === 'login') {
-                elements.loginTab.classList.add('active');
-                elements.loginForm.classList.add('active');
-            } else {
-                elements.registerTab.classList.add('active');
-                elements.registerForm.classList.add('active');
-            }
+        function logoutUser(confirmUser = true) {
+            if (confirmUser && !confirm("Çıkış yapmak istediğinize emin misiniz?")) return;
+            localStorage.removeItem('marulgpt_token');
+            localStorage.removeItem('marulgpt_user_id');
+            localStorage.removeItem('marulgpt_user_data');
+            location.reload();
         }
 
-        async function handleLogin(e) {
-            e.preventDefault();
-            
-            const email = document.getElementById('loginEmail').value;
-            const password = document.getElementById('loginPassword').value;
-            
-            if (!email || !password) {
-                showNotification('Lütfen tüm alanları doldurun', 'error');
-                return;
-            }
-            
-            try {
-                const response = await fetch(`${BACKEND_URL}/login`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, password })
-                });
-                
-                const data = await response.json();
-                
-                if (response.ok) {
-                    state.sessionToken = data.token;
-                    state.userId = data.user.id;
-                    state.currentUser = data.user;
-                    state.isAuthenticated = true;
-                    state.isGuest = false;
-                    state.userName = data.user.name;
-                    
-                    localStorage.setItem('marulgpt_token', data.token);
-                    localStorage.setItem('marulgpt_user_id', data.user.id);
-                    localStorage.setItem('marulgpt_user_data', JSON.stringify(data.user));
-                    
-                    updateUserUI();
-                    elements.authContainer.classList.add('hidden');
-                    
-                    await loadChatHistory();
-                    
-                    showNotification('Giriş başarılı!', 'success');
-                    elements.loginForm.reset();
-                } else {
-                    showNotification(data.error || 'Giriş başarısız', 'error');
-                }
-            } catch (error) {
-                showNotification('Bağlantı hatası', 'error');
-            }
-        }
-
-        async function handleRegister(e) {
-            e.preventDefault();
-            
-            const name = document.getElementById('registerName').value;
-            const email = document.getElementById('registerEmail').value;
-            const password = document.getElementById('registerPassword').value;
-            const passwordConfirm = document.getElementById('registerPasswordConfirm').value;
-            
-            if (!name || !email || !password || !passwordConfirm) {
-                showNotification('Lütfen tüm alanları doldurun', 'error');
-                return;
-            }
-            
-            if (password !== passwordConfirm) {
-                showNotification('Şifreler eşleşmiyor', 'error');
-                return;
-            }
-            
-            if (password.length < 6) {
-                showNotification('Şifre en az 6 karakter olmalıdır', 'error');
-                return;
-            }
-            
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(email)) {
-                showNotification('Geçerli bir e-posta adresi girin', 'error');
-                return;
-            }
-            
-            try {
-                const response = await fetch(`${BACKEND_URL}/register`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name, email, password })
-                });
-                
-                const data = await response.json();
-                
-                if (response.ok) {
-                    showNotification('Kayıt başarılı!', 'success');
-                    
-                    state.sessionToken = data.token;
-                    state.userId = data.user.id;
-                    state.currentUser = data.user;
-                    state.isAuthenticated = true;
-                    state.isGuest = false;
-                    state.userName = data.user.name;
-                    
-                    localStorage.setItem('marulgpt_token', data.token);
-                    localStorage.setItem('marulgpt_user_id', data.user.id);
-                    localStorage.setItem('marulgpt_user_data', JSON.stringify(data.user));
-                    
-                    updateUserUI();
-                    elements.authContainer.classList.add('hidden');
-                    await loadChatHistory();
-                    
-                    elements.registerForm.reset();
-                } else {
-                    showNotification(data.error || 'Kayıt başarısız', 'error');
-                }
-            } catch (error) {
-                showNotification('Bağlantı hatası', 'error');
-            }
-        }
-
-        function updateUserUI() {
+        function updateUI() {
             elements.userName.textContent = state.userName;
-            elements.userAvatar.textContent = state.userName.charAt(0).toUpperCase();
-            
+            elements.userAvatar.innerHTML = state.isAuthenticated ? state.userName.charAt(0).toUpperCase() : 'M';
+            elements.userAvatar.style.background = state.isAuthenticated ? '#00ff9d' : '#ff9f43';
+            elements.userAvatar.style.color = state.isAuthenticated ? '#000' : '#fff';
             if (state.isGuest) {
-                elements.userAvatar.classList.add('guest-avatar');
-                elements.questionCounter.textContent = `${state.guestQuestionCount}/${state.maxGuestQuestions}`;
-                elements.questionCounter.style.display = 'block';
-                elements.questionCountDisplay.textContent = `${state.guestQuestionCount}/${state.maxGuestQuestions}`;
-                elements.authSidebarBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i><span>Giriş Yap / Kayıt Ol</span>';
+                elements.questionCountDisplay.textContent = `${state.guestQuestionCount}/${state.maxGuestQuestions} Hak`;
+                elements.questionCountDisplay.style.color = '#ff9f43';
                 elements.logoutBtn.style.display = 'none';
-                elements.clearHistoryBtn.style.display = 'none';
+                elements.authSidebarBtn.style.display = 'block';
             } else {
-                elements.userAvatar.classList.remove('guest-avatar');
-                elements.questionCounter.style.display = 'none';
-                elements.questionCountDisplay.textContent = 'Sınırsız';
-                elements.authSidebarBtn.innerHTML = '<i class="fas fa-user"></i><span>Profil</span>';
-                elements.logoutBtn.style.display = 'flex';
-                elements.clearHistoryBtn.style.display = 'flex';
-            }
-        }
-
-        function renderGuestChatHistory() {
-            elements.chatHistoryList.innerHTML = '';
-            
-            if (state.isGuest) {
-                const sortedChats = [...state.guestChats].sort((a, b) => 
-                    new Date(b.updated_at) - new Date(a.updated_at)
-                );
-                
-                if (sortedChats.length === 0) {
-                    elements.chatHistoryList.innerHTML = '<div style="text-align: center; color: var(--gray-text); padding: 20px;">Henüz sohbet yok</div>';
-                    return;
-                }
-                
-                sortedChats.forEach(chat => {
-                    const chatItem = document.createElement('div');
-                    chatItem.className = `chat-item ${chat.id === state.currentChatId ? 'active' : ''}`;
-                    chatItem.dataset.chatId = chat.id;
-                    
-                    const date = new Date(chat.updated_at);
-                    const dateStr = date.toLocaleDateString('tr-TR', { 
-                        day: 'numeric', 
-                        month: 'short',
-                        hour: '2-digit',
-                        minute: '2-digit'
-                    });
-                    
-                    chatItem.innerHTML = `
-                        <div class="chat-item-content">
-                            <div class="chat-item-title">${chat.title || 'Yeni Sohbet'}</div>
-                            <div class="chat-item-date">${dateStr}</div>
-                        </div>
-                        <div class="chat-item-actions">
-                            <button class="chat-item-action-btn" title="Sohbeti sil" data-action="delete" data-chat-id="${chat.id}">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                    `;
-                    
-                    chatItem.addEventListener('click', function(e) {
-                        if (!e.target.closest('.chat-item-action-btn')) {
-                            const chatId = this.dataset.chatId;
-                            openGuestChat(chatId);
-                            
-                            if (window.innerWidth <= 1024) {
-                                elements.sidebar.classList.remove('open');
-                            }
-                        }
-                    });
-                    
-                    const deleteBtn = chatItem.querySelector('[data-action="delete"]');
-                    deleteBtn.addEventListener('click', function(e) {
-                        e.stopPropagation();
-                        const chatId = this.dataset.chatId;
-                        deleteGuestChat(chatId);
-                    });
-                    
-                    elements.chatHistoryList.appendChild(chatItem);
-                });
-            } else {
-                renderChatHistory();
-            }
-        }
-
-        async function loadChatHistory() {
-            if (!state.isAuthenticated) return;
-            
-            try {
-                const response = await fetch(`${BACKEND_URL}/chats`, {
-                    method: 'GET',
-                    headers: { 
-                        'Authorization': `Bearer ${state.sessionToken}`,
-                        'Content-Type': 'application/json'
-                    }
-                });
-                
-                if (response.ok) {
-                    const chats = await response.json();
-                    state.chats = chats || [];
-                    renderChatHistory();
-                    
-                    if (state.chats.length > 0) {
-                        openChat(state.chats[0].id);
-                    } else {
-                        await createNewChat();
-                    }
-                } else {
-                    const errorData = await response.json();
-                    console.error('Sohbet geçmişi yükleme hatası:', errorData.error);
-                }
-            } catch (error) {
-                console.error('Sohbet geçmişi yükleme hatası:', error);
-            }
-        }
-
-        function renderChatHistory() {
-            elements.chatHistoryList.innerHTML = '';
-            
-            if (state.chats.length === 0) {
-                elements.chatHistoryList.innerHTML = '<div style="text-align: center; color: var(--gray-text); padding: 20px;">Henüz sohbet yok</div>';
-                return;
-            }
-            
-            const sortedChats = [...state.chats].sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at));
-            
-            sortedChats.forEach(chat => {
-                const chatItem = document.createElement('div');
-                chatItem.className = `chat-item ${chat.id === state.currentChatId ? 'active' : ''}`;
-                chatItem.dataset.chatId = chat.id;
-                
-                const date = new Date(chat.updated_at);
-                const dateStr = date.toLocaleDateString('tr-TR', { 
-                    day: 'numeric', 
-                    month: 'short',
-                    hour: '2-digit',
-                    minute: '2-digit'
-                });
-                
-                chatItem.innerHTML = `
-                    <div class="chat-item-content">
-                        <div class="chat-item-title">${chat.title || 'Yeni Sohbet'}</div>
-                        <div class="chat-item-date">${dateStr}</div>
-                    </div>
-                    <div class="chat-item-actions">
-                        <button class="chat-item-action-btn" title="Sohbeti sil" data-action="delete" data-chat-id="${chat.id}">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </div>
-                `;
-                
-                chatItem.addEventListener('click', function(e) {
-                    if (!e.target.closest('.chat-item-action-btn')) {
-                        const chatId = this.dataset.chatId;
-                        openChat(chatId);
-                        
-                        if (window.innerWidth <= 1024) {
-                            elements.sidebar.classList.remove('open');
-                        }
-                    }
-                });
-                
-                const deleteBtn = chatItem.querySelector('[data-action="delete"]');
-                deleteBtn.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    const chatId = this.dataset.chatId;
-                    deleteChat(chatId);
-                });
-                
-                elements.chatHistoryList.appendChild(chatItem);
-            });
-        }
-
-        function createNewGuestChat() {
-            const chatId = 'guest_' + Date.now();
-            const newChat = {
-                id: chatId,
-                title: 'Yeni Sohbet',
-                created_at: new Date().toISOString(),
-                updated_at: new Date().toISOString(),
-                messages: []
-            };
-            
-            state.guestChats.unshift(newChat);
-            state.currentChatId = chatId;
-            
-            saveGuestChatsToStorage();
-            renderGuestChatHistory();
-            clearMessages();
-            elements.currentChatTitle.textContent = 'Yeni Sohbet';
-            showWelcomeMessage();
-            
-            if (window.innerWidth <= 1024) {
-                elements.sidebar.classList.remove('open');
-            }
-        }
-
-        async function createNewChat() {
-            if (!state.isAuthenticated) {
-                showAuthModal();
-                return;
-            }
-            
-            try {
-                const response = await fetch(`${BACKEND_URL}/chats`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${state.sessionToken}`
-                    },
-                    body: JSON.stringify({ title: 'Yeni Sohbet' })
-                });
-                
-                if (response.ok) {
-                    const newChat = await response.json();
-                    
-                    state.chats.unshift(newChat);
-                    state.currentChatId = newChat.id;
-                    
-                    renderChatHistory();
-                    clearMessages();
-                    elements.currentChatTitle.textContent = 'Yeni Sohbet';
-                    
-                    showWelcomeMessage();
-                    
-                    if (window.innerWidth <= 1024) {
-                        elements.sidebar.classList.remove('open');
-                    }
-                    
-                    showNotification('Yeni sohbet oluşturuldu', 'success');
-                } else {
-                    const errorData = await response.json();
-                    showNotification(errorData.error || 'Sohbet oluşturulamadı', 'error');
-                }
-            } catch (error) {
-                showNotification('Sohbet oluşturma hatası', 'error');
-            }
-        }
-
-        function openGuestChat(chatId) {
-            if (!state.isGuest) return;
-            
-            state.currentChatId = chatId;
-            const chat = state.guestChats.find(c => c.id === chatId);
-            
-            if (chat) {
-                elements.currentChatTitle.textContent = chat.title;
-                clearMessages();
-                
-                if (chat.messages && chat.messages.length > 0) {
-                    chat.messages.forEach(msg => {
-                        addMessageToUI(msg.role, msg.content, msg.timestamp, false);
-                    });
-                } else {
-                    showWelcomeMessage();
-                }
-            }
-            
-            renderGuestChatHistory();
-            scrollToBottom();
-        }
-
-        async function openChat(chatId) {
-            if (!state.isAuthenticated) return;
-            
-            try {
-                const response = await fetch(`${BACKEND_URL}/chats/${chatId}/messages`, {
-                    method: 'GET',
-                    headers: { 
-                        'Authorization': `Bearer ${state.sessionToken}`,
-                        'Content-Type': 'application/json'
-                    }
-                });
-                
-                if (response.ok) {
-                    const messages = await response.json();
-                    state.currentChatId = chatId;
-                    
-                    clearMessages();
-                    
-                    if (messages && messages.length > 0) {
-                        messages.forEach(msg => {
-                            addMessageToUI(msg.role === 'user' ? 'user' : 'ai', msg.content, msg.created_at, false);
-                        });
-                    } else {
-                        showWelcomeMessage();
-                    }
-                    
-                    const chat = state.chats.find(c => c.id === chatId);
-                    if (chat) {
-                        elements.currentChatTitle.textContent = chat.title;
-                    }
-                    
-                    renderChatHistory();
-                    scrollToBottom();
-                } else {
-                    const errorData = await response.json();
-                    showNotification(errorData.error || 'Sohbet yüklenemedi', 'error');
-                }
-            } catch (error) {
-                showNotification('Sohbet yükleme hatası', 'error');
+                elements.questionCountDisplay.textContent = 'Üye';
+                elements.questionCountDisplay.style.color = '#00ff9d';
+                elements.logoutBtn.style.display = 'block';
+                elements.authSidebarBtn.style.display = 'none';
             }
         }
 
         async function sendMessage() {
-            const messageText = elements.messageInput.value.trim();
-            
-            if (!messageText) return;
-            
+            const text = elements.messageInput.value.trim();
+            if (!text) return;
+
             if (state.isGuest && state.guestQuestionCount <= 0) {
-                showNotification('Soru hakkınız doldu. Giriş yapın!', 'error');
-                elements.limitWarning.style.display = 'block';
+                openModal('limitWarningModal');
                 return;
             }
-            
-            addMessageToUI('user', messageText);
+
+            addMessageToUI('user', text);
             elements.messageInput.value = '';
-            elements.messageInput.style.height = 'auto';
-            
+
             if (state.isGuest) {
-                state.guestQuestionCount--;
-                localStorage.setItem('marulgpt_guest_questions', state.guestQuestionCount.toString());
-                updateUserUI();
-                checkQuestionLimit();
-                
-                const currentChat = state.guestChats.find(chat => chat.id === state.currentChatId);
-                if (currentChat) {
-                    currentChat.messages.push({
-                        role: 'user',
-                        content: messageText,
-                        timestamp: new Date().toISOString()
-                    });
-                    
-                    if (currentChat.title === 'Yeni Sohbet' && messageText.length > 0) {
-                        currentChat.title = messageText.substring(0, 40) + (messageText.length > 40 ? '...' : '');
-                        elements.currentChatTitle.textContent = currentChat.title;
-                    }
-                    
-                    currentChat.updated_at = new Date().toISOString();
-                    saveGuestChatsToStorage();
-                }
-                
-                showTypingIndicator();
-                
-                try {
-                    const response = await fetch(`${BACKEND_URL}/guest-chat`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            message: messageText
-                        })
-                    });
-                    
-                    hideTypingIndicator();
-                    
-                    if (response.ok) {
-                        const data = await response.json();
-                        addMessageToUI('ai', data.response, null, true);
-                        
-                        if (currentChat) {
-                            currentChat.messages.push({
-                                role: 'ai',
-                                content: data.response,
-                                timestamp: new Date().toISOString()
-                            });
-                            currentChat.updated_at = new Date().toISOString();
-                            saveGuestChatsToStorage();
-                        }
-                        
-                        renderGuestChatHistory();
-                    } else {
-                        const errorData = await response.json();
-                        addMessageToUI('ai', `Üzgünüm, bir hata oluştu: ${errorData.error || 'Bilinmeyen hata'}`);
-                        showNotification(`Hata: ${errorData.error}`, 'error');
-                    }
-                } catch (error) {
-                    hideTypingIndicator();
-                    addMessageToUI('ai', 'Bağlantı hatası. Lütfen daha sonra tekrar deneyin.');
-                    showNotification('Bağlantı hatası', 'error');
-                }
+                await handleGuestMessage(text);
             } else {
-                try {
-                    showTypingIndicator();
-                    
-                    const response = await fetch(`${BACKEND_URL}/chat`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${state.sessionToken}`
-                        },
-                        body: JSON.stringify({
-                            chatId: state.currentChatId || 'new',
-                            message: messageText
-                        })
-                    });
-                    
-                    hideTypingIndicator();
-                    
-                    if (response.ok) {
-                        const data = await response.json();
-                        addMessageToUI('ai', data.response, null, true);
-                        
-                        if (data.chatId && (data.isNewChat || !state.currentChatId)) {
-                            state.currentChatId = data.chatId;
-                            await loadChatHistory();
-                        } else if (state.currentChatId) {
-                            await updateChatTitleIfNeeded(messageText);
-                        }
-                    } else {
-                        const errorData = await response.json();
-                        const errorMessage = errorData.error || 'Bilinmeyen hata';
-                        addMessageToUI('ai', `Üzgünüm, bir hata oluştu: ${errorMessage}`);
-                        showNotification(`Hata: ${errorMessage}`, 'error');
-                    }
-                } catch (error) {
-                    hideTypingIndicator();
-                    addMessageToUI('ai', 'Bağlantı hatası. Lütfen daha sonra tekrar deneyin.');
-                    showNotification('Bağlantı hatası', 'error');
-                }
+                await handleUserMessage(text);
             }
         }
 
-        function saveGuestChatsToStorage() {
-            if (!state.isGuest) return;
-            
-            try {
-                localStorage.setItem('marulgpt_guest_chats', JSON.stringify(state.guestChats));
-            } catch (e) {
-                console.error('Misafir sohbetleri kaydetme hatası:', e);
-            }
-        }
+        async function handleGuestMessage(text) {
+            state.guestQuestionCount--;
+            localStorage.setItem('marulgpt_guest_questions', state.guestQuestionCount);
+            updateUI();
+            const chat = getChatById(state.currentChatId);
+            if (!chat) return;
 
-        async function updateChatTitleIfNeeded(messageText) {
+            chat.messages.push({ role: 'user', content: text, timestamp: new Date() });
+
+            if (chat.title === 'Yeni Sohbet') {
+                chat.title = text.substring(0, 30);
+                elements.currentChatTitle.textContent = chat.title;
+            }
+            chat.updated_at = new Date();
+            saveGuestChats();
+            renderChatHistory();
+            showTyping();
             try {
-                const response = await fetch(`${BACKEND_URL}/chats`, {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${state.sessionToken}`,
-                        'Content-Type': 'application/json'
-                    }
+                const response = await fetch(`${CONFIG.BACKEND_URL}/guest-chat`, {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: text })
                 });
-                
+                hideTyping();
                 if (response.ok) {
-                    const chats = await response.json();
-                    const chat = chats.find(c => c.id === state.currentChatId);
-                    
-                    if (chat && (chat.title === 'Yeni Sohbet' || !chat.title)) {
-                        elements.currentChatTitle.textContent = messageText.substring(0, 40) + (messageText.length > 40 ? '...' : '');
-                        state.chats = chats;
-                        renderChatHistory();
-                    }
-                }
-            } catch (error) {
-                console.error('Sohbet başlığı güncelleme hatası:', error);
+                    const data = await response.json();
+                    addMessageToUI('ai', data.response, true);
+                    chat.messages.push({ role: 'ai', content: data.response, timestamp: new Date() });
+                    saveGuestChats();
+                } else addMessageToUI('ai', 'Hata.');
+            } catch (e) { hideTyping(); addMessageToUI('ai', 'Bağlantı hatası.'); }
+        }
+
+        async function handleUserMessage(text) {
+            showTyping();
+
+            const chat = getChatById(state.currentChatId);
+            if (chat && chat.title === 'Yeni Sohbet') {
+                chat.title = text.substring(0, 30);
+                elements.currentChatTitle.textContent = chat.title;
+                renderChatHistory();
+                fetch(`${CONFIG.BACKEND_URL}/chats/${state.currentChatId}`, { method: 'PUT', headers: { 'Authorization': `Bearer ${state.sessionToken}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ title: chat.title }) });
             }
-        }
 
-        function addMessageToUI(sender, text, timestamp = null, animate = false) {
-            hideTypingIndicator();
-            
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `message ${sender}`;
-            
-            const time = timestamp ? new Date(timestamp) : new Date();
-            const timeStr = time.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
-            
-            const avatarContent = sender === 'user' 
-                ? state.userName.charAt(0).toUpperCase() 
-                : '<i class="fas fa-robot"></i>';
-            
-            messageDiv.innerHTML = `
-                ${sender === 'ai' ? `<div class="message-avatar">${avatarContent}</div>` : ''}
-                <div class="message-content">
-                    <div class="message-text" id="message-text-${Date.now()}">${animate ? '' : text}</div>
-                    <div class="message-time">${timeStr}</div>
-                </div>
-                ${sender === 'user' ? `<div class="message-avatar">${avatarContent}</div>` : ''}
-            `;
-            
-            elements.messagesContainer.appendChild(messageDiv);
-            
-            if (animate && text) {
-                animateTextWriting(`message-text-${Date.now()}`, text);
-            }
-            
-            scrollToBottom();
-        }
-
-        function animateTextWriting(elementId, text) {
-            const element = document.getElementById(elementId);
-            let index = 0;
-            
-            function writeChar() {
-                if (index < text.length) {
-                    element.innerHTML += text.charAt(index);
-                    index++;
-                    const speed = Math.random() * 30 + 20;
-                    setTimeout(writeChar, speed);
-                    scrollToBottom();
-                }
-            }
-            
-            writeChar();
-        }
-
-        function showTypingIndicator() {
-            if (state.isTyping) return;
-            state.isTyping = true;
-            
-            const typingDiv = document.createElement('div');
-            typingDiv.className = 'typing-indicator';
-            typingDiv.id = 'typingIndicator';
-            typingDiv.innerHTML = `
-                <div class="typing-dot"></div>
-                <div class="typing-dot"></div>
-                <div class="typing-dot"></div>
-            `;
-            
-            elements.messagesContainer.appendChild(typingDiv);
-            scrollToBottom();
-        }
-
-        function hideTypingIndicator() {
-            state.isTyping = false;
-            const typingIndicator = document.getElementById('typingIndicator');
-            if (typingIndicator) {
-                typingIndicator.remove();
-            }
-        }
-
-        function clearMessages() {
-            elements.messagesContainer.innerHTML = '';
-        }
-
-        function showWelcomeMessage() {
-            const welcomeDiv = document.createElement('div');
-            welcomeDiv.className = 'welcome-message';
-            
-            let welcomeText;
-            if (state.isGuest) {
-                welcomeText = `Merhaba! Ben <strong>Marul AI</strong>. Size nasıl yardımcı olabilirim? Misafir modundasınız ve ${state.guestQuestionCount} soru hakkınız bulunuyor. Daha fazla soru sormak için giriş yapabilirsiniz!`;
-            } else {
-                welcomeText = `Merhaba <strong>${state.userName}</strong>! Ben <strong>Marul AI</strong>. Size nasıl yardımcı olabilirim?`;
-            }
-            
-            welcomeDiv.innerHTML = `
-                <div class="message ai">
-                    <div class="message-avatar">
-                        <i class="fas fa-robot"></i>
-                    </div>
-                    <div class="message-content">
-                        <div class="message-text">${welcomeText}</div>
-                        <div class="message-time">Şimdi</div>
-                    </div>
-                </div>
-            `;
-            
-            elements.messagesContainer.appendChild(welcomeDiv);
-            scrollToBottom();
-        }
-
-        function checkQuestionLimit() {
-            if (!state.isAuthenticated && state.guestQuestionCount <= 0) {
-                elements.limitWarning.style.display = 'block';
-                elements.sendMessageBtn.disabled = true;
-                elements.sendMessageBtn.classList.remove('pulse');
-                elements.messageInput.placeholder = 'Soru hakkınız doldu. Giriş yapın!';
-                elements.messageInput.disabled = true;
-            } else {
-                elements.limitWarning.style.display = 'none';
-                elements.sendMessageBtn.disabled = false;
-                elements.sendMessageBtn.classList.add('pulse');
-                elements.messageInput.placeholder = 'Marul AI\'ye bir mesaj yazın...';
-                elements.messageInput.disabled = false;
-            }
-            
-            updateUserUI();
-        }
-
-        function showAuthModal() {
-            elements.authContainer.classList.remove('hidden');
-            switchAuthTab('login');
-        }
-
-        function toggleSidebar() {
-            elements.sidebar.classList.toggle('open');
-        }
-
-        function toggleInfoModal() {
-            elements.infoModal.classList.toggle('active');
-        }
-
-        function switchInfoTab(tabId) {
-            document.querySelectorAll('.info-tab').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.info-content').forEach(c => c.classList.remove('active'));
-            
-            document.querySelector(`.info-tab[data-tab="${tabId}"]`).classList.add('active');
-            document.getElementById(`${tabId}Content`).classList.add('active');
-        }
-
-        function deleteGuestChat(chatId) {
-            if (!state.isGuest) return;
-            
-            if (!confirm('Bu sohbeti silmek istediğinize emin misiniz?')) return;
-            
-            const chatItem = document.querySelector(`[data-chat-id="${chatId}"]`);
-            if (chatItem) {
-                chatItem.remove();
-            }
-            
-            state.guestChats = state.guestChats.filter(chat => chat.id !== chatId);
-            
-            if (state.currentChatId === chatId) {
-                if (state.guestChats.length > 0) {
-                    openGuestChat(state.guestChats[0].id);
-                } else {
-                    createNewGuestChat();
-                }
-            }
-            
-            saveGuestChatsToStorage();
-            
-            showNotification('Sohbet silindi', 'success');
-        }
-
-        async function deleteChat(chatId) {
-            if (!state.isAuthenticated) return;
-            
-            if (!confirm('Bu sohbeti silmek istediğinize emin misiniz?')) return;
-            
             try {
-                const response = await fetch(`${BACKEND_URL}/chats/${chatId}`, {
-                    method: 'DELETE',
-                    headers: { 
-                        'Authorization': `Bearer ${state.sessionToken}`,
-                        'Content-Type': 'application/json'
-                    }
+                const response = await fetch(`${CONFIG.BACKEND_URL}/chat`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${state.sessionToken}` },
+                    body: JSON.stringify({ chatId: state.currentChatId, message: text })
                 });
-                
+                hideTyping();
                 if (response.ok) {
-                    state.chats = state.chats.filter(chat => chat.id !== chatId);
-                    
-                    const chatItem = document.querySelector(`[data-chat-id="${chatId}"]`);
-                    if (chatItem) {
-                        chatItem.remove();
+                    const data = await response.json();
+                    addMessageToUI('ai', data.response, true);
+                    if (data.chatId && data.chatId !== state.currentChatId) {
+                        state.currentChatId = data.chatId;
+                        loadChatHistory();
                     }
-                    
-                    if (state.currentChatId === chatId) {
-                        if (state.chats.length > 0) {
-                            await openChat(state.chats[0].id);
-                        } else {
-                            await createNewChat();
-                        }
-                    }
-                    
-                    showNotification('Sohbet silindi', 'success');
-                } else {
-                    const errorData = await response.json();
-                    showNotification(errorData.error || 'Sohbet silinemedi', 'error');
-                }
-            } catch (error) {
-                showNotification('Sohbet silme hatası', 'error');
-            }
+                } else addMessageToUI('ai', 'Sunucu hatası.');
+            } catch (e) { hideTyping(); addMessageToUI('ai', 'Bağlantı hatası.'); }
         }
 
-        async function clearChatHistory() {
-            if (!state.isAuthenticated || state.chats.length === 0) return;
-            
-            if (!confirm('Tüm sohbet geçmişiniz silinecek. Emin misiniz?')) return;
-            
-            try {
-                const deletePromises = state.chats.map(chat => 
-                    fetch(`${BACKEND_URL}/chats/${chat.id}`, {
-                        method: 'DELETE',
-                        headers: { 
-                            'Authorization': `Bearer ${state.sessionToken}`,
-                            'Content-Type': 'application/json'
-                        }
-                    })
-                );
-                
-                await Promise.all(deletePromises);
-                
-                state.chats = [];
-                state.currentChatId = null;
-                
-                await createNewChat();
-                
-                showNotification('Tüm sohbet geçmişi temizlendi', 'success');
-            } catch (error) {
-                showNotification('Geçmiş temizleme hatası', 'error');
-            }
+        function addMessageToUI(role, text, animate = false, timestamp = null) {
+            elements.welcomeMessage.style.display = 'none';
+            const time = new Date(timestamp || new Date()).toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
+            const div = document.createElement('div');
+            div.className = `message ${role}`;
+            let avatarHTML = role === 'ai' ? `<div class="message-avatar"><img src="favicon.png"></div>` : `<div class="message-avatar" style="background:${state.isAuthenticated ? '#00ff9d' : '#ff9f43'}; color:#000;">${state.userName.charAt(0).toUpperCase()}</div>`;
+            div.innerHTML = role === 'ai' ? `${avatarHTML}<div class="message-content">${text} <div class="message-time">${time}</div></div>` : `<div class="message-content">${text.replace(/\n/g, '<br>')} <div class="message-time">${time}</div></div>${avatarHTML}`;
+            elements.messagesContainer.appendChild(div);
+            setTimeout(() => elements.messagesContainer.scrollTop = elements.messagesContainer.scrollHeight, 10);
         }
 
-        function clearGuestHistory() {
-            if (!state.isGuest) return;
-            
-            if (!confirm('Tüm sohbet geçmişiniz silinecek. Emin misiniz?')) return;
-            
-            state.guestChats = [];
-            localStorage.removeItem('marulgpt_guest_chats');
-            
-            createNewGuestChat();
-            
-            showNotification('Tüm sohbet geçmişi temizlendi', 'success');
-        }
+        function renderChatHistory() {
+            const list = state.isGuest ? state.guestChats : state.chats;
+            list.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at));
+            elements.chatHistoryList.innerHTML = '';
+            list.forEach(chat => {
+                const div = document.createElement('div');
+                div.className = `history-item ${chat.id === state.currentChatId ? 'active' : ''}`;
 
-        async function handleLogout() {
-            if (!state.isAuthenticated) {
-                if (confirm('Misafir modundasınız. Tüm geçmişinizi temizlemek ister misiniz?')) {
-                    state.guestChats = [];
-                    localStorage.removeItem('marulgpt_guest_chats');
-                    localStorage.removeItem('marulgpt_guest_questions');
-                    
-                    state.guestQuestionCount = 10;
-                    createNewGuestChat();
-                }
-                return;
-            }
-            
-            if (!confirm('Çıkış yapmak istediğinize emin misiniz?')) return;
-            
-            clearLocalStorage();
-            
-            state.isAuthenticated = false;
-            state.currentUser = null;
-            state.sessionToken = null;
-            state.userId = null;
-            state.chats = [];
-            state.guestQuestionCount = 10;
-            state.currentChatId = null;
-            state.isGuest = true;
-            state.userName = 'Misafir Kullanıcı';
-            
-            updateUserUI();
-            clearMessages();
-            renderGuestChatHistory();
-            checkQuestionLimit();
-            showWelcomeMessage();
-            
-            showNotification('Çıkış yapıldı', 'success');
-        }
+                const date = new Date(chat.updated_at);
+                const dateStr = date.toLocaleString('tr-TR', {
+                    day: 'numeric',
+                    month: 'short',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                }).replace(',', '');
 
-        function clearLocalStorage() {
-            localStorage.removeItem('marulgpt_token');
-            localStorage.removeItem('marulgpt_user_id');
-            localStorage.removeItem('marulgpt_user_data');
-            localStorage.removeItem('marulgpt_guest_questions');
-            localStorage.removeItem('marulgpt_guest_chats');
-        }
-
-        function handleDonate() {
-            const donateUrl = 'https://www.bynogame.com/destekle/marulgpt';
-            window.open(donateUrl, '_blank');
-            showNotification('Bağış sayfasına yönlendiriliyorsunuz...', 'info');
-        }
-
-        function editChatTitle() {
-            if (!state.isAuthenticated) {
-                showNotification('Önce giriş yapmalısınız', 'error');
-                return;
-            }
-            
-            const currentTitle = elements.currentChatTitle.textContent;
-            const newTitle = prompt('Sohbet başlığını girin:', currentTitle);
-            
-            if (newTitle && newTitle.trim() && newTitle !== currentTitle) {
-                elements.currentChatTitle.textContent = newTitle.trim();
-                
-                if (state.currentChatId) {
-                    const chat = state.chats.find(c => c.id === state.currentChatId);
-                    if (chat) {
-                        chat.title = newTitle.trim();
-                        chat.updated_at = new Date().toISOString();
-                        renderChatHistory();
-                    }
-                }
-            }
-        }
-
-        function exportChat() {
-            showNotification('Bu özellik yakında eklenecek!', 'info');
-        }
-
-        function shareChat() {
-            showNotification('Paylaşım özelliği yakında eklenecek!', 'info');
-        }
-
-        function handleMessageInputKeydown(e) {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                sendMessage();
-            }
-        }
-
-        function scrollToBottom() {
-            elements.messagesContainer.scrollTop = elements.messagesContainer.scrollHeight;
-        }
-
-        function showNotification(message, type = 'info') {
-            const existingNotifications = document.querySelectorAll('.notification');
-            existingNotifications.forEach(notification => {
-                notification.remove();
+                div.innerHTML = `<div style="flex:1;overflow:hidden;"><div style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${chat.title || 'Yeni Sohbet'}</div><div class="history-date">${dateStr}</div></div><div class="item-actions"><button onclick="deleteChat('${chat.id}', event)"><i class="fas fa-trash"></i></button></div>`;
+                div.onclick = (e) => { if (!e.target.closest('button')) openChat(chat.id); };
+                elements.chatHistoryList.appendChild(div);
             });
-            
-            const notification = document.createElement('div');
-            notification.className = `notification ${type}`;
-            
-            let icon = 'info-circle';
-            if (type === 'success') icon = 'check-circle';
-            if (type === 'error') icon = 'exclamation-circle';
-            if (type === 'warning') icon = 'exclamation-triangle';
-            
-            notification.innerHTML = `
-                <i class="fas fa-${icon}"></i>
-                <span>${message}</span>
-            `;
-            
-            notification.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background-color: ${type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : type === 'warning' ? '#f59e0b' : '#3b82f6'};
-                color: white;
-                padding: 15px 20px;
-                border-radius: 10px;
-                display: flex;
-                align-items: center;
-                gap: 10px;
-                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-                z-index: 1000;
-                animation: slideIn 0.3s ease;
-            `;
-            
-            document.body.appendChild(notification);
-            
-            setTimeout(() => {
-                notification.style.animation = 'slideOut 0.3s ease';
-                setTimeout(() => {
-                    if (notification.parentNode) {
-                        notification.parentNode.removeChild(notification);
+        }
+
+        function createNewGuestChat() {
+            const newChat = { id: 'guest_' + Date.now(), title: 'Yeni Sohbet', messages: [], created_at: new Date(), updated_at: new Date() };
+            state.guestChats.unshift(newChat); saveGuestChats(); openChat(newChat.id);
+        }
+        async function createNewChat() {
+            if (state.isGuest) return createNewGuestChat();
+            try {
+                const res = await fetch(`${CONFIG.BACKEND_URL}/chats`, { method: 'POST', headers: { 'Authorization': `Bearer ${state.sessionToken}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ title: 'Yeni Sohbet' }) });
+                if (res.ok) { loadChatHistory().then(() => openChat(state.chats[0].id)); }
+            } catch (e) { }
+        }
+
+        function openChat(chatId) {
+            state.currentChatId = chatId;
+            elements.messagesContainer.innerHTML = '';
+            const chat = getChatById(chatId);
+            if (chat) {
+                elements.currentChatTitle.textContent = chat.title || 'Yeni Sohbet';
+                if (state.isGuest) {
+                    if (chat.messages && chat.messages.length) chat.messages.forEach(m => addMessageToUI(m.role, m.content, false, m.created_at));
+                    else elements.welcomeMessage.style.display = 'flex';
+                } else {
+                    fetchChatMessages(chatId);
+                    return;
+                }
+            } else elements.welcomeMessage.style.display = 'flex';
+            renderChatHistory();
+            if (window.innerWidth <= 768) elements.sidebar.classList.remove('open');
+            elements.messagesContainer.appendChild(elements.welcomeMessage);
+        }
+
+        async function fetchChatMessages(chatId) {
+            try {
+                const res = await fetch(`${CONFIG.BACKEND_URL}/chats/${chatId}/messages`, { headers: { 'Authorization': `Bearer ${state.sessionToken}` } });
+                if (res.ok) {
+                    const msgs = await res.json();
+                    elements.messagesContainer.innerHTML = '';
+                    if (msgs.length > 0) {
+                        elements.welcomeMessage.style.display = 'none';
+                        msgs.forEach(m => addMessageToUI(m.role === 'user' ? 'user' : 'ai', m.content, false, m.created_at));
+                    } else {
+                        elements.welcomeMessage.style.display = 'flex';
+                        elements.messagesContainer.appendChild(elements.welcomeMessage);
                     }
-                }, 300);
-            }, 3000);
-            
-            const style = document.createElement('style');
-            style.textContent = `
-                @keyframes slideIn {
-                    from { transform: translateX(100%); opacity: 0; }
-                    to { transform: translateX(0); opacity: 1; }
                 }
-                @keyframes slideOut {
-                    from { transform: translateX(0); opacity: 1; }
-                    to { transform: translateX(100%); opacity: 0; }
+            } catch (e) { }
+        }
+
+        function deleteChat(id, e) {
+            if (e) e.stopPropagation();
+            if (!confirm('Silmek istediğine emin misin?')) return;
+            if (state.isGuest) {
+                state.guestChats = state.guestChats.filter(c => c.id !== id);
+                saveGuestChats();
+                if (state.currentChatId === id) state.guestChats.length ? openChat(state.guestChats[0].id) : createNewGuestChat();
+                else renderChatHistory();
+            } else {
+                fetch(`${CONFIG.BACKEND_URL}/chats/${id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${state.sessionToken}` } })
+                    .then(() => loadChatHistory().then(() => {
+                        if (state.chats.length) openChat(state.chats[0].id); else createNewChat();
+                    }));
+            }
+        }
+
+        async function loadChatHistory() {
+            try {
+                const res = await fetch(`${CONFIG.BACKEND_URL}/chats`, { headers: { 'Authorization': `Bearer ${state.sessionToken}` } });
+                if (res.ok) state.chats = await res.json();
+                renderChatHistory();
+            } catch (e) { }
+        }
+
+        function getChatById(id) { return state.isGuest ? state.guestChats.find(c => c.id === id) : state.chats.find(c => c.id === id); }
+        function saveGuestChats() { localStorage.setItem('marulgpt_guest_chats', JSON.stringify(state.guestChats)); }
+        function showTyping() { document.getElementById('typingIndicator').style.display = 'block'; }
+        function hideTyping() { document.getElementById('typingIndicator').style.display = 'none'; }
+
+        function openModal(id) {
+            elements.modalOverlay.classList.add('active');
+            document.querySelectorAll('.modal-card').forEach(m => m.style.display = 'none');
+            document.getElementById(id).style.display = (id === 'infoModal' ? 'flex' : 'block');
+        }
+        function closeAllModals() { elements.modalOverlay.classList.remove('active'); }
+
+        function setupEventListeners() {
+            elements.sendMessageBtn.addEventListener('click', sendMessage);
+            elements.messageInput.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } });
+            elements.sidebarToggle.addEventListener('click', e => { e.stopPropagation(); elements.sidebar.classList.toggle('open'); });
+            document.addEventListener('click', e => {
+                if (window.innerWidth <= 768 && elements.sidebar.classList.contains('open') && !elements.sidebar.contains(e.target) && e.target !== elements.sidebarToggle)
+                    elements.sidebar.classList.remove('open');
+            });
+
+            elements.newChatBtn.addEventListener('click', () => state.isGuest ? createNewGuestChat() : createNewChat());
+            elements.authSidebarBtn.addEventListener('click', () => openModal('authModal'));
+            elements.logoutBtn.addEventListener('click', () => logoutUser());
+            elements.limitAuthBtn.addEventListener('click', () => { closeAllModals(); openModal('authModal'); });
+            elements.closeAuthModal.addEventListener('click', closeAllModals);
+            elements.closeInfoModal.addEventListener('click', closeAllModals);
+            elements.infoBtn.addEventListener('click', () => openModal('infoModal'));
+
+            elements.clearHistoryBtn.addEventListener('click', () => {
+                if (!confirm("TÜM geçmiş silinecek?")) return;
+                if (state.isGuest) {
+                    state.guestChats = []; saveGuestChats(); createNewGuestChat();
+                } else {
+                    alert("Toplu silme özelliği güvenlik nedeniyle devre dışı bırakıldı. Lütfen tek tek siliniz.");
                 }
-            `;
-            document.head.appendChild(style);
+            });
+
+            elements.donateBtn.addEventListener('click', () => {
+                window.open('https://www.bynogame.com/destekle/marulgpt', '_blank');
+            });
+
+            document.querySelectorAll('.auth-tab').forEach(t => t.addEventListener('click', (e) => {
+                document.querySelectorAll('.auth-tab').forEach(x => x.classList.remove('active')); e.target.classList.add('active');
+                const isLogin = e.target.id === 'loginTab';
+                document.getElementById('loginForm').style.display = isLogin ? 'block' : 'none';
+                document.getElementById('registerForm').style.display = isLogin ? 'none' : 'block';
+            }));
+
+            document.querySelectorAll('.info-tab').forEach(t => t.addEventListener('click', (e) => {
+                document.querySelectorAll('.info-tab').forEach(x => x.classList.remove('active')); e.target.classList.add('active');
+                document.querySelectorAll('.info-content').forEach(x => x.style.display = 'none');
+                document.getElementById(e.target.dataset.tab + 'Content').style.display = 'block';
+            }));
+
+            elements.themeToggleBtn.addEventListener('click', toggleTheme);
+
+            elements.editChatTitleBtn.addEventListener('click', () => {
+                if (state.isGuest) return alert('Misafir modunda başlık düzenlenemez');
+                const n = prompt("Yeni başlık:", elements.currentChatTitle.textContent);
+                if (n) {
+                    elements.currentChatTitle.textContent = n;
+                    fetch(`${CONFIG.BACKEND_URL}/chats/${state.currentChatId}`, { method: 'PUT', headers: { 'Authorization': `Bearer ${state.sessionToken}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ title: n }) })
+                        .then(() => loadChatHistory());
+                }
+            });
+
+            document.getElementById('loginForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                try {
+                    const res = await fetch(`${CONFIG.BACKEND_URL}/login`, { method: 'POST', body: JSON.stringify({ email: elements.loginEmail.value, password: elements.loginPassword.value }), headers: { 'Content-Type': 'application/json' } });
+                    const data = await res.json();
+                    if (res.ok) loginUser(data.user, data.token); else alert(data.error);
+                } catch (e) { alert("Hata"); }
+            });
+
+            document.getElementById('registerForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                if (elements.registerPassword.value !== elements.registerPasswordConfirm.value) return alert("Şifreler uyuşmuyor");
+                try {
+                    const res = await fetch(`${CONFIG.BACKEND_URL}/register`, { method: 'POST', body: JSON.stringify({ name: elements.registerName.value, email: elements.registerEmail.value, password: elements.registerPassword.value }), headers: { 'Content-Type': 'application/json' } });
+                    const data = await res.json();
+                    if (res.ok) { loginUser(data.user, data.token); } else alert(data.error);
+                } catch (e) { alert("Hata"); }
+            });
         }
     </script>
 </body>
+
 </html>
