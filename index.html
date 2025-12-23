@@ -1071,7 +1071,7 @@
                 <button class="auth-tab" id="registerTab">Kayıt</button>
             </div>
             
-            <!-- TURNSTILE CONTAINER - SADECE BURADA -->
+            <!-- TURNSTILE CONTAINER - HEM LOGIN HEM REGISTER İÇİN -->
             <div id="turnstileContainer" style="margin: 15px 0; display: flex; justify-content: center;"></div>
             
             <form id="loginForm">
@@ -1149,7 +1149,7 @@
         }
 
         function validatePassword(password) {
-            return password && password.length >= 8;
+            return password && password.length >= 6;
         }
 
         function validateName(name) {
@@ -1161,6 +1161,9 @@
             
             const errorStr = String(error).toLowerCase();
             
+            if (errorStr.includes('rate') || errorStr.includes('limit') || errorStr.includes('too many')) {
+                return 'Çok fazla istek gönderdiniz. Lütfen bir dakika bekleyin.';
+            }
             if (errorStr.includes('password') || errorStr.includes('şifre')) {
                 return 'Geçersiz kimlik bilgileri.';
             }
@@ -1172,9 +1175,6 @@
             }
             if (errorStr.includes('network') || errorStr.includes('connection')) {
                 return 'Bağlantı hatası. Lütfen internet bağlantınızı kontrol edin.';
-            }
-            if (errorStr.includes('rate') || errorStr.includes('limit')) {
-                return 'Çok fazla istek gönderdiniz. Lütfen bir dakika bekleyin.';
             }
             if (errorStr.includes('turnstile') || errorStr.includes('captcha')) {
                 return 'Robot doğrulaması başarısız. Lütfen tekrar deneyin.';
@@ -1190,6 +1190,9 @@
                 if (turnstileWidgetId) {
                     turnstile.remove(turnstileWidgetId);
                 }
+                
+                // Container'ı göster
+                document.getElementById('turnstileContainer').style.display = 'flex';
                 
                 // Yeni widget oluştur
                 turnstileWidgetId = turnstile.render('#turnstileContainer', {
@@ -1207,9 +1210,6 @@
                         showNotification('Doğrulama hatası. Lütfen tekrar deneyin.', 'error');
                     }
                 });
-                
-                // Container'ı göster
-                document.getElementById('turnstileContainer').style.display = 'flex';
             }
         }
 
@@ -1410,7 +1410,11 @@
                     saveGuestChats();
                 } else {
                     const errorData = await response.json();
-                    addMessageToUI('ai', 'Üzgünüm, bir hata oluştu. Lütfen daha sonra tekrar deneyin.');
+                    let errorMessage = 'Üzgünüm, bir hata oluştu. Lütfen daha sonra tekrar deneyin.';
+                    if (response.status === 429) {
+                        errorMessage = 'Çok fazla istek gönderdiniz. Lütfen bir dakika bekleyin.';
+                    }
+                    addMessageToUI('ai', errorMessage);
                     showNotification(getSafeErrorMessage(errorData.error), 'error');
                 }
             } catch (e) { 
@@ -1461,7 +1465,11 @@
                     }
                 } else {
                     const errorData = await response.json();
-                    addMessageToUI('ai', 'Üzgünüm, bir hata oluştu. Lütfen daha sonra tekrar deneyin.');
+                    let errorMessage = 'Üzgünüm, bir hata oluştu. Lütfen daha sonra tekrar deneyin.';
+                    if (response.status === 429) {
+                        errorMessage = 'Çok fazla istek gönderdiniz. Lütfen bir dakika bekleyin.';
+                    }
+                    addMessageToUI('ai', errorMessage);
                     showNotification(getSafeErrorMessage(errorData.error), 'error');
                 }
             } catch (e) { 
@@ -1670,6 +1678,11 @@
             elements.modalOverlay.classList.add('active');
             document.querySelectorAll('.modal-card').forEach(m => m.style.display = 'none');
             document.getElementById(id).style.display = (id === 'infoModal' ? 'flex' : 'block');
+            if (id === 'authModal') {
+                setTimeout(() => {
+                    initTurnstile();
+                }, 300);
+            }
         }
         
         function closeAllModals() { 
@@ -1702,18 +1715,12 @@
             // Authentication
             elements.authSidebarBtn.addEventListener('click', () => {
                 openModal('authModal');
-                setTimeout(() => {
-                    initTurnstile();
-                }, 300);
             });
             
             elements.logoutBtn.addEventListener('click', () => logoutUser());
             elements.limitAuthBtn.addEventListener('click', () => { 
                 closeAllModals(); 
                 openModal('authModal');
-                setTimeout(() => {
-                    initTurnstile();
-                }, 300);
             });
             
             // Modal controls
@@ -1739,7 +1746,7 @@
                 window.open('https://www.bynogame.com/destekle/marulgpt', '_blank');
             });
 
-            // Auth tabs - ÇİFT WIDGET HATASI DÜZELTİLDİ
+            // Auth tabs - HEM LOGIN HEM REGISTER İÇİN TURNSTILE
             document.querySelectorAll('.auth-tab').forEach(t => t.addEventListener('click', (e) => {
                 document.querySelectorAll('.auth-tab').forEach(x => x.classList.remove('active')); 
                 e.target.classList.add('active');
@@ -1747,15 +1754,10 @@
                 document.getElementById('loginForm').style.display = isLogin ? 'block' : 'none';
                 document.getElementById('registerForm').style.display = isLogin ? 'none' : 'block';
                 
-                // Sadece login tab'de Turnstile göster
-                if (isLogin) {
-                    setTimeout(() => {
-                        initTurnstile();
-                    }, 100);
-                } else {
-                    // Register tab'de Turnstile'ı gizle
-                    document.getElementById('turnstileContainer').style.display = 'none';
-                }
+                // Her iki tab'de de Turnstile göster
+                setTimeout(() => {
+                    initTurnstile();
+                }, 100);
             }));
 
             // Info tabs
@@ -1815,14 +1817,18 @@
                 }
                 
                 if (!validatePassword(password)) {
-                    showNotification('Şifre en az 8 karakter olmalıdır', 'error');
+                    showNotification('Şifre en az 6 karakter olmalıdır', 'error');
                     return;
                 }
                 
                 try {
                     const res = await fetch(`${CONFIG.BACKEND_URL}/login`, { 
                         method: 'POST', 
-                        body: JSON.stringify({ email, password, turnstileToken }), 
+                        body: JSON.stringify({ 
+                            email, 
+                            password, 
+                            turnstileToken 
+                        }), 
                         headers: { 'Content-Type': 'application/json' } 
                     });
                     const data = await res.json();
@@ -1850,10 +1856,8 @@
                 const password = elements.registerPassword.value;
                 const passwordConfirm = elements.registerPasswordConfirm.value;
                 
-                // Register için de login'deki turnstile token'ını kullan
                 if (!turnstileToken) {
-                    showNotification('Lütfen önce robot doğrulamasını yapın', 'error');
-                    document.getElementById('loginTab').click();
+                    showNotification('Lütfen robot olmadığınızı doğrulayın', 'error');
                     return;
                 }
                 
@@ -1873,7 +1877,7 @@
                 }
                 
                 if (!validatePassword(password)) {
-                    showNotification('Şifre en az 8 karakter olmalıdır', 'error');
+                    showNotification('Şifre en az 6 karakter olmalıdır', 'error');
                     return;
                 }
                 
@@ -1885,7 +1889,12 @@
                 try {
                     const res = await fetch(`${CONFIG.BACKEND_URL}/register`, { 
                         method: 'POST', 
-                        body: JSON.stringify({ name, email, password, turnstileToken }), 
+                        body: JSON.stringify({ 
+                            name, 
+                            email, 
+                            password, 
+                            turnstileToken 
+                        }), 
                         headers: { 'Content-Type': 'application/json' } 
                     });
                     const data = await res.json();
