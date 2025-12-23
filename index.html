@@ -35,6 +35,9 @@
         gtag('config', 'G-V0TG9J2D9C');
     </script>
 
+    <!-- Cloudflare Turnstile Script -->
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link
         href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;700&display=swap"
@@ -832,6 +835,7 @@
             color: #fff;
             font-weight: 700;
             cursor: pointer;
+            margin-top: 10px;
         }
 
         [data-theme="light"] .primary-btn {
@@ -1066,17 +1070,21 @@
                 <button class="auth-tab active" id="loginTab">Giriş</button>
                 <button class="auth-tab" id="registerTab">Kayıt</button>
             </div>
+            
+            <!-- TURNSTILE CONTAINER - SADECE BURADA -->
+            <div id="turnstileContainer" style="margin: 15px 0; display: flex; justify-content: center;"></div>
+            
             <form id="loginForm">
                 <input type="email" id="loginEmail" class="form-input" placeholder="E-posta" required>
                 <input type="password" id="loginPassword" class="form-input" placeholder="Şifre" required>
                 <button type="submit" class="primary-btn">Giriş Yap</button>
             </form>
+            
             <form id="registerForm" style="display:none;">
                 <input type="text" id="registerName" class="form-input" placeholder="Ad Soyad" required>
                 <input type="email" id="registerEmail" class="form-input" placeholder="E-posta" required>
                 <input type="password" id="registerPassword" class="form-input" placeholder="Şifre" required>
-                <input type="password" id="registerPasswordConfirm" class="form-input" placeholder="Şifre Tekrar"
-                    required>
+                <input type="password" id="registerPasswordConfirm" class="form-input" placeholder="Şifre Tekrar" required>
                 <button type="submit" class="primary-btn">Kayıt Ol</button>
             </form>
         </div>
@@ -1091,6 +1099,37 @@
     </div>
 
     <script>
+        // Configuration
+        const CONFIG = {
+            BACKEND_URL: 'https://marulgpt-backend.marulgpt.workers.dev',
+            MAX_GUEST_QUESTIONS: 10,
+            TURNSTILE_SITE_KEY: '0x4AAAAAACIwky-WL9EDj91G'
+        };
+
+        // State management
+        const state = {
+            isAuthenticated: false,
+            isGuest: true,
+            currentUser: null,
+            sessionToken: null,
+            userId: null,
+            guestQuestionCount: CONFIG.MAX_GUEST_QUESTIONS,
+            maxGuestQuestions: CONFIG.MAX_GUEST_QUESTIONS,
+            chats: [],
+            guestChats: [],
+            currentChatId: null,
+            userName: 'Misafir Kullanıcı',
+            theme: localStorage.getItem('theme') || 'dark'
+        };
+
+        // Turnstile için
+        let turnstileToken = null;
+        let turnstileWidgetId = null;
+
+        // DOM elements cache
+        const elements = {};
+
+        // Utility functions
         function escapeHTML(str) {
             if (typeof str !== 'string') return str;
             return str.replace(/[&<>"']/g, function(match) {
@@ -1110,7 +1149,7 @@
         }
 
         function validatePassword(password) {
-            return password && password.length >= 6;
+            return password && password.length >= 8;
         }
 
         function validateName(name) {
@@ -1134,32 +1173,54 @@
             if (errorStr.includes('network') || errorStr.includes('connection')) {
                 return 'Bağlantı hatası. Lütfen internet bağlantınızı kontrol edin.';
             }
+            if (errorStr.includes('rate') || errorStr.includes('limit')) {
+                return 'Çok fazla istek gönderdiniz. Lütfen bir dakika bekleyin.';
+            }
+            if (errorStr.includes('turnstile') || errorStr.includes('captcha')) {
+                return 'Robot doğrulaması başarısız. Lütfen tekrar deneyin.';
+            }
             
             return error.length > 100 ? 'Bir hata oluştu. Lütfen daha sonra tekrar deneyin.' : error;
         }
 
-        const CONFIG = {
-            BACKEND_URL: 'https://marulgpt-backend.marulgpt.workers.dev',
-            MAX_GUEST_QUESTIONS: 10
-        };
+        // Turnstile yönetimi
+        function initTurnstile() {
+            if (window.turnstile) {
+                // Eski widget'ı temizle
+                if (turnstileWidgetId) {
+                    turnstile.remove(turnstileWidgetId);
+                }
+                
+                // Yeni widget oluştur
+                turnstileWidgetId = turnstile.render('#turnstileContainer', {
+                    sitekey: CONFIG.TURNSTILE_SITE_KEY,
+                    callback: function(token) {
+                        turnstileToken = token;
+                        console.log('Turnstile token alındı');
+                    },
+                    'expired-callback': function() {
+                        turnstileToken = null;
+                        showNotification('Doğrulama süresi doldu. Lütfen tekrar deneyin.', 'error');
+                    },
+                    'error-callback': function() {
+                        turnstileToken = null;
+                        showNotification('Doğrulama hatası. Lütfen tekrar deneyin.', 'error');
+                    }
+                });
+                
+                // Container'ı göster
+                document.getElementById('turnstileContainer').style.display = 'flex';
+            }
+        }
 
-        const state = {
-            isAuthenticated: false,
-            isGuest: true,
-            currentUser: null,
-            sessionToken: null,
-            userId: null,
-            guestQuestionCount: CONFIG.MAX_GUEST_QUESTIONS,
-            maxGuestQuestions: CONFIG.MAX_GUEST_QUESTIONS,
-            chats: [],
-            guestChats: [],
-            currentChatId: null,
-            userName: 'Misafir Kullanıcı',
-            theme: localStorage.getItem('theme') || 'dark'
-        };
+        function resetTurnstile() {
+            turnstileToken = null;
+            if (window.turnstile && turnstileWidgetId) {
+                turnstile.reset(turnstileWidgetId);
+            }
+        }
 
-        const elements = {};
-
+        // Initialize application
         document.addEventListener('DOMContentLoaded', () => {
             cacheElements();
             initTheme();
@@ -1182,8 +1243,14 @@
             ids.forEach(id => elements[id] = document.getElementById(id));
         }
 
-        function initTheme() { setTheme(state.theme); }
-        function toggleTheme() { setTheme(state.theme === 'dark' ? 'light' : 'dark'); }
+        function initTheme() { 
+            setTheme(state.theme); 
+        }
+
+        function toggleTheme() { 
+            setTheme(state.theme === 'dark' ? 'light' : 'dark'); 
+        }
+
         function setTheme(theme) {
             state.theme = theme;
             document.documentElement.setAttribute('data-theme', theme);
@@ -1222,7 +1289,9 @@
                     if (data.valid && data.user) loginUser(data.user, token);
                     else logoutUser(false);
                 } else logoutUser(false);
-            } catch (e) { setupGuestMode(); }
+            } catch (e) { 
+                setupGuestMode(); 
+            }
         }
 
         function setupGuestMode() {
@@ -1230,7 +1299,11 @@
             state.isAuthenticated = false;
             state.userName = 'Misafir Kullanıcı';
             const savedChats = localStorage.getItem('marulgpt_guest_chats');
-            if (savedChats) { try { state.guestChats = JSON.parse(savedChats); } catch (e) { } }
+            if (savedChats) { 
+                try { 
+                    state.guestChats = JSON.parse(savedChats); 
+                } catch (e) { } 
+            }
             if (state.guestChats.length === 0) createNewGuestChat();
             else if (!state.currentChatId) openChat(state.guestChats[0].id);
             renderChatHistory();
@@ -1604,6 +1677,7 @@
         }
 
         function setupEventListeners() {
+            // Send message
             elements.sendMessageBtn.addEventListener('click', sendMessage);
             elements.messageInput.addEventListener('keydown', e => { 
                 if (e.key === 'Enter' && !e.shiftKey) { 
@@ -1611,6 +1685,8 @@
                     sendMessage(); 
                 } 
             });
+            
+            // Sidebar toggle
             elements.sidebarToggle.addEventListener('click', e => { 
                 e.stopPropagation(); 
                 elements.sidebar.classList.toggle('open'); 
@@ -1620,14 +1696,32 @@
                     elements.sidebar.classList.remove('open');
             });
 
+            // New chat
             elements.newChatBtn.addEventListener('click', () => state.isGuest ? createNewGuestChat() : createNewChat());
-            elements.authSidebarBtn.addEventListener('click', () => openModal('authModal'));
+            
+            // Authentication
+            elements.authSidebarBtn.addEventListener('click', () => {
+                openModal('authModal');
+                setTimeout(() => {
+                    initTurnstile();
+                }, 300);
+            });
+            
             elements.logoutBtn.addEventListener('click', () => logoutUser());
-            elements.limitAuthBtn.addEventListener('click', () => { closeAllModals(); openModal('authModal'); });
+            elements.limitAuthBtn.addEventListener('click', () => { 
+                closeAllModals(); 
+                openModal('authModal');
+                setTimeout(() => {
+                    initTurnstile();
+                }, 300);
+            });
+            
+            // Modal controls
             elements.closeAuthModal.addEventListener('click', closeAllModals);
             elements.closeInfoModal.addEventListener('click', closeAllModals);
             elements.infoBtn.addEventListener('click', () => openModal('infoModal'));
 
+            // Clear history
             elements.clearHistoryBtn.addEventListener('click', () => {
                 if (!confirm("TÜM geçmiş silinecek, emin misiniz?")) return;
                 if (state.isGuest) {
@@ -1640,18 +1734,31 @@
                 }
             });
 
+            // Donate button
             elements.donateBtn.addEventListener('click', () => {
                 window.open('https://www.bynogame.com/destekle/marulgpt', '_blank');
             });
 
+            // Auth tabs - ÇİFT WIDGET HATASI DÜZELTİLDİ
             document.querySelectorAll('.auth-tab').forEach(t => t.addEventListener('click', (e) => {
                 document.querySelectorAll('.auth-tab').forEach(x => x.classList.remove('active')); 
                 e.target.classList.add('active');
                 const isLogin = e.target.id === 'loginTab';
                 document.getElementById('loginForm').style.display = isLogin ? 'block' : 'none';
                 document.getElementById('registerForm').style.display = isLogin ? 'none' : 'block';
+                
+                // Sadece login tab'de Turnstile göster
+                if (isLogin) {
+                    setTimeout(() => {
+                        initTurnstile();
+                    }, 100);
+                } else {
+                    // Register tab'de Turnstile'ı gizle
+                    document.getElementById('turnstileContainer').style.display = 'none';
+                }
             }));
 
+            // Info tabs
             document.querySelectorAll('.info-tab').forEach(t => t.addEventListener('click', (e) => {
                 document.querySelectorAll('.info-tab').forEach(x => x.classList.remove('active')); 
                 e.target.classList.add('active');
@@ -1659,8 +1766,10 @@
                 document.getElementById(e.target.dataset.tab + 'Content').style.display = 'block';
             }));
 
+            // Theme toggle
             elements.themeToggleBtn.addEventListener('click', toggleTheme);
 
+            // Edit chat title
             elements.editChatTitleBtn.addEventListener('click', () => {
                 if (state.isGuest) {
                     showNotification('Misafir modunda başlık düzenlenemez', 'error');
@@ -1683,11 +1792,17 @@
                 }
             });
 
+            // Login form
             document.getElementById('loginForm').addEventListener('submit', async (e) => {
                 e.preventDefault();
                 
                 const email = elements.loginEmail.value.trim();
                 const password = elements.loginPassword.value;
+                
+                if (!turnstileToken) {
+                    showNotification('Lütfen robot olmadığınızı doğrulayın', 'error');
+                    return;
+                }
                 
                 if (!email || !password) {
                     showNotification('Lütfen tüm alanları doldurun', 'error');
@@ -1700,14 +1815,14 @@
                 }
                 
                 if (!validatePassword(password)) {
-                    showNotification('Şifre en az 6 karakter olmalıdır', 'error');
+                    showNotification('Şifre en az 8 karakter olmalıdır', 'error');
                     return;
                 }
                 
                 try {
                     const res = await fetch(`${CONFIG.BACKEND_URL}/login`, { 
                         method: 'POST', 
-                        body: JSON.stringify({ email, password }), 
+                        body: JSON.stringify({ email, password, turnstileToken }), 
                         headers: { 'Content-Type': 'application/json' } 
                     });
                     const data = await res.json();
@@ -1715,14 +1830,18 @@
                         loginUser(data.user, data.token);
                         showNotification('Giriş başarılı!', 'success');
                         elements.loginForm.reset();
+                        resetTurnstile();
                     } else {
                         showNotification(getSafeErrorMessage(data.error), 'error');
+                        resetTurnstile();
                     }
                 } catch (e) { 
                     showNotification(getSafeErrorMessage(e), 'error');
+                    resetTurnstile();
                 }
             });
 
+            // Register form
             document.getElementById('registerForm').addEventListener('submit', async (e) => {
                 e.preventDefault();
                 
@@ -1730,6 +1849,13 @@
                 const email = elements.registerEmail.value.trim();
                 const password = elements.registerPassword.value;
                 const passwordConfirm = elements.registerPasswordConfirm.value;
+                
+                // Register için de login'deki turnstile token'ını kullan
+                if (!turnstileToken) {
+                    showNotification('Lütfen önce robot doğrulamasını yapın', 'error');
+                    document.getElementById('loginTab').click();
+                    return;
+                }
                 
                 if (!name || !email || !password || !passwordConfirm) {
                     showNotification('Lütfen tüm alanları doldurun', 'error');
@@ -1747,7 +1873,7 @@
                 }
                 
                 if (!validatePassword(password)) {
-                    showNotification('Şifre en az 6 karakter olmalıdır', 'error');
+                    showNotification('Şifre en az 8 karakter olmalıdır', 'error');
                     return;
                 }
                 
@@ -1759,7 +1885,7 @@
                 try {
                     const res = await fetch(`${CONFIG.BACKEND_URL}/register`, { 
                         method: 'POST', 
-                        body: JSON.stringify({ name, email, password }), 
+                        body: JSON.stringify({ name, email, password, turnstileToken }), 
                         headers: { 'Content-Type': 'application/json' } 
                     });
                     const data = await res.json();
@@ -1767,17 +1893,21 @@
                         loginUser(data.user, data.token); 
                         showNotification('Kayıt başarılı! Hoş geldiniz!', 'success');
                         elements.registerForm.reset();
+                        resetTurnstile();
                     } else {
                         showNotification(getSafeErrorMessage(data.error), 'error');
+                        resetTurnstile();
                     }
                 } catch (e) { 
                     showNotification(getSafeErrorMessage(e), 'error');
+                    resetTurnstile();
                 }
             });
         }
+        
+        // Global function for deleteChat
+        window.deleteChat = deleteChat;
     </script>
 </body>
 
 </html>
-
-
