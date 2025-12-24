@@ -1108,7 +1108,7 @@
             <form id="loginForm">
                 <input type="email" id="loginEmail" class="form-input" placeholder="E-posta" required>
                 <input type="password" id="loginPassword" class="form-input" placeholder="Şifre" required>
-                <button type="submit" class="primary-btn" id="loginSubmitBtn" disabled>
+                <button type="submit" class="primary-btn" id="loginSubmitBtn">
                     <span id="loginBtnText">Giriş Yap</span>
                 </button>
             </form>
@@ -1118,7 +1118,7 @@
                 <input type="password" id="registerPassword" class="form-input" placeholder="Şifre" required>
                 <input type="password" id="registerPasswordConfirm" class="form-input" placeholder="Şifre Tekrar"
                     required>
-                <button type="submit" class="primary-btn" id="registerSubmitBtn" disabled>
+                <button type="submit" class="primary-btn" id="registerSubmitBtn">
                     <span id="registerBtnText">Kayıt Ol</span>
                 </button>
             </form>
@@ -1139,7 +1139,7 @@
             BACKEND_URL: 'https://marulgpt-backend.marulgpt.workers.dev',
             MAX_GUEST_QUESTIONS: 10,
             // TURNSTILE SITE KEY - BU DEĞERİ KENDİ TURNSTILE SITE KEY'İNİZLE DEĞİŞTİRİN
-            TURNSTILE_SITE_KEY: '0x4AAAAAACIwky-WL9EDj91G' // Örnek key, kendi key'inizi ekleyin
+            TURNSTILE_SITE_KEY: '0x4AAAAAAAAygzN8lJ4nZPXc' // Örnek key, kendi key'inizi ekleyin
         };
 
         // State Management
@@ -1184,7 +1184,8 @@
         }
 
         function validatePassword(password) {
-            return password && password.length >= 8;
+            // Backend'de şifre hash'leme değiştiği için 6 karakter yeterli
+            return password && password.length >= 6;
         }
 
         function validateName(name) {
@@ -1196,8 +1197,8 @@
             
             const errorStr = String(error).toLowerCase();
             
-            if (errorStr.includes('password') || errorStr.includes('şifre')) {
-                return 'Geçersiz kimlik bilgileri.';
+            if (errorStr.includes('password') || errorStr.includes('şifre') || errorStr.includes('geçersiz')) {
+                return 'Geçersiz e-posta veya şifre.';
             }
             if (errorStr.includes('email') || errorStr.includes('e-posta')) {
                 return 'Geçersiz e-posta adresi.';
@@ -1210,6 +1211,9 @@
             }
             if (errorStr.includes('turnstile') || errorStr.includes('human')) {
                 return 'Güvenlik doğrulaması başarısız. Lütfen tekrar deneyin.';
+            }
+            if (errorStr.includes('kayıtlı')) {
+                return 'Bu e-posta adresi zaten kayıtlı.';
             }
             
             return error.length > 100 ? 'Bir hata oluştu. Lütfen daha sonra tekrar deneyin.' : error;
@@ -1244,16 +1248,14 @@
                 sitekey: CONFIG.TURNSTILE_SITE_KEY,
                 callback: function(token) {
                     state.turnstileToken = token;
-                    updateAuthButtons();
+                    console.log('Turnstile token alındı:', token.substring(0, 20) + '...');
                     document.getElementById('turnstileError').style.display = 'none';
                 },
                 'error-callback': function() {
                     showTurnstileError('Güvenlik doğrulaması yüklenirken bir hata oluştu.');
-                    updateAuthButtons();
                 },
                 'expired-callback': function() {
                     state.turnstileToken = null;
-                    updateAuthButtons();
                     showTurnstileError('Güvenlik doğrulaması süresi doldu. Lütfen tekrar deneyin.');
                 }
             });
@@ -1265,7 +1267,6 @@
             if (state.turnstileWidgetId && window.turnstile) {
                 window.turnstile.reset(state.turnstileWidgetId);
                 state.turnstileToken = null;
-                updateAuthButtons();
             }
         }
 
@@ -1277,13 +1278,6 @@
 
         function hideTurnstileError() {
             document.getElementById('turnstileError').style.display = 'none';
-        }
-
-        function updateAuthButtons() {
-            const hasToken = !!state.turnstileToken;
-            
-            document.getElementById('loginSubmitBtn').disabled = !hasToken;
-            document.getElementById('registerSubmitBtn').disabled = !hasToken;
         }
 
         // App Initialization
@@ -1818,7 +1812,6 @@
             if (id === 'authModal' && window.turnstile) {
                 // Clear previous token
                 state.turnstileToken = null;
-                updateAuthButtons();
                 
                 // Reset form
                 document.getElementById('loginForm').reset();
@@ -1938,7 +1931,7 @@
                 }
             });
 
-            // Login form
+            // Login form - DÜZELTİLMİŞ VERSİYON
             document.getElementById('loginForm').addEventListener('submit', async (e) => {
                 e.preventDefault();
                 
@@ -1957,7 +1950,7 @@
                 }
                 
                 if (!validatePassword(password)) {
-                    showNotification('Şifre en az 8 karakter olmalıdır', 'error');
+                    showNotification('Şifre en az 6 karakter olmalıdır', 'error');
                     return;
                 }
                 
@@ -1975,6 +1968,11 @@
                 submitBtn.disabled = true;
                 
                 try {
+                    console.log('Login attempt with:', { 
+                        email, 
+                        turnstileToken: state.turnstileToken ? 'present' : 'missing' 
+                    });
+                    
                     const res = await fetch(`${CONFIG.BACKEND_URL}/login`, { 
                         method: 'POST', 
                         body: JSON.stringify({ 
@@ -1986,6 +1984,7 @@
                     });
                     
                     const data = await res.json();
+                    console.log('Login response:', data);
                     
                     // Reset button
                     submitBtn.querySelector('span').textContent = originalText;
@@ -1997,6 +1996,7 @@
                         elements.loginForm.reset();
                         resetTurnstile();
                     } else {
+                        console.error('Login failed:', data.error);
                         showNotification(getSafeErrorMessage(data.error), 'error');
                         resetTurnstile(); // Reset on error
                     }
@@ -2005,12 +2005,13 @@
                     submitBtn.querySelector('span').textContent = originalText;
                     submitBtn.disabled = false;
                     
+                    console.error('Login error:', e);
                     showNotification(getSafeErrorMessage(e), 'error');
                     resetTurnstile();
                 }
             });
 
-            // Register form
+            // Register form - DÜZELTİLMİŞ VERSİYON
             document.getElementById('registerForm').addEventListener('submit', async (e) => {
                 e.preventDefault();
                 
@@ -2036,7 +2037,7 @@
                 }
                 
                 if (!validatePassword(password)) {
-                    showNotification('Şifre en az 8 karakter olmalıdır', 'error');
+                    showNotification('Şifre en az 6 karakter olmalıdır', 'error');
                     return;
                 }
                 
@@ -2059,6 +2060,12 @@
                 submitBtn.disabled = true;
                 
                 try {
+                    console.log('Register attempt with:', { 
+                        name, 
+                        email, 
+                        turnstileToken: state.turnstileToken ? 'present' : 'missing' 
+                    });
+                    
                     const res = await fetch(`${CONFIG.BACKEND_URL}/register`, { 
                         method: 'POST', 
                         body: JSON.stringify({ 
@@ -2071,6 +2078,7 @@
                     });
                     
                     const data = await res.json();
+                    console.log('Register response:', data);
                     
                     // Reset button
                     submitBtn.querySelector('span').textContent = originalText;
@@ -2082,6 +2090,7 @@
                         elements.registerForm.reset();
                         resetTurnstile();
                     } else {
+                        console.error('Register failed:', data.error);
                         showNotification(getSafeErrorMessage(data.error), 'error');
                         resetTurnstile(); // Reset on error
                     }
@@ -2090,6 +2099,7 @@
                     submitBtn.querySelector('span').textContent = originalText;
                     submitBtn.disabled = false;
                     
+                    console.error('Register error:', e);
                     showNotification(getSafeErrorMessage(e), 'error');
                     resetTurnstile();
                 }
