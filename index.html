@@ -10,7 +10,6 @@
 
     <title>Marul AI - Akıllı Sohbet Asistanı</title>
 
-    <!-- Cloudflare Turnstile Script -->
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 
     <link rel="icon" href="favicon.ico" type="image/x-icon">
@@ -866,7 +865,6 @@
             transform: translateX(5px);
         }
 
-        /* Turnstile Widget Container */
         .turnstile-container {
             margin: 15px 0;
             min-height: 65px;
@@ -1099,7 +1097,6 @@
                 <button class="auth-tab" id="registerTab">Kayıt</button>
             </div>
             
-            <!-- Turnstile Widget Container -->
             <div id="turnstileContainer" class="turnstile-container">
                 <div class="turnstile-loading">Güvenlik doğrulaması yükleniyor...</div>
             </div>
@@ -1134,15 +1131,12 @@
     </div>
 
     <script>
-        // CONFIGURATION
         const CONFIG = {
             BACKEND_URL: 'https://marulgpt-backend.marulgpt.workers.dev',
             MAX_GUEST_QUESTIONS: 10,
-            // TURNSTILE SITE KEY - BU DEĞERİ KENDİ TURNSTILE SITE KEY'İNİZLE DEĞİŞTİRİN
-            TURNSTILE_SITE_KEY: '0x4AAAAAACIwky-WL9EDj91G' // Örnek key, kendi key'inizi ekleyin
+            TURNSTILE_SITE_KEY: '0x4AAAAAACIwky-WL9EDj91G'
         };
 
-        // State Management
         const state = {
             isAuthenticated: false,
             isGuest: true,
@@ -1161,10 +1155,8 @@
             isTurnstileLoaded: false
         };
 
-        // Element Cache
         const elements = {};
 
-        // Utility Functions
         function escapeHTML(str) {
             if (typeof str !== 'string') return str;
             return str.replace(/[&<>"']/g, function(match) {
@@ -1184,7 +1176,6 @@
         }
 
         function validatePassword(password) {
-            // Backend'de şifre hash'leme değiştiği için 6 karakter yeterli
             return password && password.length >= 6;
         }
 
@@ -1228,7 +1219,6 @@
             setTimeout(() => div.remove(), 3000);
         }
 
-        // TURNSTILE FUNCTIONS
         function loadTurnstileWidget() {
             if (!window.turnstile) {
                 console.error('Turnstile script not loaded');
@@ -1240,10 +1230,8 @@
             
             container.innerHTML = '';
             
-            // Reset token
             state.turnstileToken = null;
             
-            // Render Turnstile widget
             state.turnstileWidgetId = window.turnstile.render('#turnstileContainer', {
                 sitekey: CONFIG.TURNSTILE_SITE_KEY,
                 callback: function(token) {
@@ -1280,18 +1268,15 @@
             document.getElementById('turnstileError').style.display = 'none';
         }
 
-        // App Initialization
         document.addEventListener('DOMContentLoaded', () => {
             cacheElements();
             initTheme();
             initApp();
             setupEventListeners();
             
-            // Wait for Turnstile to load
             if (window.turnstile) {
                 state.isTurnstileLoaded = true;
             } else {
-                // Fallback in case script doesn't load
                 setTimeout(() => {
                     if (!window.turnstile) {
                         console.warn('Turnstile failed to load, using fallback');
@@ -1454,7 +1439,6 @@
             }
         }
 
-        // Message Handling
         async function sendMessage() {
             const text = elements.messageInput.value.trim();
             if (!text) return;
@@ -1596,7 +1580,6 @@
             setTimeout(() => elements.messagesContainer.scrollTop = elements.messagesContainer.scrollHeight, 10);
         }
 
-        // Chat Management
         function renderChatHistory() {
             const list = state.isGuest ? state.guestChats : state.chats;
             list.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at));
@@ -1801,24 +1784,19 @@
             document.getElementById('typingIndicator').style.display = 'none'; 
         }
 
-        // Modal Functions
         function openModal(id) {
             elements.modalOverlay.classList.add('active');
             document.querySelectorAll('.modal-card').forEach(m => m.style.display = 'none');
             const modal = document.getElementById(id);
             modal.style.display = (id === 'infoModal' ? 'flex' : 'block');
             
-            // Load Turnstile when auth modal opens
             if (id === 'authModal' && window.turnstile) {
-                // Clear previous token
                 state.turnstileToken = null;
                 
-                // Reset form
                 document.getElementById('loginForm').reset();
                 document.getElementById('registerForm').reset();
                 hideTurnstileError();
                 
-                // Load Turnstile with a small delay to ensure DOM is ready
                 setTimeout(() => {
                     loadTurnstileWidget();
                 }, 100);
@@ -1829,9 +1807,7 @@
             elements.modalOverlay.classList.remove('active'); 
         }
 
-        // Event Listeners Setup
         function setupEventListeners() {
-            // Message sending
             elements.sendMessageBtn.addEventListener('click', sendMessage);
             elements.messageInput.addEventListener('keydown', e => { 
                 if (e.key === 'Enter' && !e.shiftKey) { 
@@ -1840,7 +1816,6 @@
                 } 
             });
             
-            // Sidebar toggle
             elements.sidebarToggle.addEventListener('click', e => { 
                 e.stopPropagation(); 
                 elements.sidebar.classList.toggle('open'); 
@@ -1855,7 +1830,6 @@
                 }
             });
 
-            // Chat actions
             elements.newChatBtn.addEventListener('click', () => state.isGuest ? createNewGuestChat() : createNewChat());
             elements.authSidebarBtn.addEventListener('click', () => openModal('authModal'));
             elements.logoutBtn.addEventListener('click', () => logoutUser());
@@ -1864,7 +1838,6 @@
             elements.closeInfoModal.addEventListener('click', closeAllModals);
             elements.infoBtn.addEventListener('click', () => openModal('infoModal'));
 
-            // Clear history
             elements.clearHistoryBtn.addEventListener('click', () => {
                 if (!confirm("TÜM geçmiş silinecek, emin misiniz?")) return;
                 
@@ -1878,12 +1851,10 @@
                 }
             });
 
-            // Donate button
             elements.donateBtn.addEventListener('click', () => {
                 window.open('https://www.bynogame.com/destekle/marulgpt', '_blank');
             });
 
-            // Auth tabs
             document.querySelectorAll('.auth-tab').forEach(t => t.addEventListener('click', (e) => {
                 document.querySelectorAll('.auth-tab').forEach(x => x.classList.remove('active')); 
                 e.target.classList.add('active');
@@ -1891,11 +1862,9 @@
                 document.getElementById('loginForm').style.display = isLogin ? 'block' : 'none';
                 document.getElementById('registerForm').style.display = isLogin ? 'none' : 'block';
                 
-                // Reset Turnstile when switching tabs
                 resetTurnstile();
             }));
 
-            // Info tabs
             document.querySelectorAll('.info-tab').forEach(t => t.addEventListener('click', (e) => {
                 document.querySelectorAll('.info-tab').forEach(x => x.classList.remove('active')); 
                 e.target.classList.add('active');
@@ -1903,10 +1872,8 @@
                 document.getElementById(e.target.dataset.tab + 'Content').style.display = 'block';
             }));
 
-            // Theme toggle
             elements.themeToggleBtn.addEventListener('click', toggleTheme);
 
-            // Edit chat title
             elements.editChatTitleBtn.addEventListener('click', () => {
                 if (state.isGuest) {
                     showNotification('Misafir modunda başlık düzenlenemez', 'error');
@@ -1931,14 +1898,12 @@
                 }
             });
 
-            // Login form - DÜZELTİLMİŞ VERSİYON
             document.getElementById('loginForm').addEventListener('submit', async (e) => {
                 e.preventDefault();
                 
                 const email = elements.loginEmail.value.trim();
                 const password = elements.loginPassword.value;
                 
-                // Validation
                 if (!email || !password) {
                     showNotification('Lütfen tüm alanları doldurun', 'error');
                     return;
@@ -1954,14 +1919,12 @@
                     return;
                 }
                 
-                // Check Turnstile token
                 if (!state.turnstileToken) {
                     showNotification('Lütfen güvenlik doğrulamasını tamamlayın', 'error');
                     showTurnstileError('Güvenlik doğrulaması gereklidir.');
                     return;
                 }
                 
-                // Disable button during request
                 const submitBtn = document.getElementById('loginSubmitBtn');
                 const originalText = submitBtn.querySelector('span').textContent;
                 submitBtn.querySelector('span').textContent = 'Giriş yapılıyor...';
@@ -1986,7 +1949,6 @@
                     const data = await res.json();
                     console.log('Login response:', data);
                     
-                    // Reset button
                     submitBtn.querySelector('span').textContent = originalText;
                     submitBtn.disabled = false;
                     
@@ -1998,10 +1960,9 @@
                     } else {
                         console.error('Login failed:', data.error);
                         showNotification(getSafeErrorMessage(data.error), 'error');
-                        resetTurnstile(); // Reset on error
+                        resetTurnstile();
                     }
                 } catch (e) { 
-                    // Reset button
                     submitBtn.querySelector('span').textContent = originalText;
                     submitBtn.disabled = false;
                     
@@ -2011,7 +1972,6 @@
                 }
             });
 
-            // Register form - DÜZELTİLMİŞ VERSİYON
             document.getElementById('registerForm').addEventListener('submit', async (e) => {
                 e.preventDefault();
                 
@@ -2020,7 +1980,6 @@
                 const password = elements.registerPassword.value;
                 const passwordConfirm = elements.registerPasswordConfirm.value;
                 
-                // Validation
                 if (!name || !email || !password || !passwordConfirm) {
                     showNotification('Lütfen tüm alanları doldurun', 'error');
                     return;
@@ -2046,14 +2005,12 @@
                     return;
                 }
                 
-                // Check Turnstile token
                 if (!state.turnstileToken) {
                     showNotification('Lütfen güvenlik doğrulamasını tamamlayın', 'error');
                     showTurnstileError('Güvenlik doğrulaması gereklidir.');
                     return;
                 }
                 
-                // Disable button during request
                 const submitBtn = document.getElementById('registerSubmitBtn');
                 const originalText = submitBtn.querySelector('span').textContent;
                 submitBtn.querySelector('span').textContent = 'Kayıt yapılıyor...';
@@ -2080,7 +2037,6 @@
                     const data = await res.json();
                     console.log('Register response:', data);
                     
-                    // Reset button
                     submitBtn.querySelector('span').textContent = originalText;
                     submitBtn.disabled = false;
                     
@@ -2092,10 +2048,9 @@
                     } else {
                         console.error('Register failed:', data.error);
                         showNotification(getSafeErrorMessage(data.error), 'error');
-                        resetTurnstile(); // Reset on error
+                        resetTurnstile();
                     }
                 } catch (e) { 
-                    // Reset button
                     submitBtn.querySelector('span').textContent = originalText;
                     submitBtn.disabled = false;
                     
@@ -2109,4 +2064,5 @@
 </body>
 
 </html>
+
 
