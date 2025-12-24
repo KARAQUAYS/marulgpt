@@ -10,6 +10,9 @@
 
     <title>Marul AI - Akıllı Sohbet Asistanı</title>
 
+    <!-- Cloudflare Turnstile Script -->
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <link rel="icon" type="image/png" href="favicon.png">
     <link rel="shortcut icon" href="favicon.ico">
@@ -832,6 +835,12 @@
             color: #fff;
             font-weight: 700;
             cursor: pointer;
+            position: relative;
+        }
+
+        .primary-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
         }
 
         [data-theme="light"] .primary-btn {
@@ -855,6 +864,29 @@
             background: rgba(0, 255, 157, 0.1);
             color: var(--primary);
             transform: translateX(5px);
+        }
+
+        /* Turnstile Widget Container */
+        .turnstile-container {
+            margin: 15px 0;
+            min-height: 65px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 8px;
+            background: rgba(128, 128, 128, 0.05);
+        }
+
+        .turnstile-error {
+            color: #ff4757;
+            font-size: 0.8rem;
+            margin-top: 5px;
+            text-align: center;
+        }
+
+        .turnstile-loading {
+            color: var(--text-muted);
+            font-size: 0.9rem;
         }
 
         @media (max-width: 768px) {
@@ -1066,10 +1098,19 @@
                 <button class="auth-tab active" id="loginTab">Giriş</button>
                 <button class="auth-tab" id="registerTab">Kayıt</button>
             </div>
+            
+            <!-- Turnstile Widget Container -->
+            <div id="turnstileContainer" class="turnstile-container">
+                <div class="turnstile-loading">Güvenlik doğrulaması yükleniyor...</div>
+            </div>
+            <div id="turnstileError" class="turnstile-error" style="display: none;"></div>
+            
             <form id="loginForm">
                 <input type="email" id="loginEmail" class="form-input" placeholder="E-posta" required>
                 <input type="password" id="loginPassword" class="form-input" placeholder="Şifre" required>
-                <button type="submit" class="primary-btn">Giriş Yap</button>
+                <button type="submit" class="primary-btn" id="loginSubmitBtn" disabled>
+                    <span id="loginBtnText">Giriş Yap</span>
+                </button>
             </form>
             <form id="registerForm" style="display:none;">
                 <input type="text" id="registerName" class="form-input" placeholder="Ad Soyad" required>
@@ -1077,7 +1118,9 @@
                 <input type="password" id="registerPassword" class="form-input" placeholder="Şifre" required>
                 <input type="password" id="registerPasswordConfirm" class="form-input" placeholder="Şifre Tekrar"
                     required>
-                <button type="submit" class="primary-btn">Kayıt Ol</button>
+                <button type="submit" class="primary-btn" id="registerSubmitBtn" disabled>
+                    <span id="registerBtnText">Kayıt Ol</span>
+                </button>
             </form>
         </div>
 
@@ -1091,6 +1134,37 @@
     </div>
 
     <script>
+        // CONFIGURATION
+        const CONFIG = {
+            BACKEND_URL: 'https://marulgpt-backend.marulgpt.workers.dev',
+            MAX_GUEST_QUESTIONS: 10,
+            // TURNSTILE SITE KEY - BU DEĞERİ KENDİ TURNSTILE SITE KEY'İNİZLE DEĞİŞTİRİN
+            TURNSTILE_SITE_KEY: '0x4AAAAAACIwky-WL9EDj91G' // Örnek key, kendi key'inizi ekleyin
+        };
+
+        // State Management
+        const state = {
+            isAuthenticated: false,
+            isGuest: true,
+            currentUser: null,
+            sessionToken: null,
+            userId: null,
+            guestQuestionCount: CONFIG.MAX_GUEST_QUESTIONS,
+            maxGuestQuestions: CONFIG.MAX_GUEST_QUESTIONS,
+            chats: [],
+            guestChats: [],
+            currentChatId: null,
+            userName: 'Misafir Kullanıcı',
+            theme: localStorage.getItem('theme') || 'dark',
+            turnstileToken: null,
+            turnstileWidgetId: null,
+            isTurnstileLoaded: false
+        };
+
+        // Element Cache
+        const elements = {};
+
+        // Utility Functions
         function escapeHTML(str) {
             if (typeof str !== 'string') return str;
             return str.replace(/[&<>"']/g, function(match) {
@@ -1110,7 +1184,7 @@
         }
 
         function validatePassword(password) {
-            return password && password.length >= 6;
+            return password && password.length >= 8;
         }
 
         function validateName(name) {
@@ -1134,37 +1208,107 @@
             if (errorStr.includes('network') || errorStr.includes('connection')) {
                 return 'Bağlantı hatası. Lütfen internet bağlantınızı kontrol edin.';
             }
+            if (errorStr.includes('turnstile') || errorStr.includes('human')) {
+                return 'Güvenlik doğrulaması başarısız. Lütfen tekrar deneyin.';
+            }
             
             return error.length > 100 ? 'Bir hata oluştu. Lütfen daha sonra tekrar deneyin.' : error;
         }
 
-        const CONFIG = {
-            BACKEND_URL: 'https://marulgpt-backend.marulgpt.workers.dev',
-            MAX_GUEST_QUESTIONS: 10
-        };
+        function showNotification(msg, type = 'info') {
+            const div = document.createElement('div');
+            div.className = 'notification';
+            div.style.borderColor = type === 'error' ? '#ff4757' : (type === 'success' ? '#00ff9d' : 'var(--border-light)');
+            div.innerHTML = `<i class="fas fa-${type === 'error' ? 'times-circle' : (type === 'success' ? 'check-circle' : 'info-circle')}"></i> ${escapeHTML(msg)}`;
+            document.body.appendChild(div);
+            setTimeout(() => div.remove(), 3000);
+        }
 
-        const state = {
-            isAuthenticated: false,
-            isGuest: true,
-            currentUser: null,
-            sessionToken: null,
-            userId: null,
-            guestQuestionCount: CONFIG.MAX_GUEST_QUESTIONS,
-            maxGuestQuestions: CONFIG.MAX_GUEST_QUESTIONS,
-            chats: [],
-            guestChats: [],
-            currentChatId: null,
-            userName: 'Misafir Kullanıcı',
-            theme: localStorage.getItem('theme') || 'dark'
-        };
+        // TURNSTILE FUNCTIONS
+        function loadTurnstileWidget() {
+            if (!window.turnstile) {
+                console.error('Turnstile script not loaded');
+                return;
+            }
+            
+            const container = document.getElementById('turnstileContainer');
+            if (!container) return;
+            
+            container.innerHTML = '';
+            
+            // Reset token
+            state.turnstileToken = null;
+            
+            // Render Turnstile widget
+            state.turnstileWidgetId = window.turnstile.render('#turnstileContainer', {
+                sitekey: CONFIG.TURNSTILE_SITE_KEY,
+                callback: function(token) {
+                    state.turnstileToken = token;
+                    updateAuthButtons();
+                    document.getElementById('turnstileError').style.display = 'none';
+                },
+                'error-callback': function() {
+                    showTurnstileError('Güvenlik doğrulaması yüklenirken bir hata oluştu.');
+                    updateAuthButtons();
+                },
+                'expired-callback': function() {
+                    state.turnstileToken = null;
+                    updateAuthButtons();
+                    showTurnstileError('Güvenlik doğrulaması süresi doldu. Lütfen tekrar deneyin.');
+                }
+            });
+            
+            state.isTurnstileLoaded = true;
+        }
 
-        const elements = {};
+        function resetTurnstile() {
+            if (state.turnstileWidgetId && window.turnstile) {
+                window.turnstile.reset(state.turnstileWidgetId);
+                state.turnstileToken = null;
+                updateAuthButtons();
+            }
+        }
 
+        function showTurnstileError(message) {
+            const errorElement = document.getElementById('turnstileError');
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+        }
+
+        function hideTurnstileError() {
+            document.getElementById('turnstileError').style.display = 'none';
+        }
+
+        function updateAuthButtons() {
+            const hasToken = !!state.turnstileToken;
+            
+            document.getElementById('loginSubmitBtn').disabled = !hasToken;
+            document.getElementById('registerSubmitBtn').disabled = !hasToken;
+        }
+
+        // App Initialization
         document.addEventListener('DOMContentLoaded', () => {
             cacheElements();
             initTheme();
             initApp();
             setupEventListeners();
+            
+            // Wait for Turnstile to load
+            if (window.turnstile) {
+                state.isTurnstileLoaded = true;
+            } else {
+                // Fallback in case script doesn't load
+                setTimeout(() => {
+                    if (!window.turnstile) {
+                        console.warn('Turnstile failed to load, using fallback');
+                        state.isTurnstileLoaded = true;
+                        const container = document.getElementById('turnstileContainer');
+                        if (container) {
+                            container.innerHTML = '<div style="color: var(--text-muted);">Güvenlik doğrulaması kullanılamıyor. Lütfen sayfayı yenileyin.</div>';
+                        }
+                    }
+                }, 5000);
+            }
         });
 
         function cacheElements() {
@@ -1177,13 +1321,20 @@
                 'loginEmail', 'loginPassword', 'registerName', 'registerEmail', 'registerPassword', 'registerPasswordConfirm',
                 'editChatTitleBtn', 'shareChatBtn', 'clearHistoryBtn',
                 'authSidebarBtn', 'closeAuthModal', 'limitAuthBtn', 'closeInfoModal',
-                'welcomeMessage', 'donateBtn', 'themeToggleBtn'
+                'welcomeMessage', 'donateBtn', 'themeToggleBtn',
+                'turnstileContainer', 'turnstileError', 'loginSubmitBtn', 'registerSubmitBtn'
             ];
             ids.forEach(id => elements[id] = document.getElementById(id));
         }
 
-        function initTheme() { setTheme(state.theme); }
-        function toggleTheme() { setTheme(state.theme === 'dark' ? 'light' : 'dark'); }
+        function initTheme() { 
+            setTheme(state.theme); 
+        }
+        
+        function toggleTheme() { 
+            setTheme(state.theme === 'dark' ? 'light' : 'dark'); 
+        }
+        
         function setTheme(theme) {
             state.theme = theme;
             document.documentElement.setAttribute('data-theme', theme);
@@ -1191,22 +1342,18 @@
             elements.themeToggleBtn.innerHTML = theme === 'dark' ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
         }
 
-        function showNotification(msg, type = 'info') {
-            const div = document.createElement('div');
-            div.className = 'notification';
-            div.style.borderColor = type === 'error' ? '#ff4757' : (type === 'success' ? '#00ff9d' : 'var(--border-light)');
-            div.innerHTML = `<i class="fas fa-${type === 'error' ? 'times-circle' : (type === 'success' ? 'check-circle' : 'info-circle')}"></i> ${escapeHTML(msg)}`;
-            document.body.appendChild(div);
-            setTimeout(() => div.remove(), 3000);
-        }
-
         async function initApp() {
             const token = localStorage.getItem('marulgpt_token');
             const userData = localStorage.getItem('marulgpt_user_data');
             const savedGuestQuestions = localStorage.getItem('marulgpt_guest_questions');
+            
             if (savedGuestQuestions) state.guestQuestionCount = parseInt(savedGuestQuestions);
-            if (token && userData) await verifySession(token);
-            else setupGuestMode();
+            
+            if (token && userData) {
+                await verifySession(token);
+            } else {
+                setupGuestMode();
+            }
         }
 
         async function verifySession(token) {
@@ -1217,22 +1364,42 @@
                         'Content-Type': 'application/json'
                     } 
                 });
+                
                 if (response.ok) {
                     const data = await response.json();
-                    if (data.valid && data.user) loginUser(data.user, token);
-                    else logoutUser(false);
-                } else logoutUser(false);
-            } catch (e) { setupGuestMode(); }
+                    if (data.valid && data.user) {
+                        loginUser(data.user, token);
+                    } else {
+                        logoutUser(false);
+                    }
+                } else {
+                    logoutUser(false);
+                }
+            } catch (e) { 
+                setupGuestMode(); 
+            }
         }
 
         function setupGuestMode() {
             state.isGuest = true;
             state.isAuthenticated = false;
             state.userName = 'Misafir Kullanıcı';
+            
             const savedChats = localStorage.getItem('marulgpt_guest_chats');
-            if (savedChats) { try { state.guestChats = JSON.parse(savedChats); } catch (e) { } }
-            if (state.guestChats.length === 0) createNewGuestChat();
-            else if (!state.currentChatId) openChat(state.guestChats[0].id);
+            if (savedChats) { 
+                try { 
+                    state.guestChats = JSON.parse(savedChats); 
+                } catch (e) { 
+                    console.error('Failed to parse guest chats:', e);
+                } 
+            }
+            
+            if (state.guestChats.length === 0) {
+                createNewGuestChat();
+            } else if (!state.currentChatId) {
+                openChat(state.guestChats[0].id);
+            }
+            
             renderChatHistory();
             updateUI();
         }
@@ -1254,18 +1421,23 @@
 
             elements.messagesContainer.innerHTML = '';
             loadChatHistory().then(() => {
-                if (state.chats.length > 0) openChat(state.chats[0].id);
-                else createNewChat();
+                if (state.chats.length > 0) {
+                    openChat(state.chats[0].id);
+                } else {
+                    createNewChat();
+                }
             });
         }
 
         function logoutUser(confirmUser = true) {
             if (confirmUser && !confirm("Çıkış yapmak istediğinize emin misiniz?")) return;
+            
             localStorage.removeItem('marulgpt_token');
             localStorage.removeItem('marulgpt_user_id');
             localStorage.removeItem('marulgpt_user_data');
             localStorage.removeItem('marulgpt_guest_questions');
             localStorage.removeItem('marulgpt_guest_chats');
+            
             location.reload();
         }
 
@@ -1274,6 +1446,7 @@
             elements.userAvatar.innerHTML = state.isAuthenticated ? escapeHTML(state.userName.charAt(0).toUpperCase()) : 'M';
             elements.userAvatar.style.background = state.isAuthenticated ? '#00ff9d' : '#ff9f43';
             elements.userAvatar.style.color = state.isAuthenticated ? '#000' : '#fff';
+            
             if (state.isGuest) {
                 elements.questionCountDisplay.textContent = `${state.guestQuestionCount}/${state.maxGuestQuestions} Hak`;
                 elements.questionCountDisplay.style.color = '#ff9f43';
@@ -1287,6 +1460,7 @@
             }
         }
 
+        // Message Handling
         async function sendMessage() {
             const text = elements.messageInput.value.trim();
             if (!text) return;
@@ -1310,6 +1484,7 @@
             state.guestQuestionCount--;
             localStorage.setItem('marulgpt_guest_questions', state.guestQuestionCount);
             updateUI();
+            
             const chat = getChatById(state.currentChatId);
             if (!chat) return;
 
@@ -1319,17 +1494,21 @@
                 chat.title = text.substring(0, 30);
                 elements.currentChatTitle.textContent = escapeHTML(chat.title);
             }
+            
             chat.updated_at = new Date();
             saveGuestChats();
             renderChatHistory();
             showTyping();
+            
             try {
                 const response = await fetch(`${CONFIG.BACKEND_URL}/guest-chat`, {
                     method: 'POST', 
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ message: text })
                 });
+                
                 hideTyping();
+                
                 if (response.ok) {
                     const data = await response.json();
                     addMessageToUI('ai', data.response, true);
@@ -1355,6 +1534,7 @@
                 chat.title = text.substring(0, 30);
                 elements.currentChatTitle.textContent = escapeHTML(chat.title);
                 renderChatHistory();
+                
                 try {
                     await fetch(`${CONFIG.BACKEND_URL}/chats/${state.currentChatId}`, { 
                         method: 'PUT', 
@@ -1378,10 +1558,13 @@
                     },
                     body: JSON.stringify({ chatId: state.currentChatId, message: text })
                 });
+                
                 hideTyping();
+                
                 if (response.ok) {
                     const data = await response.json();
                     addMessageToUI('ai', data.response, true);
+                    
                     if (data.chatId && data.chatId !== state.currentChatId) {
                         state.currentChatId = data.chatId;
                         loadChatHistory();
@@ -1419,10 +1602,12 @@
             setTimeout(() => elements.messagesContainer.scrollTop = elements.messagesContainer.scrollHeight, 10);
         }
 
+        // Chat Management
         function renderChatHistory() {
             const list = state.isGuest ? state.guestChats : state.chats;
             list.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at));
             elements.chatHistoryList.innerHTML = '';
+            
             list.forEach(chat => {
                 const div = document.createElement('div');
                 div.className = `history-item ${chat.id === state.currentChatId ? 'active' : ''}`;
@@ -1435,8 +1620,24 @@
                     minute: '2-digit'
                 }).replace(',', '');
 
-                div.innerHTML = `<div style="flex:1;overflow:hidden;"><div style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHTML(chat.title || 'Yeni Sohbet')}</div><div class="history-date">${escapeHTML(dateStr)}</div></div><div class="item-actions"><button onclick="deleteChat('${escapeHTML(chat.id)}', event)"><i class="fas fa-trash"></i></button></div>`;
-                div.onclick = (e) => { if (!e.target.closest('button')) openChat(chat.id); };
+                div.innerHTML = `
+                    <div style="flex:1;overflow:hidden;">
+                        <div style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+                            ${escapeHTML(chat.title || 'Yeni Sohbet')}
+                        </div>
+                        <div class="history-date">${escapeHTML(dateStr)}</div>
+                    </div>
+                    <div class="item-actions">
+                        <button onclick="deleteChat('${escapeHTML(chat.id)}', event)">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+                
+                div.onclick = (e) => { 
+                    if (!e.target.closest('button')) openChat(chat.id); 
+                };
+                
                 elements.chatHistoryList.appendChild(div);
             });
         }
@@ -1456,6 +1657,7 @@
         
         async function createNewChat() {
             if (state.isGuest) return createNewGuestChat();
+            
             try {
                 const res = await fetch(`${CONFIG.BACKEND_URL}/chats`, { 
                     method: 'POST', 
@@ -1465,10 +1667,10 @@
                     }, 
                     body: JSON.stringify({ title: 'Yeni Sohbet' }) 
                 });
+                
                 if (res.ok) { 
-                    loadChatHistory().then(() => {
-                        if (state.chats.length > 0) openChat(state.chats[0].id);
-                    }); 
+                    await loadChatHistory();
+                    if (state.chats.length > 0) openChat(state.chats[0].id);
                 } else {
                     const errorData = await res.json();
                     showNotification(getSafeErrorMessage(errorData.error), 'error');
@@ -1481,9 +1683,11 @@
         function openChat(chatId) {
             state.currentChatId = chatId;
             elements.messagesContainer.innerHTML = '';
+            
             const chat = getChatById(chatId);
             if (chat) {
                 elements.currentChatTitle.textContent = escapeHTML(chat.title || 'Yeni Sohbet');
+                
                 if (state.isGuest) {
                     if (chat.messages && chat.messages.length) {
                         chat.messages.forEach(m => addMessageToUI(m.role, m.content, false, m.created_at));
@@ -1497,8 +1701,13 @@
             } else {
                 elements.welcomeMessage.style.display = 'flex';
             }
+            
             renderChatHistory();
-            if (window.innerWidth <= 768) elements.sidebar.classList.remove('open');
+            
+            if (window.innerWidth <= 768) {
+                elements.sidebar.classList.remove('open');
+            }
+            
             elements.messagesContainer.appendChild(elements.welcomeMessage);
         }
 
@@ -1510,9 +1719,11 @@
                         'Content-Type': 'application/json'
                     } 
                 });
+                
                 if (res.ok) {
                     const msgs = await res.json();
                     elements.messagesContainer.innerHTML = '';
+                    
                     if (msgs.length > 0) {
                         elements.welcomeMessage.style.display = 'none';
                         msgs.forEach(m => addMessageToUI(m.role === 'user' ? 'user' : 'ai', m.content, false, m.created_at));
@@ -1529,9 +1740,11 @@
         function deleteChat(id, e) {
             if (e) e.stopPropagation();
             if (!confirm('Sohbeti silmek istediğinize emin misiniz?')) return;
+            
             if (state.isGuest) {
                 state.guestChats = state.guestChats.filter(c => c.id !== id);
                 saveGuestChats();
+                
                 if (state.currentChatId === id) {
                     if (state.guestChats.length > 0) {
                         openChat(state.guestChats[0].id);
@@ -1568,6 +1781,7 @@
                         'Content-Type': 'application/json'
                     } 
                 });
+                
                 if (res.ok) state.chats = await res.json();
                 renderChatHistory();
             } catch (e) { 
@@ -1593,17 +1807,38 @@
             document.getElementById('typingIndicator').style.display = 'none'; 
         }
 
+        // Modal Functions
         function openModal(id) {
             elements.modalOverlay.classList.add('active');
             document.querySelectorAll('.modal-card').forEach(m => m.style.display = 'none');
-            document.getElementById(id).style.display = (id === 'infoModal' ? 'flex' : 'block');
+            const modal = document.getElementById(id);
+            modal.style.display = (id === 'infoModal' ? 'flex' : 'block');
+            
+            // Load Turnstile when auth modal opens
+            if (id === 'authModal' && window.turnstile) {
+                // Clear previous token
+                state.turnstileToken = null;
+                updateAuthButtons();
+                
+                // Reset form
+                document.getElementById('loginForm').reset();
+                document.getElementById('registerForm').reset();
+                hideTurnstileError();
+                
+                // Load Turnstile with a small delay to ensure DOM is ready
+                setTimeout(() => {
+                    loadTurnstileWidget();
+                }, 100);
+            }
         }
         
         function closeAllModals() { 
             elements.modalOverlay.classList.remove('active'); 
         }
 
+        // Event Listeners Setup
         function setupEventListeners() {
+            // Message sending
             elements.sendMessageBtn.addEventListener('click', sendMessage);
             elements.messageInput.addEventListener('keydown', e => { 
                 if (e.key === 'Enter' && !e.shiftKey) { 
@@ -1611,15 +1846,23 @@
                     sendMessage(); 
                 } 
             });
+            
+            // Sidebar toggle
             elements.sidebarToggle.addEventListener('click', e => { 
                 e.stopPropagation(); 
                 elements.sidebar.classList.toggle('open'); 
             });
+            
             document.addEventListener('click', e => {
-                if (window.innerWidth <= 768 && elements.sidebar.classList.contains('open') && !elements.sidebar.contains(e.target) && e.target !== elements.sidebarToggle)
+                if (window.innerWidth <= 768 && 
+                    elements.sidebar.classList.contains('open') && 
+                    !elements.sidebar.contains(e.target) && 
+                    e.target !== elements.sidebarToggle) {
                     elements.sidebar.classList.remove('open');
+                }
             });
 
+            // Chat actions
             elements.newChatBtn.addEventListener('click', () => state.isGuest ? createNewGuestChat() : createNewChat());
             elements.authSidebarBtn.addEventListener('click', () => openModal('authModal'));
             elements.logoutBtn.addEventListener('click', () => logoutUser());
@@ -1628,8 +1871,10 @@
             elements.closeInfoModal.addEventListener('click', closeAllModals);
             elements.infoBtn.addEventListener('click', () => openModal('infoModal'));
 
+            // Clear history
             elements.clearHistoryBtn.addEventListener('click', () => {
                 if (!confirm("TÜM geçmiş silinecek, emin misiniz?")) return;
+                
                 if (state.isGuest) {
                     state.guestChats = []; 
                     saveGuestChats(); 
@@ -1640,18 +1885,24 @@
                 }
             });
 
+            // Donate button
             elements.donateBtn.addEventListener('click', () => {
                 window.open('https://www.bynogame.com/destekle/marulgpt', '_blank');
             });
 
+            // Auth tabs
             document.querySelectorAll('.auth-tab').forEach(t => t.addEventListener('click', (e) => {
                 document.querySelectorAll('.auth-tab').forEach(x => x.classList.remove('active')); 
                 e.target.classList.add('active');
                 const isLogin = e.target.id === 'loginTab';
                 document.getElementById('loginForm').style.display = isLogin ? 'block' : 'none';
                 document.getElementById('registerForm').style.display = isLogin ? 'none' : 'block';
+                
+                // Reset Turnstile when switching tabs
+                resetTurnstile();
             }));
 
+            // Info tabs
             document.querySelectorAll('.info-tab').forEach(t => t.addEventListener('click', (e) => {
                 document.querySelectorAll('.info-tab').forEach(x => x.classList.remove('active')); 
                 e.target.classList.add('active');
@@ -1659,17 +1910,21 @@
                 document.getElementById(e.target.dataset.tab + 'Content').style.display = 'block';
             }));
 
+            // Theme toggle
             elements.themeToggleBtn.addEventListener('click', toggleTheme);
 
+            // Edit chat title
             elements.editChatTitleBtn.addEventListener('click', () => {
                 if (state.isGuest) {
                     showNotification('Misafir modunda başlık düzenlenemez', 'error');
                     return;
                 }
+                
                 const n = prompt("Yeni başlık:", elements.currentChatTitle.textContent);
                 if (n && n.trim()) {
                     const newTitle = escapeHTML(n.trim());
                     elements.currentChatTitle.textContent = newTitle;
+                    
                     fetch(`${CONFIG.BACKEND_URL}/chats/${state.currentChatId}`, { 
                         method: 'PUT', 
                         headers: { 
@@ -1683,12 +1938,14 @@
                 }
             });
 
+            // Login form
             document.getElementById('loginForm').addEventListener('submit', async (e) => {
                 e.preventDefault();
                 
                 const email = elements.loginEmail.value.trim();
                 const password = elements.loginPassword.value;
                 
+                // Validation
                 if (!email || !password) {
                     showNotification('Lütfen tüm alanları doldurun', 'error');
                     return;
@@ -1700,29 +1957,60 @@
                 }
                 
                 if (!validatePassword(password)) {
-                    showNotification('Şifre en az 6 karakter olmalıdır', 'error');
+                    showNotification('Şifre en az 8 karakter olmalıdır', 'error');
                     return;
                 }
+                
+                // Check Turnstile token
+                if (!state.turnstileToken) {
+                    showNotification('Lütfen güvenlik doğrulamasını tamamlayın', 'error');
+                    showTurnstileError('Güvenlik doğrulaması gereklidir.');
+                    return;
+                }
+                
+                // Disable button during request
+                const submitBtn = document.getElementById('loginSubmitBtn');
+                const originalText = submitBtn.querySelector('span').textContent;
+                submitBtn.querySelector('span').textContent = 'Giriş yapılıyor...';
+                submitBtn.disabled = true;
                 
                 try {
                     const res = await fetch(`${CONFIG.BACKEND_URL}/login`, { 
                         method: 'POST', 
-                        body: JSON.stringify({ email, password }), 
+                        body: JSON.stringify({ 
+                            email, 
+                            password,
+                            turnstileToken: state.turnstileToken 
+                        }), 
                         headers: { 'Content-Type': 'application/json' } 
                     });
+                    
                     const data = await res.json();
+                    
+                    // Reset button
+                    submitBtn.querySelector('span').textContent = originalText;
+                    submitBtn.disabled = false;
+                    
                     if (res.ok) {
                         loginUser(data.user, data.token);
                         showNotification('Giriş başarılı!', 'success');
                         elements.loginForm.reset();
+                        resetTurnstile();
                     } else {
                         showNotification(getSafeErrorMessage(data.error), 'error');
+                        resetTurnstile(); // Reset on error
                     }
                 } catch (e) { 
+                    // Reset button
+                    submitBtn.querySelector('span').textContent = originalText;
+                    submitBtn.disabled = false;
+                    
                     showNotification(getSafeErrorMessage(e), 'error');
+                    resetTurnstile();
                 }
             });
 
+            // Register form
             document.getElementById('registerForm').addEventListener('submit', async (e) => {
                 e.preventDefault();
                 
@@ -1731,6 +2019,7 @@
                 const password = elements.registerPassword.value;
                 const passwordConfirm = elements.registerPasswordConfirm.value;
                 
+                // Validation
                 if (!name || !email || !password || !passwordConfirm) {
                     showNotification('Lütfen tüm alanları doldurun', 'error');
                     return;
@@ -1747,7 +2036,7 @@
                 }
                 
                 if (!validatePassword(password)) {
-                    showNotification('Şifre en az 6 karakter olmalıdır', 'error');
+                    showNotification('Şifre en az 8 karakter olmalıdır', 'error');
                     return;
                 }
                 
@@ -1756,22 +2045,53 @@
                     return;
                 }
                 
+                // Check Turnstile token
+                if (!state.turnstileToken) {
+                    showNotification('Lütfen güvenlik doğrulamasını tamamlayın', 'error');
+                    showTurnstileError('Güvenlik doğrulaması gereklidir.');
+                    return;
+                }
+                
+                // Disable button during request
+                const submitBtn = document.getElementById('registerSubmitBtn');
+                const originalText = submitBtn.querySelector('span').textContent;
+                submitBtn.querySelector('span').textContent = 'Kayıt yapılıyor...';
+                submitBtn.disabled = true;
+                
                 try {
                     const res = await fetch(`${CONFIG.BACKEND_URL}/register`, { 
                         method: 'POST', 
-                        body: JSON.stringify({ name, email, password }), 
+                        body: JSON.stringify({ 
+                            name, 
+                            email, 
+                            password,
+                            turnstileToken: state.turnstileToken 
+                        }), 
                         headers: { 'Content-Type': 'application/json' } 
                     });
+                    
                     const data = await res.json();
+                    
+                    // Reset button
+                    submitBtn.querySelector('span').textContent = originalText;
+                    submitBtn.disabled = false;
+                    
                     if (res.ok) { 
                         loginUser(data.user, data.token); 
                         showNotification('Kayıt başarılı! Hoş geldiniz!', 'success');
                         elements.registerForm.reset();
+                        resetTurnstile();
                     } else {
                         showNotification(getSafeErrorMessage(data.error), 'error');
+                        resetTurnstile(); // Reset on error
                     }
                 } catch (e) { 
+                    // Reset button
+                    submitBtn.querySelector('span').textContent = originalText;
+                    submitBtn.disabled = false;
+                    
                     showNotification(getSafeErrorMessage(e), 'error');
+                    resetTurnstile();
                 }
             });
         }
@@ -1779,4 +2099,3 @@
 </body>
 
 </html>
-
