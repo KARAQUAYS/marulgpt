@@ -3,7 +3,7 @@
   "short_name": "MarulAI",
   "start_url": "/",
   "scope": "/",
-  "display": "standalone",
+  "display": "fullscreen",
   "background_color": "#0f172a",
   "theme_color": "#22c55e",
   "description": "Marul AI – Akıllı Sohbet Asistanı",
