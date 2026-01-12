@@ -422,6 +422,7 @@
             display: flex;
             flex-direction: column;
             position: relative;
+            min-width: 0;
         }
 
         .chat-header {
@@ -509,9 +510,11 @@
             flex: 1;
             padding: 2rem;
             overflow-y: auto;
+            overflow-x: hidden;
             display: flex;
             flex-direction: column;
             gap: 2rem;
+            overscroll-behavior-y: contain;
         }
 
         .welcome-screen {
@@ -656,6 +659,7 @@
             overflow-x: auto;
             position: relative;
             border: 1px solid var(--border-light);
+            max-width: 100%;
         }
 
         .message-content pre code {
@@ -1127,13 +1131,15 @@
         @media (max-width: 768px) {
             .sidebar {
                 position: fixed;
-                left: -100%;
+                left: 0;
+                transform: translateX(-100%);
                 height: 100%;
                 width: 85%;
+                transition: transform var(--anim-smooth);
             }
 
             .sidebar.open {
-                left: 0;
+                transform: translateX(0);
             }
 
             .mobile-menu-btn {
@@ -1158,6 +1164,9 @@
                 white-space: nowrap;
                 text-align: center;
             }
+
+
+
         }
 
         @keyframes fadeIn {
@@ -1861,7 +1870,7 @@
 
             if (role === 'ai' && animate) {
                 let i = 0;
-                const chunk = 12; 
+                const chunk = 12;
                 div.innerHTML = `<div class="message-avatar"><img src="favicon.png" alt="Marul AI"></div><div class="message-content"><div class="markdown-body"></div></div>`;
                 const contentBody = div.querySelector('.markdown-body');
                 elements.messagesContainer.appendChild(div);
@@ -1882,7 +1891,7 @@
                     contentBody.innerHTML = marked.parse(text.substring(0, i + chunk));
                     i += chunk;
                     elements.messagesContainer.scrollTop = elements.messagesContainer.scrollHeight;
-                }, 25); 
+                }, 25);
             } else {
                 let contentHTML = '';
                 if (role === 'ai') {
@@ -1912,7 +1921,6 @@
                 const actionsDiv = document.createElement('div');
                 actionsDiv.className = 'code-actions';
 
-                // Run button for HTML
                 if (lang.toLowerCase() === 'html' || codeText.trim().startsWith('<!DOCTYPE html>') || codeText.trim().startsWith('<html')) {
                     const runBtn = document.createElement('button');
                     runBtn.className = 'run-btn';
@@ -1921,7 +1929,6 @@
                     actionsDiv.appendChild(runBtn);
                 }
 
-                // Copy button
                 const copyBtn = document.createElement('button');
                 copyBtn.className = 'copy-btn';
                 copyBtn.innerHTML = '<i class="fas fa-copy"></i> Kopyala';
