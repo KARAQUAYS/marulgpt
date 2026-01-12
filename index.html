@@ -1552,7 +1552,7 @@
                                         <span class="model-name">GPT 4</span>
                                     </button>
                                     <button class="model-option" data-model="llama">
-                                        <span class="model-name">Llama 3 (8B)</span>
+                                        <span class="model-name">Llama 3 (70B)</span>
                                     </button>
                                     <button class="model-option disabled" data-model="marul" disabled>
                                         <span class="model-name">Marul V7</span>
@@ -2533,7 +2533,7 @@
                     opt.classList.add('active');
                     elements.modelSelector.classList.remove('open');
 
-                    const modelLabels = { 'gpt4': 'GPT 4', 'llama': 'Llama 3 (8B)' };
+                    const modelLabels = { 'gpt4': 'GPT 4', 'llama': 'Llama 3 (70B)' };
                     showNotification(`Model değiştirildi: ${modelLabels[model]}`, 'info');
                 });
             });
@@ -2795,6 +2795,11 @@
         }
     </script>
 
+    <script defer
+        src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015"
+        integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ=="
+        data-cf-beacon='{"version":"2024.11.0","token":"c76e8391a5224cc9b3725918225b25ec","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}'
+        crossorigin="anonymous"></script>
     <script defer
         src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015"
         integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ=="
