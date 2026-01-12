@@ -869,13 +869,21 @@
         .input-wrapper {
             background: var(--bg-card);
             border: 1px solid var(--border-light);
-            border-radius: 24px;
-            padding: 8px 16px;
+            border-radius: 20px;
+            padding: 12px 16px 10px 16px;
             display: flex;
-            align-items: flex-end;
-            gap: 10px;
+            flex-direction: column;
+            gap: 2px;
             box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.2);
             transition: var(--anim-fast);
+        }
+
+        .input-bottom-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            margin-top: 4px;
         }
 
         .input-wrapper:focus-within {
@@ -896,9 +904,9 @@
         }
 
         .send-btn {
-            width: 40px;
-            height: 40px;
-            border-radius: 12px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
             border: none;
             background: var(--primary);
             color: #000;
@@ -907,7 +915,6 @@
             align-items: center;
             justify-content: center;
             transition: var(--anim-fast);
-            margin-bottom: 4px;
         }
 
         .send-btn:hover {
@@ -1267,6 +1274,183 @@
                 transform: translateY(0);
             }
         }
+
+        .model-selector {
+            position: relative;
+            display: inline-block;
+        }
+
+        .mode-selector {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 2px;
+            border: 1px solid var(--border-light);
+            height: 36px;
+            box-sizing: border-box;
+        }
+
+        .mode-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.8rem;
+        }
+
+        .mode-btn:hover {
+            color: var(--text-main);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .mode-btn.active {
+            background: var(--primary);
+            color: #000;
+            box-shadow: 0 0 10px rgba(0, 255, 157, 0.3);
+        }
+
+        .model-selector-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 0 14px;
+            height: 36px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-light);
+            border-radius: 20px;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            box-sizing: border-box;
+        }
+
+        .model-selector-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-main);
+            border-color: var(--primary);
+        }
+
+        .model-selector-btn i {
+            display: block;
+            font-size: 0.7rem;
+            transition: transform 0.2s;
+            opacity: 0.7;
+        }
+
+        .model-selector.open .model-selector-btn i {
+            transform: rotate(180deg);
+        }
+
+        .model-dropdown {
+            position: absolute;
+            left: 0;
+            bottom: calc(100% + 8px);
+            min-width: 180px;
+            background: var(--bg-dark);
+            border: 1px solid var(--border-light);
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            z-index: 10000;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: all 0.2s ease;
+            overflow: hidden;
+            padding: 4px;
+        }
+
+        .model-selector.open .model-dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .model-dropdown-header {
+            padding: 12px 16px;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .model-option {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            color: var(--text-main);
+            font-size: 0.9rem;
+            position: relative;
+        }
+
+        .model-option:hover:not(.disabled) {
+            background: rgba(0, 255, 157, 0.08);
+        }
+
+        .model-option.active {
+            background: rgba(0, 255, 157, 0.12);
+            color: var(--primary);
+        }
+
+        .model-option.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: var(--primary);
+        }
+
+        .model-option.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .model-badge {
+            font-size: 0.65rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .model-badge.wip {
+            background: linear-gradient(135deg, #ff9f43, #ff6b6b);
+            color: #fff;
+        }
+
+        [data-theme="light"] .model-dropdown {
+            background: #fff;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        [data-theme="light"] .model-option:hover:not(.disabled) {
+            background: rgba(0, 191, 114, 0.1);
+        }
+
+        [data-theme="light"] .model-option.active {
+            background: rgba(0, 191, 114, 0.15);
+        }
     </style>
 </head>
 
@@ -1347,7 +1531,38 @@
                     API kullanılmaktadır.</div>
                 <div class="input-wrapper">
                     <textarea id="messageInput" rows="1" placeholder="Bir şeyler yaz..."></textarea>
-                    <button class="send-btn" id="sendMessageBtn"><i class="fas fa-paper-plane"></i></button>
+                    <div class="input-bottom-row">
+                        <div class="input-left-group" style="display: flex; align-items: center; gap: 8px;">
+                            <div class="mode-selector" id="modeSelector">
+                                <button class="mode-btn active" data-mode="fast" title="Hızlı Mod">
+                                    <i class="fas fa-bolt"></i>
+                                </button>
+                                <button class="mode-btn" data-mode="thinking" title="Düşünen Mod">
+                                    <i class="fas fa-brain"></i>
+                                </button>
+                            </div>
+                            <div class="model-selector" id="modelSelector">
+                                <button class="model-selector-btn" id="modelSelectorBtn">
+                                    <span id="selectedModelName">GPT 4</span>
+                                    <i class="fas fa-chevron-up"></i>
+                                </button>
+                                <div class="model-dropdown">
+                                    <div class="model-dropdown-header">Model Seçin</div>
+                                    <button class="model-option active" data-model="gpt4">
+                                        <span class="model-name">GPT 4</span>
+                                    </button>
+                                    <button class="model-option" data-model="llama">
+                                        <span class="model-name">Llama 3 (8B)</span>
+                                    </button>
+                                    <button class="model-option disabled" data-model="marul" disabled>
+                                        <span class="model-name">Marul V7</span>
+                                        <span class="model-badge wip">Yapım Aşamasında</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="send-btn" id="sendMessageBtn"><i class="fas fa-paper-plane"></i></button>
+                    </div>
                 </div>
             </div>
         </main>
@@ -1486,7 +1701,9 @@
             theme: localStorage.getItem('theme') || 'dark',
             turnstileToken: null,
             turnstileWidgetId: null,
-            isTurnstileLoaded: false
+            isTurnstileLoaded: false,
+            selectedModel: 'gpt4',
+            responseMode: 'fast'
         };
 
         const elements = {};
@@ -1669,9 +1886,12 @@
                 'editChatTitleBtn', 'shareChatBtn', 'clearHistoryBtn',
                 'authSidebarBtn', 'closeAuthModal', 'limitAuthBtn', 'closeInfoModal',
                 'welcomeMessage', 'donateBtn', 'themeToggleBtn',
-                'turnstileContainer', 'turnstileError', 'loginSubmitBtn', 'registerSubmitBtn'
+                'turnstileContainer', 'turnstileError', 'loginSubmitBtn', 'registerSubmitBtn',
+                'modelSelectorBtn', 'selectedModelName', 'modelSelector'
             ];
             ids.forEach(id => elements[id] = document.getElementById(id));
+            elements.modelOptions = document.querySelectorAll('.model-option');
+            elements.modeBtns = document.querySelectorAll('.mode-btn');
         }
 
         function initTheme() {
@@ -1701,6 +1921,8 @@
             } else {
                 setupGuestMode();
             }
+
+            setTimeout(() => elements.messageInput.focus(), 100);
         }
 
         async function verifySession(token) {
@@ -1819,14 +2041,17 @@
             addMessageToUI('user', text);
             elements.messageInput.value = '';
 
+            const model = state.selectedModel;
+            const mode = state.responseMode;
+
             if (state.isGuest) {
-                await handleGuestMessage(text);
+                await handleGuestMessage(text, model, mode);
             } else {
-                await handleUserMessage(text);
+                await handleUserMessage(text, model, mode);
             }
         }
 
-        async function handleGuestMessage(text) {
+        async function handleGuestMessage(text, model, mode) {
             state.guestQuestionCount--;
             localStorage.setItem('marulgpt_guest_questions', state.guestQuestionCount);
             updateUI();
@@ -1839,10 +2064,9 @@
             if (contextMessages.length > 0) {
                 contextualPrompt = "### Önceki Konuşma Geçmişi (Bağlam):\n";
                 contextMessages.forEach(msg => {
-                    const roleName = msg.role === 'user' ? 'Kullanıcı' : 'Marul AI';
-                    contextualPrompt += `${roleName}: ${msg.content}\n`;
+                    contextualPrompt += `${msg.role === 'user' ? 'Kullanıcı' : 'Asistan'}: ${msg.content}\n`;
                 });
-                contextualPrompt += "\n### Yeni Mesaj:\n";
+                contextualPrompt += "\n";
             }
             const finalPrompt = contextualPrompt + text;
 
@@ -1862,7 +2086,7 @@
                 const response = await fetch(`${CONFIG.BACKEND_URL}/guest-chat`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ message: finalPrompt })
+                    body: JSON.stringify({ message: finalPrompt, model, mode })
                 });
 
                 hideTyping();
@@ -1884,7 +2108,7 @@
             }
         }
 
-        async function handleUserMessage(text) {
+        async function handleUserMessage(text, model, mode) {
             showTyping();
 
             const chat = getChatById(state.currentChatId);
@@ -1914,7 +2138,7 @@
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${state.sessionToken}`
                     },
-                    body: JSON.stringify({ chatId: state.currentChatId, message: text })
+                    body: JSON.stringify({ chatId: state.currentChatId, message: text, model, mode })
                 });
 
                 hideTyping();
@@ -2285,6 +2509,51 @@
                     !elements.sidebar.contains(e.target) &&
                     e.target !== elements.sidebarToggle) {
                     elements.sidebar.classList.remove('open');
+                }
+
+                if (elements.modelSelector.classList.contains('open') &&
+                    !elements.modelSelector.contains(e.target)) {
+                    elements.modelSelector.classList.remove('open');
+                }
+            });
+
+            elements.modelSelectorBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                elements.modelSelector.classList.toggle('open');
+            });
+
+            elements.modelOptions.forEach(opt => {
+                opt.addEventListener('click', () => {
+                    const model = opt.dataset.model;
+                    if (model === 'marul') return;
+
+                    state.selectedModel = model;
+                    elements.selectedModelName.textContent = opt.querySelector('.model-name').textContent;
+                    elements.modelOptions.forEach(o => o.classList.remove('active'));
+                    opt.classList.add('active');
+                    elements.modelSelector.classList.remove('open');
+
+                    const modelLabels = { 'gpt4': 'GPT 4', 'llama': 'Llama 3 (8B)' };
+                    showNotification(`Model değiştirildi: ${modelLabels[model]}`, 'info');
+                });
+            });
+
+            elements.modeBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const mode = btn.dataset.mode;
+                    state.responseMode = mode;
+                    elements.modeBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+
+                    const modeLabels = { 'fast': 'Hızlı', 'thinking': 'Düşünen' };
+                    showNotification(`Cevap modu değiştirildi: ${modeLabels[mode]}`, 'info');
+                });
+            });
+
+            elements.messageInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && e.ctrlKey) {
+                    e.preventDefault();
+                    sendMessage();
                 }
             });
 
