@@ -100,6 +100,10 @@
             --shadow-card: 0 10px 30px rgba(0, 0, 0, 0.1);
         }
 
+        html {
+            height: 100%;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -423,6 +427,7 @@
             flex-direction: column;
             position: relative;
             min-width: 0;
+            overflow: hidden;
         }
 
         .chat-header {
@@ -510,11 +515,9 @@
             flex: 1;
             padding: 2rem;
             overflow-y: auto;
-            overflow-x: hidden;
             display: flex;
             flex-direction: column;
             gap: 2rem;
-            overscroll-behavior-y: contain;
         }
 
         .welcome-screen {
@@ -660,6 +663,7 @@
             position: relative;
             border: 1px solid var(--border-light);
             max-width: 100%;
+            word-wrap: normal;
         }
 
         .message-content pre code {
@@ -1165,8 +1169,38 @@
                 text-align: center;
             }
 
+            body {
+                height: 100dvh;
+                overflow-x: hidden;
+            }
 
+            html {
+                overflow-x: hidden;
+            }
 
+            .messages-container {
+                padding: 1rem;
+                gap: 1.5rem;
+                overflow-x: hidden;
+                overscroll-behavior-y: contain;
+            }
+
+            .message {
+                min-width: 0;
+                box-sizing: border-box;
+                gap: 10px;
+            }
+
+            .message-content {
+                min-width: 0;
+                flex: 1;
+                word-wrap: break-word;
+                overflow-wrap: anywhere;
+            }
+
+            .input-area {
+                padding: 1rem;
+            }
         }
 
         @keyframes fadeIn {
