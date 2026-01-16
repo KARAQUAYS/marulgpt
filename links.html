@@ -1,0 +1,529 @@
+<!-- 
+    © 2024 Marul AI. Tüm Hakları Saklıdır.
+    Bu sitenin kodları lisansla korunmaktadır. 
+    İzinsiz kopyalanması, dağıtılması veya üzerinde değişiklik yapılarak kullanılması yasaktır.
+    License: GPL-3.0
+-->
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="Marul AI - Tüm sosyal medya hesaplarımız ve bağlantılarımız tek bir yerde.">
+    <title>Marul AI - Linkler</title>
+    <link rel="shortcut icon" href="https://marulai.com.tr/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="https://marulai.com.tr/favicon.png" type="image/png">
+    <link rel="apple-touch-icon" href="https://marulai.com.tr/favicon.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg-deep: #050505;
+            --primary: #00ff9d;
+            --primary-glow: rgba(0, 255, 157, 0.4);
+            --secondary: #7000ff;
+            --accent: #00e5ff;
+            --text-main: #ffffff;
+            --text-muted: #8b9bb4;
+            --border-light: rgba(255, 255, 255, 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            height: 100%;
+            overflow-x: hidden;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg-deep);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background: linear-gradient(135deg, #0a0a0f 0%, #050510 50%, #0a0515 100%);
+            overflow: hidden;
+        }
+
+        .floating-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            animation: float 20s infinite ease-in-out;
+            opacity: 0.6;
+        }
+
+        .orb-1 {
+            width: 400px;
+            height: 400px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            top: -100px;
+            left: -100px;
+            animation-delay: 0s;
+        }
+
+        .orb-2 {
+            width: 350px;
+            height: 350px;
+            background: linear-gradient(135deg, var(--secondary), #ff00ff);
+            bottom: -80px;
+            right: -80px;
+            animation-delay: -5s;
+        }
+
+        .orb-3 {
+            width: 250px;
+            height: 250px;
+            background: linear-gradient(135deg, #ff6b6b, #ffd93d);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation-delay: -10s;
+            opacity: 0.3;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            25% {
+                transform: translate(50px, -30px) scale(1.1);
+            }
+
+            50% {
+                transform: translate(-30px, 50px) scale(0.9);
+            }
+
+            75% {
+                transform: translate(-50px, -20px) scale(1.05);
+            }
+        }
+
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--primary);
+            border-radius: 50%;
+            opacity: 0;
+            animation: sparkle 4s infinite ease-in-out;
+        }
+
+        @keyframes sparkle {
+
+            0%,
+            100% {
+                opacity: 0;
+                transform: translateY(0) scale(0);
+            }
+
+            50% {
+                opacity: 0.8;
+                transform: translateY(-100px) scale(1);
+            }
+        }
+
+        .grid-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 420px;
+            padding: 40px 20px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .logo-container {
+            position: relative;
+            margin-bottom: 25px;
+            display: inline-block;
+        }
+
+        .logo {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid rgba(0, 255, 157, 0.3);
+            box-shadow:
+                0 0 30px rgba(0, 255, 157, 0.3),
+                0 0 60px rgba(0, 255, 157, 0.1);
+            animation: logoGlow 3s infinite ease-in-out;
+            position: relative;
+            z-index: 2;
+        }
+
+        .logo-ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            border-top-color: var(--primary);
+            border-bottom-color: var(--accent);
+            animation: spin 3s linear infinite;
+            z-index: 1;
+        }
+
+        .logo-ring-2 {
+            width: 140px;
+            height: 140px;
+            border-top-color: var(--secondary);
+            border-bottom-color: #ff00ff;
+            animation: spinReverse 4s linear infinite;
+        }
+
+        @keyframes logoGlow {
+
+            0%,
+            100% {
+                box-shadow:
+                    0 0 30px rgba(0, 255, 157, 0.3),
+                    0 0 60px rgba(0, 255, 157, 0.1);
+            }
+
+            50% {
+                box-shadow:
+                    0 0 40px rgba(0, 255, 157, 0.5),
+                    0 0 80px rgba(0, 255, 157, 0.2);
+            }
+        }
+
+        @keyframes spin {
+            from {
+                transform: translate(-50%, -50%) rotate(0deg);
+            }
+
+            to {
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
+        }
+
+        @keyframes spinReverse {
+            from {
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
+
+            to {
+                transform: translate(-50%, -50%) rotate(0deg);
+            }
+        }
+
+        .title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            margin-bottom: 35px;
+            line-height: 1.5;
+        }
+
+        .links-container {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .link-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 16px 24px;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-light);
+            border-radius: 16px;
+            color: var(--text-main);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .link-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .link-btn:hover::before {
+            left: 100%;
+        }
+
+        .link-btn:hover {
+            transform: translateY(-3px) scale(1.02);
+            border-color: var(--primary);
+            box-shadow:
+                0 10px 30px rgba(0, 255, 157, 0.15),
+                0 0 20px rgba(0, 255, 157, 0.1) inset;
+        }
+
+        .link-btn:active {
+            transform: translateY(-1px) scale(0.98);
+        }
+
+        .link-btn i {
+            font-size: 1.2rem;
+            width: 24px;
+            text-align: center;
+        }
+
+        .link-btn.youtube i {
+            color: #ff0000;
+        }
+
+        .link-btn.instagram i {
+            background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .link-btn.twitter i {
+            color: #1da1f2;
+        }
+
+        .link-btn.website i {
+            color: var(--primary);
+        }
+
+        .link-btn:hover.youtube {
+            border-color: #ff0000;
+            box-shadow: 0 10px 30px rgba(255, 0, 0, 0.15);
+        }
+
+        .link-btn:hover.instagram {
+            border-color: #dc2743;
+            box-shadow: 0 10px 30px rgba(220, 39, 67, 0.15);
+        }
+
+        .link-btn:hover.twitter {
+            border-color: #1da1f2;
+            box-shadow: 0 10px 30px rgba(29, 161, 242, 0.15);
+        }
+
+        .link-btn:hover.website {
+            border-color: var(--primary);
+            box-shadow: 0 10px 30px rgba(0, 255, 157, 0.15);
+        }
+
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+        }
+
+        .footer p {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            opacity: 0.7;
+        }
+
+        .footer p:first-child {
+            margin-bottom: 4px;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 30px 15px;
+            }
+
+            .logo {
+                width: 80px;
+                height: 80px;
+            }
+
+            .logo-ring {
+                width: 100px;
+                height: 100px;
+            }
+
+            .logo-ring-2 {
+                width: 120px;
+                height: 120px;
+            }
+
+            .title {
+                font-size: 1.6rem;
+            }
+
+            .subtitle {
+                font-size: 0.85rem;
+            }
+
+            .link-btn {
+                padding: 14px 20px;
+                font-size: 0.9rem;
+            }
+
+            .floating-orb {
+                filter: blur(60px);
+            }
+
+            .orb-1 {
+                width: 250px;
+                height: 250px;
+            }
+
+            .orb-2 {
+                width: 200px;
+                height: 200px;
+            }
+
+            .orb-3 {
+                width: 150px;
+                height: 150px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="animated-bg">
+        <div class="floating-orb orb-1"></div>
+        <div class="floating-orb orb-2"></div>
+        <div class="floating-orb orb-3"></div>
+    </div>
+
+    <div class="particles" id="particles"></div>
+
+    <div class="grid-overlay"></div>
+
+    <div class="container">
+        <div class="logo-container">
+            <div class="logo-ring"></div>
+            <div class="logo-ring logo-ring-2"></div>
+            <img src="https://marulai.com.tr/favicon.png" alt="Marul AI" class="logo">
+        </div>
+
+        <h1 class="title">Marul AI</h1>
+        <p class="subtitle">Bunları mı arıyordun? 🌿<br>Tüm sosyal medya hesaplarım burada!</p>
+
+        <div class="links-container">
+            <a href="https://marulai.com.tr/" target="_blank" class="link-btn website">
+                <i class="fas fa-globe"></i>
+                <span>Web Sitemiz</span>
+            </a>
+            <a href="https://www.youtube.com/@MarulAI_Resmi" target="_blank" class="link-btn youtube">
+                <i class="fab fa-youtube"></i>
+                <span>YouTube</span>
+            </a>
+            <a href="https://www.instagram.com/marulai_resmi/" target="_blank" class="link-btn instagram">
+                <i class="fab fa-instagram"></i>
+                <span>Instagram</span>
+            </a>
+            <a href="https://x.com/Marulai_resmi" target="_blank" class="link-btn twitter">
+                <svg viewBox="0 0 24 24" aria-hidden="true" style="width: 20px; height: 20px; fill: currentColor;">
+                    <path
+                        d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z">
+                    </path>
+                </svg>
+                <span>X (Twitter)</span>
+            </a>
+        </div>
+
+        <div class="footer">
+            <p>&copy; 2024 Marul AI</p>
+            <p>Tüm Hakları Saklıdır</p>
+        </div>
+    </div>
+
+    <script>
+        const particlesContainer = document.getElementById('particles');
+        const particleCount = 30;
+
+        for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.top = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 4 + 's';
+            particle.style.animationDuration = (3 + Math.random() * 3) + 's';
+
+            const colors = ['#00ff9d', '#00e5ff', '#7000ff', '#ff00ff'];
+            particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+
+            particlesContainer.appendChild(particle);
+        }
+
+        document.addEventListener('mousemove', (e) => {
+            const orbs = document.querySelectorAll('.floating-orb');
+            const x = (e.clientX / window.innerWidth - 0.5) * 30;
+            const y = (e.clientY / window.innerHeight - 0.5) * 30;
+
+            orbs.forEach((orb, index) => {
+                const factor = (index + 1) * 0.5;
+                orb.style.transform = `translate(${x * factor}px, ${y * factor}px)`;
+            });
+        });
+    </script>
+</body>
+
+</html>
