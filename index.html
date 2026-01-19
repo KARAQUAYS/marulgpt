@@ -426,6 +426,231 @@
             color: var(--primary);
         }
 
+        .personalization-btn {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, rgba(112, 0, 255, 0.1), rgba(0, 229, 255, 0.1));
+            border: 1px solid rgba(112, 0, 255, 0.2);
+            border-radius: var(--radius-md);
+            color: var(--text-main);
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .personalization-btn:hover {
+            background: linear-gradient(135deg, rgba(112, 0, 255, 0.2), rgba(0, 229, 255, 0.2));
+            border-color: var(--secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(112, 0, 255, 0.2);
+        }
+
+        .personalization-btn i {
+            font-size: 1rem;
+            color: var(--secondary);
+        }
+
+        [data-theme="light"] .personalization-btn {
+            background: linear-gradient(135deg, rgba(108, 92, 231, 0.1), rgba(116, 185, 255, 0.1));
+            border-color: rgba(108, 92, 231, 0.2);
+        }
+
+        [data-theme="light"] .personalization-btn:hover {
+            background: linear-gradient(135deg, rgba(108, 92, 231, 0.2), rgba(116, 185, 255, 0.2));
+        }
+
+        .personalization-modal {
+            max-width: 500px;
+            padding: 0;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .personalization-header {
+            padding: 1.5rem 2rem;
+            background: linear-gradient(135deg, rgba(112, 0, 255, 0.15), rgba(0, 229, 255, 0.1));
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .personalization-header-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 15px;
+            background: linear-gradient(135deg, var(--secondary), var(--accent));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            color: #fff;
+        }
+
+        .personalization-header-text h3 {
+            margin: 0 0 5px 0;
+            font-size: 1.2rem;
+            color: var(--text-main);
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .personalization-header-text p {
+            margin: 0;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .personalization-body {
+            padding: 1.5rem 2rem;
+        }
+
+        .personalization-textarea {
+            width: 100%;
+            min-height: 150px;
+            max-height: 250px;
+            padding: 15px;
+            background: rgba(128, 128, 128, 0.05);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            color: var(--text-main);
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            resize: vertical;
+            transition: all 0.3s ease;
+        }
+
+        .personalization-textarea:focus {
+            border-color: var(--secondary);
+            box-shadow: 0 0 15px rgba(112, 0, 255, 0.15);
+            outline: none;
+        }
+
+        .personalization-textarea::placeholder {
+            color: var(--text-muted);
+            opacity: 0.7;
+        }
+
+        .personalization-char-count {
+            text-align: right;
+            margin-top: 8px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .personalization-char-count.warning {
+            color: #ff9f43;
+        }
+
+        .personalization-char-count.danger {
+            color: #ff4757;
+        }
+
+        .personalization-examples {
+            margin-top: 15px;
+            padding: 15px;
+            background: rgba(128, 128, 128, 0.03);
+            border-radius: var(--radius-md);
+            border: 1px dashed var(--border-light);
+        }
+
+        .personalization-examples-title {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .personalization-example-item {
+            display: inline-block;
+            padding: 6px 12px;
+            margin: 4px;
+            background: rgba(112, 0, 255, 0.08);
+            border: 1px solid rgba(112, 0, 255, 0.15);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .personalization-example-item:hover {
+            background: rgba(112, 0, 255, 0.15);
+            color: var(--text-main);
+            transform: scale(1.02);
+        }
+
+        .personalization-footer {
+            padding: 1.5rem 2rem;
+            border-top: 1px solid var(--border-light);
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+
+        .personalization-btn-secondary {
+            padding: 12px 24px;
+            background: rgba(128, 128, 128, 0.1);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            color: var(--text-muted);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .personalization-btn-secondary:hover {
+            background: rgba(128, 128, 128, 0.2);
+            color: var(--text-main);
+        }
+
+        .personalization-btn-primary {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, var(--secondary), var(--accent));
+            border: none;
+            border-radius: var(--radius-md);
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .personalization-btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(112, 0, 255, 0.3);
+        }
+
+        .personalization-btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .personalization-loading {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            color: var(--text-muted);
+        }
+
+        .personalization-loading i {
+            margin-right: 10px;
+        }
+
         .main-chat-area {
             flex: 1;
             display: flex;
@@ -1484,6 +1709,9 @@
                 <button class="sidebar-link" id="infoBtn">
                     <i class="fas fa-info-circle"></i> <span>Hakkında & İletişim</span>
                 </button>
+                <button class="personalization-btn" id="personalizationBtn" style="display: none;">
+                    <i class="fas fa-wand-magic-sparkles"></i> <span>Kişiselleştirme</span>
+                </button>
                 <div class="user-profile">
                     <div class="avatar" id="userAvatar">M</div>
                     <div class="user-info">
@@ -1689,6 +1917,57 @@
             <h3>Soru Hakkı Bitti</h3>
             <p style="color:var(--text-muted); margin-bottom: 20px;">Devam etmek için giriş yapmalısınız.</p>
             <button class="primary-btn" id="limitAuthBtn">Giriş Yap</button>
+        </div>
+
+        <div class="modal-card personalization-modal" id="personalizationModal" style="display: none;">
+            <button class="modal-close" id="closePersonalizationModal"><i class="fas fa-times"></i></button>
+            
+            <div class="personalization-header">
+                <div class="personalization-header-icon">
+                    <i class="fas fa-wand-magic-sparkles"></i>
+                </div>
+                <div class="personalization-header-text">
+                    <h3>Kişiselleştirme</h3>
+                    <p>Marul AI'nin seninle nasıl konuşmasını istiyorsun?</p>
+                </div>
+            </div>
+
+            <div class="personalization-loading" id="personalizationLoading">
+                <i class="fas fa-circle-notch fa-spin"></i> Yükleniyor...
+            </div>
+
+            <div class="personalization-body" id="personalizationBody">
+                <textarea 
+                    class="personalization-textarea" 
+                    id="personalizationTextarea" 
+                    placeholder="Örnek: Samimi ol, kankalı konuş. Cevaplarında emoji kullan. Teknik konularda detaylı açıklamalar yap..."
+                    maxlength="600"
+                ></textarea>
+                <div class="personalization-char-count" id="personalizationCharCount">0 / 600</div>
+
+                <div class="personalization-examples">
+                    <div class="personalization-examples-title">
+                        <i class="fas fa-lightbulb"></i> Örnek talimatlar
+                    </div>
+                    <span class="personalization-example-item" data-text="Samimi ve arkadaşça konuş">Samimi konuş</span>
+                    <span class="personalization-example-item" data-text="Kısa ve öz cevaplar ver">Kısa cevaplar</span>
+                    <span class="personalization-example-item" data-text="Detaylı ve açıklayıcı ol">Detaylı açıkla</span>
+                    <span class="personalization-example-item" data-text="Emoji kullanma">Emoji kullanma</span>
+                    <span class="personalization-example-item" data-text="Bol emoji kullan 😊">Bol emoji</span>
+                    <span class="personalization-example-item" data-text="Resmi ve profesyonel ol">Profesyonel ol</span>
+                    <span class="personalization-example-item" data-text="Türkçe dil bilgisine dikkat et">Dil bilgisi</span>
+                    <span class="personalization-example-item" data-text="Kod yazarken yorum satırları ekle">Kodlara yorum</span>
+                </div>
+            </div>
+
+            <div class="personalization-footer">
+                <button class="personalization-btn-secondary" id="clearPersonalizationBtn">
+                    <i class="fas fa-eraser"></i> Temizle
+                </button>
+                <button class="personalization-btn-primary" id="savePersonalizationBtn">
+                    <i class="fas fa-save"></i> Kaydet
+                </button>
+            </div>
         </div>
     </div>
 
@@ -2041,6 +2320,8 @@
                 elements.logoutBtn.style.display = 'block';
                 elements.authSidebarBtn.style.display = 'none';
             }
+
+            updatePersonalizationButton();
         }
 
         async function sendMessage() {
@@ -2808,6 +3089,188 @@
                     resetTurnstile();
                 }
             });
+
+            setupPersonalizationListeners();
+        }
+
+        function setupPersonalizationListeners() {
+            const personalizationBtn = document.getElementById('personalizationBtn');
+            const closePersonalizationModal = document.getElementById('closePersonalizationModal');
+            const personalizationTextarea = document.getElementById('personalizationTextarea');
+            const personalizationCharCount = document.getElementById('personalizationCharCount');
+            const savePersonalizationBtn = document.getElementById('savePersonalizationBtn');
+            const clearPersonalizationBtn = document.getElementById('clearPersonalizationBtn');
+            const exampleItems = document.querySelectorAll('.personalization-example-item');
+
+            if (personalizationBtn) {
+                personalizationBtn.addEventListener('click', () => {
+                    openPersonalizationModal();
+                });
+            }
+
+            if (closePersonalizationModal) {
+                closePersonalizationModal.addEventListener('click', closeAllModals);
+            }
+
+            if (personalizationTextarea) {
+                personalizationTextarea.addEventListener('input', () => {
+                    updateCharCount();
+                });
+            }
+
+            if (savePersonalizationBtn) {
+                savePersonalizationBtn.addEventListener('click', savePersonalization);
+            }
+
+            if (clearPersonalizationBtn) {
+                clearPersonalizationBtn.addEventListener('click', clearPersonalization);
+            }
+
+            exampleItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    const text = item.dataset.text;
+                    const textarea = document.getElementById('personalizationTextarea');
+                    if (textarea) {
+                        const currentText = textarea.value.trim();
+                        if (currentText) {
+                            textarea.value = currentText + '. ' + text;
+                        } else {
+                            textarea.value = text;
+                        }
+                        updateCharCount();
+                        textarea.focus();
+                    }
+                });
+            });
+        }
+
+        function updateCharCount() {
+            const textarea = document.getElementById('personalizationTextarea');
+            const charCount = document.getElementById('personalizationCharCount');
+            if (textarea && charCount) {
+                const length = textarea.value.length;
+                charCount.textContent = `${length} / 600`;
+                
+                charCount.classList.remove('warning', 'danger');
+                if (length > 550) {
+                    charCount.classList.add('danger');
+                } else if (length > 450) {
+                    charCount.classList.add('warning');
+                }
+            }
+        }
+
+        async function openPersonalizationModal() {
+            elements.modalOverlay.classList.add('active');
+            document.querySelectorAll('.modal-card').forEach(m => m.style.display = 'none');
+            
+            const modal = document.getElementById('personalizationModal');
+            const loading = document.getElementById('personalizationLoading');
+            const body = document.getElementById('personalizationBody');
+            const footer = document.querySelector('.personalization-footer');
+            
+            modal.style.display = 'flex';
+            loading.style.display = 'flex';
+            body.style.display = 'none';
+            footer.style.display = 'none';
+
+            try {
+                const response = await fetch(`${CONFIG.BACKEND_URL}/personalization`, {
+                    headers: {
+                        'Authorization': `Bearer ${state.sessionToken}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    const textarea = document.getElementById('personalizationTextarea');
+                    if (textarea) {
+                        textarea.value = data.systemPrompt || '';
+                        updateCharCount();
+                    }
+                }
+            } catch (e) {
+                console.error('Kişiselleştirme yükleme hatası:', e);
+            }
+
+            loading.style.display = 'none';
+            body.style.display = 'block';
+            footer.style.display = 'flex';
+        }
+
+        async function savePersonalization() {
+            const textarea = document.getElementById('personalizationTextarea');
+            const saveBtn = document.getElementById('savePersonalizationBtn');
+            
+            if (!textarea || !saveBtn) return;
+
+            const systemPrompt = textarea.value.trim();
+
+            saveBtn.disabled = true;
+            saveBtn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Kaydediliyor...';
+
+            try {
+                const response = await fetch(`${CONFIG.BACKEND_URL}/personalization`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${state.sessionToken}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ systemPrompt })
+                });
+
+                if (response.ok) {
+                    showNotification('Kişiselleştirme kaydedildi! 🎉', 'success');
+                    closeAllModals();
+                } else {
+                    const errorData = await response.json();
+                    showNotification(getSafeErrorMessage(errorData.error), 'error');
+                }
+            } catch (e) {
+                console.error('Kişiselleştirme kaydetme hatası:', e);
+                showNotification('Bir hata oluştu. Lütfen tekrar deneyin.', 'error');
+            }
+
+            saveBtn.disabled = false;
+            saveBtn.innerHTML = '<i class="fas fa-save"></i> Kaydet';
+        }
+
+        async function clearPersonalization() {
+            const textarea = document.getElementById('personalizationTextarea');
+            
+            if (!textarea) return;
+
+            if (!confirm('Kişiselleştirme ayarlarınız silinecek. Emin misiniz?')) return;
+
+            try {
+                const response = await fetch(`${CONFIG.BACKEND_URL}/personalization`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${state.sessionToken}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    textarea.value = '';
+                    updateCharCount();
+                    showNotification('Kişiselleştirme ayarları temizlendi', 'success');
+                } else {
+                    const errorData = await response.json();
+                    showNotification(getSafeErrorMessage(errorData.error), 'error');
+                }
+            } catch (e) {
+                console.error('Kişiselleştirme silme hatası:', e);
+                showNotification('Bir hata oluştu. Lütfen tekrar deneyin.', 'error');
+            }
+        }
+
+        function updatePersonalizationButton() {
+            const personalizationBtn = document.getElementById('personalizationBtn');
+            if (personalizationBtn) {
+                personalizationBtn.style.display = state.isAuthenticated ? 'flex' : 'none';
+            }
         }
     </script>
 
