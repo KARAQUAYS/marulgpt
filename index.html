@@ -20,7 +20,7 @@
     <title>Marul AI - Akıllı Sohbet Asistanı</title>
 
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-    
+
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     <link rel="icon" href="favicon.png" type="image/png">
     <link rel="apple-touch-icon" href="favicon.png">
@@ -2404,6 +2404,9 @@
                         elements.welcomeMessage.style.display = 'flex';
                         elements.messagesContainer.appendChild(elements.welcomeMessage);
                     }
+                } else {
+                    const errorData = await res.json();
+                    showNotification(getSafeErrorMessage(errorData.error), 'error');
                 }
             } catch (e) {
                 showNotification(getSafeErrorMessage(e), 'error');
@@ -2455,7 +2458,12 @@
                     }
                 });
 
-                if (res.ok) state.chats = await res.json();
+                if (res.ok) {
+                    state.chats = await res.json();
+                } else {
+                    const errorData = await res.json();
+                    showNotification(getSafeErrorMessage(errorData.error), 'error');
+                }
                 renderChatHistory();
             } catch (e) {
                 showNotification(getSafeErrorMessage(e), 'error');
@@ -2817,4 +2825,3 @@
 </body>
 
 </html>
-
