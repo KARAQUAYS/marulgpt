@@ -1793,12 +1793,9 @@
                                     <button class="model-option" data-model="llama">
                                         <span class="model-name">Llama 3 (70B)</span>
                                     </button>
-                                    <button class="model-option" data-model="claude">
-                                        <span class="model-name">Claude 4 Opus</span>
-                                    </button>
-                                    <button class="model-option disabled" data-model="marul" disabled>
+                                    <button class="model-option" data-model="marul">
                                         <span class="model-name">Marul V7</span>
-                                        <span class="model-badge wip">Yapım Aşamasında</span>
+                                        <span class="model-badge wip">Yerli Model</span>
                                     </button>
                                 </div>
                             </div>
@@ -2828,7 +2825,6 @@
             elements.modelOptions.forEach(opt => {
                 opt.addEventListener('click', () => {
                     const model = opt.dataset.model;
-                    if (model === 'marul') return;
 
                     state.selectedModel = model;
                     elements.selectedModelName.textContent = opt.querySelector('.model-name').textContent;
@@ -2836,8 +2832,25 @@
                     opt.classList.add('active');
                     elements.modelSelector.classList.remove('open');
 
-                    const modelLabels = { 'gpt4': 'GPT 4', 'llama': 'Llama 3 (70B)', 'claude': 'Claude 4 Opus' };
-                    showNotification(`Model değiştirildi: ${modelLabels[model]}`, 'info');
+                    const modeSelector = document.getElementById('modeSelector');
+                    const personalizationBtn = document.getElementById('personalizationBtn');
+                    const apiDisclaimer = document.querySelector('.api-disclaimer');
+                    
+                    if (model === 'marul') {
+                        if (modeSelector) modeSelector.style.display = 'none';
+                        if (personalizationBtn) personalizationBtn.style.display = 'none';
+                        if (apiDisclaimer) apiDisclaimer.innerHTML = '<i class="fas fa-seedling"></i> Yerli dil modelimiz Marul V7 aktif!';
+                        showNotification('🥬 Marul V7 seçildi! Yerli model aktif.', 'success');
+                    } else {
+                        if (modeSelector) modeSelector.style.display = 'flex';
+                        if (personalizationBtn && state.isAuthenticated) {
+                            personalizationBtn.style.display = 'flex';
+                        }
+                        if (apiDisclaimer) apiDisclaimer.innerHTML = '<i class="fas fa-robot"></i> Kendi dil modelimiz geliştirilmesi bitene kadar API kullanılmaktadır.';
+                        
+                        const modelLabels = { 'gpt4': 'GPT 4', 'llama': 'Llama 3 (70B)', 'claude': 'Claude 4 Opus' };
+                        showNotification(`Model değiştirildi: ${modelLabels[model]}`, 'info');
+                    }
                 });
             });
 
