@@ -355,6 +355,13 @@
             color: var(--primary);
         }
 
+        .link-btn.google-play i {
+            background: linear-gradient(45deg, #00C4FF, #00FFBB);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
         .link-btn:hover.youtube {
             border-color: #ff0000;
             box-shadow: 0 10px 30px rgba(255, 0, 0, 0.15);
@@ -373,6 +380,11 @@
         .link-btn:hover.website {
             border-color: var(--primary);
             box-shadow: 0 10px 30px rgba(0, 255, 157, 0.15);
+        }
+
+        .link-btn:hover.google-play {
+            border-color: #00FFBB;
+            box-shadow: 0 10px 30px rgba(0, 255, 187, 0.15);
         }
 
         .footer {
@@ -486,6 +498,11 @@
                     </path>
                 </svg>
                 <span>X (Twitter)</span>
+            </a>
+            <a href="https://play.google.com/store/apps/details?id=ai.marul.com" target="_blank"
+                class="link-btn google-play">
+                <i class="fab fa-google-play"></i>
+                <span>Marul AI Mobil Uygulaması</span>
             </a>
         </div>
 
