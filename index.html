@@ -1681,12 +1681,103 @@
         [data-theme="light"] .model-option.active {
             background: rgba(0, 191, 114, 0.15);
         }
+
+        /* Security Gate Styles */
+        #securityGate {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-deep);
+            z-index: 99999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem;
+            backdrop-filter: blur(20px);
+        }
+
+        .gate-content {
+            max-width: 400px;
+            width: 100%;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .gate-logo {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 1.5rem;
+            filter: drop-shadow(0 0 20px var(--primary-glow));
+        }
+
+        .gate-title {
+            font-size: 1.8rem;
+            font-family: 'Space Grotesk', sans-serif;
+            margin-bottom: 1rem;
+            color: var(--text-main);
+        }
+
+        .gate-text {
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            line-height: 1.5;
+        }
+
+        .gate-footer {
+            margin-top: 2rem;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            opacity: 0.6;
+        }
+
+        #legalModalContent h4 {
+            color: var(--text-main);
+            margin: 25px 0 10px 0;
+            font-size: 1.1rem;
+            border-left: 3px solid var(--primary);
+            padding-left: 10px;
+        }
+
+        #legalModalContent p {
+            margin-bottom: 15px;
+            opacity: 0.9;
+        }
+
+        .legal-link {
+            transition: var(--anim-fast);
+        }
+
+        .legal-link:hover {
+            opacity: 0.8;
+            text-decoration: underline !important;
+        }
     </style>
 </head>
 
 <body>
     <div class="nebula-bg"></div>
     <div class="grid-overlay"></div>
+
+    <!-- Security Gate Overlay -->
+    <div id="securityGate">
+        <div class="gate-content">
+            <img src="favicon.png" alt="Marul AI" class="gate-logo">
+            <h2 class="gate-title">Güvenlik Kontrolü</h2>
+            <p class="gate-text">Marul AI'ye erişmek için lütfen insan olduğunuzu doğrulayın. Bu işlem güvenliğiniz ve
+                sistem sağlığı için gereklidir.</p>
+
+            <div id="gateTurnstileContainer"></div>
+            <div id="gateTurnstileError" style="display: none; color: #ff4757; margin-top: 15px; font-size: 0.9rem;">
+            </div>
+
+            <div class="gate-footer">
+                &copy; 2024 Marul AI. Tüm hakları saklıdır.
+            </div>
+        </div>
+    </div>
 
     <div class="app-container" id="appContainer">
         <nav class="sidebar" id="sidebar">
@@ -1703,9 +1794,6 @@
                 <div class="history-container" id="chatHistoryList"></div>
             </div>
             <div class="sidebar-footer">
-                <button class="donate-btn-sidebar" id="donateBtn">
-                    <i class="fas fa-heart"></i> Bağış Yap
-                </button>
                 <button class="sidebar-link" id="infoBtn">
                     <i class="fas fa-info-circle"></i> <span>Hakkında & İletişim</span>
                 </button>
@@ -1785,15 +1873,12 @@
                             </div>
                             <div class="model-selector" id="modelSelector">
                                 <button class="model-selector-btn" id="modelSelectorBtn">
-                                    <span id="selectedModelName">GPT 4</span>
+                                    <span id="selectedModelName">Llama 3 (70B)</span>
                                     <i class="fas fa-chevron-up"></i>
                                 </button>
                                 <div class="model-dropdown">
                                     <div class="model-dropdown-header">Model Seçin</div>
-                                    <button class="model-option active" data-model="gpt4">
-                                        <span class="model-name">GPT 4</span>
-                                    </button>
-                                    <button class="model-option" data-model="llama">
+                                    <button class="model-option active" data-model="llama">
                                         <span class="model-name">Llama 3 (70B)</span>
                                     </button>
                                     <button class="model-option" data-model="marul">
@@ -1824,7 +1909,7 @@
                                 <i class="fas fa-plus"></i> Yeni Sohbet
                             </button>
                             <button class="primary-btn" id="upgradeLimitBtn">
-                                <i class="fas fa-crown"></i> Marul AI Plus Al
+                                <i class="fas fa-crown"></i> Marul AI Plus Al (49,99 TL)
                             </button>
                         </div>
                     </div>
@@ -1928,6 +2013,20 @@
                 <input type="password" id="registerPassword" class="form-input" placeholder="Şifre" required>
                 <input type="password" id="registerPasswordConfirm" class="form-input" placeholder="Şifre Tekrar"
                     required>
+
+                <div
+                    style="font-size: 0.75rem; color: var(--text-muted); margin: 15px 0; line-height: 1.4; text-align: left;">
+                    Kayıt olarak;
+                    <a href="javascript:void(0)" onclick="openLegalModal('terms')" class="legal-link"
+                        style="color: var(--primary); text-decoration: none;">Kullanıcı Sözleşmesi</a>,
+                    <a href="javascript:void(0)" onclick="openLegalModal('privacy')" class="legal-link"
+                        style="color: var(--primary); text-decoration: none;">Gizlilik Politikası</a>,
+                    <a href="javascript:void(0)" onclick="openLegalModal('membership')" class="legal-link"
+                        style="color: var(--primary); text-decoration: none;">Üyelik Sözleşmesi</a> ve
+                    <a href="javascript:void(0)" onclick="openLegalModal('kvkk')" class="legal-link"
+                        style="color: var(--primary); text-decoration: none;">KVKK Aydınlatma Metni</a>'ni
+                    okuduğunuzu ve kabul ettiğinizi beyan edersiniz.
+                </div>
                 <button type="submit" class="primary-btn" id="registerSubmitBtn">
                     <span id="registerBtnText">Kayıt Ol</span>
                 </button>
@@ -1947,7 +2046,7 @@
             <div class="modal-body">
                 <h3
                     style="color:var(--primary); margin-bottom:20px; font-family:'Space Grotesk'; display:flex; align-items:center; gap:10px;">
-                    <i class="fas fa-cog"></i> Hesap & Abonelik
+                    <i class="fas fa-cog"></i> Hesap & Üyelik
                 </h3>
 
                 <div id="subscriptionStatus" style="margin-bottom: 25px;">
@@ -1956,7 +2055,7 @@
                         <div
                             style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                             <div>
-                                <h4 style="margin: 0 0 5px 0; color: var(--text-main);">Abonelik Durumu</h4>
+                                <h4 style="margin: 0 0 5px 0; color: var(--text-main);">Üyelik Durumu</h4>
                                 <div id="subscriptionStatusText" style="font-size: 0.9rem; color: var(--text-muted);">
                                     Yükleniyor...</div>
                             </div>
@@ -1986,7 +2085,7 @@
                                 </div>
                                 <div>
                                     <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 5px;">
-                                        Abonelik Tipi</div>
+                                        Üyelik Tipi</div>
                                     <div id="subscriptionType" style="font-weight: 600; color: var(--text-main);">-
                                     </div>
                                 </div>
@@ -2002,7 +2101,7 @@
                         <h4 style="margin: 0; color: #ffae00;">Mesaj Limiti Yaklaşıyor</h4>
                     </div>
                     <p style="margin: 0; font-size: 0.9rem; color: var(--text-muted);" id="limitWarningText">
-                        Bu sohbette 25 mesaj limitine yaklaşıyorsunuz. Premium abonelik ile sınırsız mesaj
+                        Bu sohbette 25 mesaj limitine yaklaşıyorsunuz. Plus üyelik ile sınırsız mesaj
                         gönderebilirsiniz.
                     </p>
                 </div>
@@ -2016,19 +2115,20 @@
                             <div>
                                 <h5 style="margin: 0 0 5px 0; color: var(--text-main);">Marul AI Plus</h5>
                                 <p style="margin: 0; font-size: 0.9rem; color: var(--text-muted);">Sınırsız mesaj •
-                                    Öncelikli erişim</p>
+                                    Ömür Boyu Erişim</p>
                             </div>
-                            <div style="font-size: 1.5rem; font-weight: 700; color: var(--primary);">₺39.90<span
-                                    style="font-size: 0.9rem; color: var(--text-muted);">/ay</span></div>
+                            <div style="font-size: 1.5rem; font-weight: 700; color: var(--primary);">₺49,99<span
+                                    style="font-size: 0.9rem; color: var(--text-muted);"> / Tek Seferlik</span></div>
                         </div>
                         <ul
                             style="margin: 0 0 20px 0; padding-left: 20px; color: var(--text-muted); font-size: 0.9rem;">
                             <li>Sınırsız mesaj gönderme</li>
                             <li>Yeni özelliklere öncelikli erişim</li>
                             <li>Öncelikli destek</li>
+                            <li>Tek sefer öde, sonsuza dek kullan</li>
                         </ul>
                         <button class="primary-btn" id="upgradeBtn" style="width: 100%;">
-                            <i class="fas fa-crown"></i> Marul AI Plus'a Yükselt
+                            <i class="fas fa-crown"></i> Marul AI Plus'a Geç
                         </button>
                     </div>
                 </div>
@@ -2041,20 +2141,13 @@
                             style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                             <div>
                                 <h5 style="margin: 0 0 5px 0; color: var(--primary);">Marul AI Plus</h5>
-                                <p style="margin: 0; font-size: 0.9rem; color: var(--text-muted);">Aktif abonelik</p>
+                                <p style="margin: 0; font-size: 0.9rem; color: var(--text-muted);">Aktif Üyelik</p>
                             </div>
-                            <div style="font-size: 1.5rem; font-weight: 700; color: var(--primary);">₺39.90<span
-                                    style="font-size: 0.9rem; color: var(--text-muted);">/ay</span></div>
-                        </div>
-                        <div
-                            style="margin-bottom: 15px; padding: 10px; background: rgba(0, 255, 157, 0.05); border-radius: 8px;">
-                            <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 5px;">Sonraki Fatura
-                                Tarihi</div>
-                            <div id="nextBillingDate" style="font-weight: 600; color: var(--text-main);">-</div>
+                            <div style="font-size: 1.5rem; font-weight: 700; color: var(--primary);">₺49,99</div>
                         </div>
                         <button class="primary-btn" id="manageSubscriptionBtn"
                             style="width: 100%; background: rgba(128, 128, 128, 0.1); color: var(--text-main); border: 1px solid var(--border-light);">
-                            <i class="fas fa-external-link-alt"></i> Aboneliği Yönet
+                            <i class="fas fa-external-link-alt"></i> Üyeliği Yönet
                         </button>
                     </div>
                 </div>
@@ -2127,6 +2220,19 @@
                 </button>
             </div>
         </div>
+
+        <!-- Yasal Sözleşmeler Modalı -->
+        <div class="modal-card" id="legalModal" style="display: none; max-width: 600px; height: 80vh;">
+            <button class="modal-close" onclick="closeLegalModal()"><i class="fas fa-times"></i></button>
+            <div class="modal-body" style="padding: 30px; display: flex; flex-direction: column;">
+                <h3 id="legalModalTitle"
+                    style="color: var(--primary); margin-bottom: 20px; font-family: 'Space Grotesk';"></h3>
+                <div id="legalModalContent"
+                    style="flex: 1; overflow-y: auto; line-height: 1.6; color: var(--text-muted); padding-right: 15px; font-size: 0.9rem;">
+                    <!-- İçerik JS ile yüklenecek -->
+                </div>
+            </div>
+        </div>
     </div>
 
     <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
@@ -2137,6 +2243,36 @@
             TURNSTILE_SITE_KEY: '0x4AAAAAACIwky-WL9EDj91G'
         };
 
+
+        const originalFetch = window.fetch;
+        window.fetch = function (resource, config) {
+            let url = typeof resource === 'string' ? resource : (resource instanceof Request ? resource.url : '');
+
+            if (url.includes(CONFIG.BACKEND_URL)) {
+                config = config || {};
+                const gateToken = localStorage.getItem('marul_gate_token');
+
+                if (resource instanceof Request) {
+                    const newHeaders = new Headers(resource.headers);
+                    if (state.turnstileToken) {
+                        newHeaders.set('X-Turnstile-Token', state.turnstileToken);
+                    }
+                    if (gateToken) {
+                        newHeaders.set('X-Gate-Token', gateToken);
+                    }
+                    resource = new Request(resource, { headers: newHeaders });
+                } else {
+                    config.headers = config.headers || {};
+                    if (state.turnstileToken) {
+                        config.headers['X-Turnstile-Token'] = state.turnstileToken;
+                    }
+                    if (gateToken) {
+                        config.headers['X-Gate-Token'] = gateToken;
+                    }
+                }
+            }
+            return originalFetch(resource, config);
+        };
         const state = {
             isAuthenticated: false,
             isGuest: true,
@@ -2153,7 +2289,7 @@
             turnstileToken: null,
             turnstileWidgetId: null,
             isTurnstileLoaded: false,
-            selectedModel: 'gpt4',
+            selectedModel: 'llama',
             responseMode: 'fast',
             userSubscription: null,
             isPremiumUser: false
@@ -2261,6 +2397,45 @@
                 return;
             }
 
+            const gateContainer = document.getElementById('gateTurnstileContainer');
+            if (gateContainer) {
+                window.turnstile.render('#gateTurnstileContainer', {
+                    sitekey: CONFIG.TURNSTILE_SITE_KEY,
+                    callback: async function (token) {
+                        try {
+                            const response = await fetch(`${CONFIG.BACKEND_URL}/verify-gate`, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ token })
+                            });
+
+                            if (response.ok) {
+                                const data = await response.json();
+                                if (data.gateToken) {
+                                    localStorage.setItem('marul_gate_token', data.gateToken);
+                                }
+                                console.log('Security Gate passed and session established');
+                                document.getElementById('securityGate').style.display = 'none';
+                                elements.messageInput.focus();
+                            } else {
+                                const data = await response.json();
+                                document.getElementById('gateTurnstileError').textContent = data.error || 'Doğrulama başarısız.';
+                                document.getElementById('gateTurnstileError').style.display = 'block';
+                                resetTurnstile();
+                            }
+                        } catch (e) {
+                            console.error('Gate verification error details:', e);
+                            document.getElementById('gateTurnstileError').textContent = 'Sunucuya bağlanılamadı. (' + e.message + ')';
+                            document.getElementById('gateTurnstileError').style.display = 'block';
+                        }
+                    },
+                    'error-callback': function () {
+                        document.getElementById('gateTurnstileError').textContent = 'Doğrulama yüklenemedi. Lütfen sayfayı yenileyin.';
+                        document.getElementById('gateTurnstileError').style.display = 'block';
+                    }
+                });
+            }
+
             const container = document.getElementById('turnstileContainer');
             if (!container) return;
 
@@ -2310,6 +2485,18 @@
             initApp();
             setupEventListeners();
 
+
+            if (window.turnstile) {
+                loadTurnstileWidget();
+            } else {
+                const interval = setInterval(() => {
+                    if (window.turnstile) {
+                        loadTurnstileWidget();
+                        clearInterval(interval);
+                    }
+                }, 100);
+            }
+
             document.getElementById('closePreviewBtn').onclick = closePreviewPane;
 
             if (window.turnstile) {
@@ -2338,7 +2525,7 @@
                 'loginEmail', 'loginPassword', 'registerName', 'registerEmail', 'registerPassword', 'registerPasswordConfirm',
                 'editChatTitleBtn', 'shareChatBtn', 'clearHistoryBtn',
                 'authSidebarBtn', 'closeAuthModal', 'limitAuthBtn', 'closeInfoModal',
-                'welcomeMessage', 'donateBtn', 'themeToggleBtn',
+                'welcomeMessage', 'themeToggleBtn',
                 'turnstileContainer', 'turnstileError', 'loginSubmitBtn', 'registerSubmitBtn',
                 'modelSelectorBtn', 'selectedModelName', 'modelSelector',
                 'settingsBtn', 'settingsModal', 'closeSettingsModal',
@@ -2347,7 +2534,8 @@
                 'messageLimitWarning', 'limitWarningText', 'upgradeSection',
                 'currentPlanSection', 'upgradeBtn', 'manageSubscriptionBtn',
                 'accountName', 'accountEmail', 'nextBillingDate',
-                'normalInputWrapper', 'limitReachedWrapper', 'newChatLimitBtn', 'upgradeLimitBtn'
+                'normalInputWrapper', 'limitReachedWrapper', 'newChatLimitBtn', 'upgradeLimitBtn',
+                'legalModal', 'legalModalTitle', 'legalModalContent'
             ];
             ids.forEach(id => elements[id] = document.getElementById(id));
             elements.modelOptions = document.querySelectorAll('.model-option');
@@ -2993,8 +3181,80 @@
             document.getElementById('typingIndicator').style.display = 'block';
         }
 
-        function hideTyping() {
-            document.getElementById('typingIndicator').style.display = 'none';
+        function closeLegalModal() {
+            if (elements.legalModal) elements.legalModal.style.display = 'none';
+            if (elements.authModal) elements.authModal.style.display = 'block';
+        }
+
+        function openLegalModal(type) {
+            const modal = document.getElementById('legalModal');
+            const titleEl = document.getElementById('legalModalTitle');
+            const contentEl = document.getElementById('legalModalContent');
+
+            elements.modalOverlay.classList.add('active');
+            document.querySelectorAll('.modal-card').forEach(m => m.style.display = 'none');
+            modal.style.display = 'flex';
+
+            const legalContent = {
+                terms: {
+                    title: 'Kullanım Şartları',
+                    content: `
+                        <h4>1. Genel Kurallar</h4>
+                        <p>Marul AI'yı kullanırken lütfen yasalara ve genel ahlak kurallarına uygun davranın. Sistemi bozmaya çalışmak veya kötü niyetli içerikler üretmek yasaktır.</p>
+                        
+                        <h4>2. Yapay Zeka Yanıtları</h4>
+                        <p>Buradaki tüm cevaplar yapay zeka tarafından üretilir. Yani bazen yanlış, eksik veya saçma bilgiler verebiliriz. Önemli kararlar alırken bilgileri mutlaka başka yerden teyit edin.</p>
+                        
+                        <h4>3. Sorumluluk</h4>
+                        <p>Marul AI'yı kullanırken oluşabilecek herhangi bir aksaklık veya sorundan dolayı geliştiriciyi sorumlu tutamayacağınızı kabul edersiniz. Size en iyi deneyimi sunmak için çalışıyoruz ama garanti veremiyoruz.</p>
+                    `
+                },
+                privacy: {
+                    title: 'Gizlilik ve Veri Güvenliği',
+                    content: `
+                        <h4>1. Hangi Verileri Alıyoruz?</h4>
+                        <p>Hesabınızı korumak için e-postanız ve adınız bizim için önemli. Ayrıca size daha iyi cevaplar verebilmek için sohbet geçmişinizi kaydediyoruz.</p>
+                        
+                        <h4>2. Verileriniz Nerede Kullanılıyor?</h4>
+                        <p>Sohbetleriniz, yapay zekayı daha akıllı hale getirmek için anonim (isimsiz) şekilde analiz edilebilir. Kişisel bilgilerinizi reklamcılarla veya üçüncü şahıslarla asla paylaşmayız.</p>
+                        
+                        <h4>3. Verilerimi Nasıl Silerim?</h4>
+                        <p>Hesabınızı sildiğinizde tüm kişisel verileriniz sistemimizden kalıcı olarak temizlenir. Kontrol tamamen sizde.</p>
+                    `
+                },
+                membership: {
+                    title: 'Plus Üyelik Şartları',
+                    content: `
+                        <h4>1. Plus Üyelik</h4>
+                        <p>Plus üyelik size sınırsız mesaj ve öncelikli destek gibi özel avantajlar sağlar. Ödemeyi bir kez yaparsınız ve Marul AI aktif olduğu sürece kullanırsınız.</p>
+                        
+                        <h4>2. İade Politikası</h4>
+                        <p>Üyelik anında aktifleşen dijital bir hizmet olduğu için, satın alma işleminden sonra iade yapılamamaktadır. Lütfen Plus özelliklerini inceledikten sonra karar verin.</p>
+                        
+                        <h4>3. Hizmet Garantisi</h4>
+                        <p>"Ömür Boyu Erişim", projenin teknik ve ticari olarak devam ettiği süreyi ifade eder. Olağanüstü durumlarda hizmette değişiklik yapma hakkımız saklıdır.</p>
+                    `
+                },
+                kvkk: {
+                    title: 'Kişisel Verilerin Korunması',
+                    content: `
+                        <h4>1. Veri Sorumlusu</h4>
+                        <p>Verileriniz, 6698 sayılı kanuna uygun olarak Marul AI geliştiricisi Ahmet Karakuş tarafından, sadece size bu hizmeti sunabilmek amacıyla işlenir.</p>
+                        
+                        <h4>2. Haklarınız</h4>
+                        <p>Kendi verileriniz hakkında bilgi alma, düzeltme veya silme taleplerinizi dilediğiniz zaman bize iletebilirsiniz. Gizliliğinize saygı duyuyoruz.</p>
+                        
+                        <h4>3. Saklama Koşulları</h4>
+                        <p>Verileriniz güvenli sunucularda saklanır. Güvenliğinizi sağlamak için en güncel teknolojileri kullanmaya özen gösteriyoruz.</p>
+                    `
+                }
+            };
+
+            const data = legalContent[type];
+            if (data) {
+                titleEl.textContent = data.title;
+                contentEl.innerHTML = data.content;
+            }
         }
 
         function openModal(id) {
@@ -3125,9 +3385,6 @@
                 }
             });
 
-            elements.donateBtn.addEventListener('click', () => {
-                window.open('https://buymeacoffee.com/marulai', '_blank');
-            });
 
             document.querySelectorAll('.auth-tab').forEach(t => t.addEventListener('click', (e) => {
                 document.querySelectorAll('.auth-tab').forEach(x => x.classList.remove('active'));
