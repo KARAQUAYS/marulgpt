@@ -1844,8 +1844,30 @@
             const STORAGE_KEY = btoa('marul_s_token');
             const DATA_KEY = btoa('marul_s_user');
 
-            let __token = sessionStorage.getItem(STORAGE_KEY) || null;
-            let __user = JSON.parse(sessionStorage.getItem(DATA_KEY) || 'null');
+            if (sessionStorage.getItem(STORAGE_KEY)) {
+                localStorage.setItem(STORAGE_KEY, sessionStorage.getItem(STORAGE_KEY));
+                if (sessionStorage.getItem(DATA_KEY)) localStorage.setItem(DATA_KEY, sessionStorage.getItem(DATA_KEY));
+                sessionStorage.removeItem(STORAGE_KEY);
+                sessionStorage.removeItem(DATA_KEY);
+            }
+
+            function isTokenExpired(token) {
+                try {
+                    const parts = token.split('.');
+                    if (parts.length !== 3) return true;
+                    const payload = JSON.parse(atob(parts[1].replace(/-/g, '+').replace(/_/g, '/')));
+                    if (payload.exp && payload.exp < Math.floor(Date.now() / 1000)) return true;
+                    return false;
+                } catch (e) { return true; }
+            }
+
+            let __token = localStorage.getItem(STORAGE_KEY) || null;
+            if (__token && isTokenExpired(__token)) {
+                __token = null;
+                localStorage.removeItem(STORAGE_KEY);
+                localStorage.removeItem(DATA_KEY);
+            }
+            let __user = JSON.parse(localStorage.getItem(DATA_KEY) || 'null');
 
             let state = {
                 isGuest: !__token,
@@ -2409,8 +2431,8 @@
                 __token = token;
                 __user = user;
                 state.isGuest = false;
-                sessionStorage.setItem(STORAGE_KEY, token);
-                sessionStorage.setItem(DATA_KEY, JSON.stringify(user));
+                localStorage.setItem(STORAGE_KEY, token);
+                localStorage.setItem(DATA_KEY, JSON.stringify(user));
 
                 el.authOverlay.classList.remove('active');
                 showNotif('Hoşgeldiniz!', 'success');
@@ -2419,6 +2441,8 @@
 
             function logout() {
                 __token = null; __user = null; state.isGuest = true;
+                localStorage.removeItem(STORAGE_KEY);
+                localStorage.removeItem(DATA_KEY);
                 sessionStorage.removeItem(STORAGE_KEY);
                 sessionStorage.removeItem(DATA_KEY);
                 window.location.reload();
