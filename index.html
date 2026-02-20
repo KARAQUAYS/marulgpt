@@ -1843,6 +1843,25 @@
 
             const STORAGE_KEY = btoa('marul_s_token');
             const DATA_KEY = btoa('marul_s_user');
+            const COOKIE_TOKEN_NAME = '__mt';
+            const COOKIE_USER_NAME = '__mu';
+
+            function setCookie(name, value, days) {
+                const d = new Date();
+                d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
+                let cookieStr = name + '=' + encodeURIComponent(value) + ';expires=' + d.toUTCString() + ';path=/;SameSite=Strict';
+                if (location.protocol === 'https:') cookieStr += ';Secure';
+                document.cookie = cookieStr;
+            }
+
+            function getCookie(name) {
+                const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+                return match ? decodeURIComponent(match[2]) : null;
+            }
+
+            function deleteCookie(name) {
+                document.cookie = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;SameSite=Strict';
+            }
 
             if (sessionStorage.getItem(STORAGE_KEY)) {
                 localStorage.setItem(STORAGE_KEY, sessionStorage.getItem(STORAGE_KEY));
@@ -1861,13 +1880,18 @@
                 } catch (e) { return true; }
             }
 
-            let __token = localStorage.getItem(STORAGE_KEY) || null;
+            let __token = localStorage.getItem(STORAGE_KEY) || getCookie(COOKIE_TOKEN_NAME) || null;
             if (__token && isTokenExpired(__token)) {
                 __token = null;
                 localStorage.removeItem(STORAGE_KEY);
                 localStorage.removeItem(DATA_KEY);
+                deleteCookie(COOKIE_TOKEN_NAME);
+                deleteCookie(COOKIE_USER_NAME);
             }
-            let __user = JSON.parse(localStorage.getItem(DATA_KEY) || 'null');
+            if (__token && !localStorage.getItem(STORAGE_KEY)) {
+                localStorage.setItem(STORAGE_KEY, __token);
+            }
+            let __user = JSON.parse(localStorage.getItem(DATA_KEY) || getCookie(COOKIE_USER_NAME) || 'null');
 
             let state = {
                 isGuest: !__token,
@@ -2433,6 +2457,8 @@
                 state.isGuest = false;
                 localStorage.setItem(STORAGE_KEY, token);
                 localStorage.setItem(DATA_KEY, JSON.stringify(user));
+                setCookie(COOKIE_TOKEN_NAME, token, 7);
+                setCookie(COOKIE_USER_NAME, JSON.stringify(user), 7);
 
                 el.authOverlay.classList.remove('active');
                 showNotif('Hoşgeldiniz!', 'success');
@@ -2445,6 +2471,8 @@
                 localStorage.removeItem(DATA_KEY);
                 sessionStorage.removeItem(STORAGE_KEY);
                 sessionStorage.removeItem(DATA_KEY);
+                deleteCookie(COOKIE_TOKEN_NAME);
+                deleteCookie(COOKIE_USER_NAME);
                 window.location.reload();
             }
 
