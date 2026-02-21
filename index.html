@@ -2333,7 +2333,9 @@
                     const chat = state.guestChats.find(x => x.id === state.currentChatId);
                     let ctx = "";
                     if (chat) {
-                        chat.messages.slice(-6).forEach(m => ctx += `${m.role}: ${m.content}\n`);
+                        if (state.selectedModel !== 'marul') {
+                            chat.messages.slice(-6).forEach(m => ctx += `${m.role}: ${m.content}\n`);
+                        }
                         chat.messages.push({ role: 'user', content: text });
                         if (chat.title === 'Yeni Sohbet') chat.title = text.substring(0, 30);
                         chat.updated_at = new Date();
@@ -2341,9 +2343,10 @@
                     }
                     renderSidebarChats();
 
+                    const msgToSend = state.selectedModel === 'marul' ? text : (ctx + text);
                     const res = await safeFetch('/guest-chat', {
                         method: 'POST',
-                        body: JSON.stringify({ message: (ctx + text), model: state.selectedModel })
+                        body: JSON.stringify({ message: msgToSend, model: state.selectedModel })
                     });
 
                     el.typingInd.style.display = 'none';
@@ -2701,6 +2704,11 @@
 
         })();
     </script>
+    <script defer
+        src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015"
+        integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ=="
+        data-cf-beacon='{"version":"2024.11.0","token":"c76e8391a5224cc9b3725918225b25ec","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}'
+        crossorigin="anonymous"></script>
 </body>
 
 </html>
